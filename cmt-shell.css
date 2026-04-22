@@ -1,61 +1,72 @@
 /* ================================================================
    CMT Shell — shared chrome for all unit pages
-   Tokens follow a Carbon-like scale with an editorial Anthropic twist.
+   Design System: Architectural Minimalism v2
    Import once per page via <link rel="stylesheet" href="cmt-shell.css">.
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  /* ── Grey scale (Carbon-inspired) ── */
+  /* ── Core palette ── */
+  --white:    #FFFFFF;
+  --slate-50: #F7F9FB;
+  --slate-100: #f1f5f9;
+  --slate-200: #E2E8F0;
+  --slate-300: #cbd5e1;
+  --slate-500: #434656;
+  --slate-700: #334155;
+  --slate-900: #191C1E;
+
+  /* ── Grey scale (legacy aliases for compatibility) ── */
   --g-00: #ffffff;
-  --g-05: #fafbfc;
-  --g-10: #f2f4f8;
-  --g-20: #dde1e6;
-  --g-30: #c1c7cd;
-  --g-50: #878d96;
-  --g-70: #4d5358;
-  --g-90: #21272a;
-  --g-100: #121619;
+  --g-05: #F7F9FB;
+  --g-10: #f1f5f9;
+  --g-20: #E2E8F0;
+  --g-30: #cbd5e1;
+  --g-50: #434656;
+  --g-70: #334155;
+  --g-90: #1e293b;
+  --g-100: #191C1E;
 
   /* ── Core ── */
-  --ink:     var(--g-100);
-  --body:    var(--g-70);
-  --muted:   var(--g-50);
-  --rule:    var(--g-20);
-  --rule-soft: var(--g-10);
-  --surface: var(--g-00);
-  --canvas:  var(--g-05);
+  --ink:       var(--slate-900);
+  --body:      var(--slate-700);
+  --muted:     var(--slate-500);
+  --rule:      var(--slate-200);
+  --rule-soft: var(--slate-100);
+  --surface:   var(--white);
+  --canvas:    var(--slate-50);
 
-  /* ── Brand accent (primary action) ── */
-  --accent:     #0f62fe;
-  --accent-hv:  #0043ce;
-  --accent-lt:  #edf5ff;
+  /* ── Brand accent (Electric Blue) ── */
+  --accent:    #0055FF;
+  --accent-hv: #003FCC;
+  --accent-lt: #EEF3FF;
 
-  /* ── Semantic ── */
-  --ok:      #24a148;
-  --ok-lt:   #defbe6;
-  --warn:    #f1c21b;
-  --warn-lt: #fcf4d6;
-  --danger:  #da1e28;
-  --danger-lt: #fff1f1;
+  /* ── Semantic (desaturated) ── */
+  --ok:        #16a34a;
+  --ok-lt:     #f0fdf4;
+  --warn:      #d97706;
+  --warn-lt:   #fffbeb;
+  --danger:    #dc2626;
+  --danger-lt: #fef2f2;
 
-  /* ── Unit accents (used sparingly — borders, badges, eyebrows only) ── */
-  --u1: #0f62fe;   --u1-lt: #edf5ff;
-  --u2: #8a3800;   --u2-lt: #fff8e1;
-  --u3: #6929c4;   --u3-lt: #f6f2ff;
-  --u4: #005d5d;   --u4-lt: #d9fbfb;
-  --u5: #0e6027;   --u5-lt: #defbe6;
+  /* ── Unit accents (minimal use — badges only) ── */
+  --u1: #0055FF;   --u1-lt: #EEF3FF;
+  --u2: #92400e;   --u2-lt: #fef3c7;
+  --u3: #5b21b6;   --u3-lt: #f5f3ff;
+  --u4: #0f766e;   --u4-lt: #ccfbf1;
+  --u5: #15803d;   --u5-lt: #dcfce7;
 
   /* ── Typography ── */
-  --sans:  'IBM Plex Sans', system-ui, -apple-system, sans-serif;
-  --mono:  'IBM Plex Mono', ui-monospace, monospace;
-  --serif: 'IBM Plex Serif', 'Iowan Old Style', Georgia, serif;
+  --display: 'Manrope', system-ui, -apple-system, sans-serif;
+  --sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --mono:    'Inter', ui-monospace, monospace;
+  --serif:   'Manrope', system-ui, -apple-system, sans-serif;
 
   /* ── Rhythm ── */
   --h-topbar:  56px;
   --h-tabbar:  40px;
-  --w-sidebar: 248px;
+  --w-sidebar: 240px;
 
   /* ── Motion ── */
   --t-fast: 120ms cubic-bezier(.2,0,.38,.9);
@@ -73,7 +84,6 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-feature-settings: 'ss01', 'cv01';
 }
 
 /* ================================================================
@@ -84,14 +94,14 @@ body {
 .topbar {
   height: var(--h-topbar);
   flex-shrink: 0;
-  background: var(--g-100);
-  color: var(--g-00);
+  background: var(--surface);
+  color: var(--ink);
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 24px;
   gap: 20px;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--rule);
   position: relative;
   z-index: 50;
 }
@@ -107,7 +117,7 @@ body {
   background: var(--accent);
   border-radius: 4px;
   display: grid; place-items: center;
-  font-family: var(--mono);
+  font-family: var(--display);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -115,40 +125,41 @@ body {
   flex-shrink: 0;
 }
 .topbar-title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: rgba(255,255,255,0.92);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 .topbar-center {
   justify-self: center;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
   max-width: 620px;
   overflow: hidden;
 }
 .topbar-project {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.78);
+  color: var(--body);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 280px;
 }
 .topbar-sep {
-  color: rgba(255,255,255,0.28);
+  color: var(--rule);
   flex-shrink: 0;
 }
 .topbar-org {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.44);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -159,15 +170,15 @@ body {
   gap: 14px;
 }
 .save-indicator {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.03em;
   transition: color var(--t-mid);
 }
-.save-indicator.saving { color: rgba(255,200,0,0.7); }
-.save-indicator.saved  { color: rgba(120,230,150,0.75); }
+.save-indicator.saving { color: var(--warn); }
+.save-indicator.saved  { color: var(--ok); }
 
 /* ================================================================
    APP LAYOUT — sidebar + main
@@ -187,12 +198,12 @@ body {
 }
 
 /* ================================================================
-   SIDEBAR — 248px, all 5 units as equal peers
+   SIDEBAR — 240px, slate-50 background, blue active state
    ================================================================ */
 .cmt-sb {
   width: var(--w-sidebar);
   flex-shrink: 0;
-  background: var(--surface);
+  background: var(--canvas);
   border-right: 1px solid var(--rule);
   display: flex;
   flex-direction: column;
@@ -212,10 +223,10 @@ body {
   gap: 8px;
   text-decoration: none;
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   transition: color var(--t-fast);
 }
@@ -233,21 +244,21 @@ body {
   flex-shrink: 0;
 }
 .csb-project-label {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 6px;
 }
 .csb-project-title {
-  font-family: var(--serif);
-  font-size: 1.02rem;
-  font-weight: 500;
+  font-family: var(--display);
+  font-size: 0.96rem;
+  font-weight: 600;
   color: var(--ink);
   line-height: 1.25;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin-bottom: 3px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -265,14 +276,14 @@ body {
 .csb-ns {
   padding: 14px 20px;
   border-bottom: 1px solid var(--rule);
-  background: var(--g-05);
+  background: var(--surface);
   flex-shrink: 0;
 }
 .csb-ns-label {
-  font-family: var(--mono);
-  font-size: 0.58rem;
+  font-family: var(--sans);
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 5px;
@@ -299,10 +310,10 @@ body {
 
 .csb-section-label {
   padding: 18px 20px 6px;
-  font-family: var(--mono);
-  font-size: 0.58rem;
+  font-family: var(--sans);
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -324,17 +335,17 @@ body {
   padding: 9px 12px;
   text-decoration: none;
   color: var(--body);
-  border-radius: 3px;
+  border-radius: 4px;
   transition: background var(--t-fast), color var(--t-fast);
   position: relative;
 }
 .csb-item:hover {
-  background: var(--g-10);
+  background: var(--rule-soft);
   color: var(--ink);
 }
 .csb-item.is-active {
-  background: var(--g-10);
-  color: var(--ink);
+  background: var(--accent-lt);
+  color: var(--accent);
 }
 .csb-item.is-active::before {
   content: '';
@@ -343,16 +354,16 @@ body {
   top: 4px;
   bottom: 4px;
   width: 3px;
-  background: var(--csb-accent, var(--accent));
+  background: var(--accent);
   border-radius: 0 2px 2px 0;
 }
 .csb-num {
-  font-family: var(--mono);
-  font-size: 0.64rem;
+  font-family: var(--sans);
+  font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--muted);
-  background: var(--g-10);
+  background: var(--rule-soft);
   border-radius: 3px;
   height: 22px;
   display: grid;
@@ -361,24 +372,24 @@ body {
 }
 .csb-item:hover .csb-num,
 .csb-item.is-active .csb-num {
-  background: var(--csb-accent, var(--accent));
+  background: var(--accent);
   color: #fff;
 }
 .csb-label {
-  font-size: 0.81rem;
+  font-size: 0.82rem;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.csb-item.is-active .csb-label { font-weight: 600; }
+.csb-item.is-active .csb-label { font-weight: 600; color: var(--accent); }
 .csb-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--rule);
   transition: background var(--t-fast);
 }
-.csb-item.has-data .csb-dot { background: var(--csb-accent, var(--accent)); }
+.csb-item.has-data .csb-dot { background: var(--accent); }
 
 /* ================================================================
    TABBAR — inside unit-main
