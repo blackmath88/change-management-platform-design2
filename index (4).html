@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Management Platform</title>
+<link rel="stylesheet" href="cmt-shell.css">
+<style>
+/* Dashboard-specific — this page doesn't use the workspace sidebar.
+   Body needs to scroll (unit pages don't). */
+body { height: auto; overflow: auto; min-height: 100vh; display: block; background: var(--canvas); }
+
+.dash-wrap { max-width: 980px; margin: 0 auto; padding: 44px 32px 80px; }
+
+/* Hero — subtle, editorial, not a marketing splash */
+.hero {
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  max-width: 720px;
+}
+.hero-sub {
+  font-size: 0.96rem;
+  color: var(--body);
+  line-height: 1.6;
+  max-width: 620px;
+}
+
+/* Section headers */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.section-meta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* New project form */
+.new-project {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 24px 28px;
+  margin-bottom: 44px;
+}
+.new-project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.new-project-field-full { grid-column: span 2; }
+.new-project-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+.label-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--g-30);
+  background: var(--surface);
+  color: var(--ink);
+  transition: all var(--t-fast);
+}
+.label-file:hover { background: var(--g-10); border-color: var(--g-50); }
+
+/* Projects list */
+.projects-list { margin-bottom: 44px; }
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 18px 22px;
+  margin-bottom: 8px;
+  transition: all var(--t-fast);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+.project-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.project-card-main { min-width: 0; }
+.project-card-org {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.project-card-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.project-card-summary {
+  font-size: 0.82rem;
+  color: var(--body);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.project-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.project-card-date {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+/* Progress track */
+.progress-track {
+  display: flex;
+  gap: 3px;
+}
+.progress-seg {
+  width: 24px; height: 4px;
+  border-radius: 1px;
+  background: var(--rule);
+  transition: background var(--t-fast);
+}
+.progress-seg.done { background: var(--accent); }
+.progress-seg.active { background: var(--accent-lt); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.progress-label {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+.project-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+/* Stage badge */
+.stage-badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.stage-unit_1   { background: var(--u1-lt); color: var(--u1); }
+.stage-unit_2   { background: var(--u2-lt); color: var(--u2); }
+.stage-unit_3   { background: var(--u3-lt); color: var(--u3); }
+.stage-unit_4   { background: var(--u4-lt); color: var(--u4); }
+.stage-unit_5   { background: var(--u5-lt); color: var(--u5); }
+.stage-complete { background: var(--ok-lt); color: var(--ok); }
+
+/* Demo badge — subtle chip on seeded example projects */
+.demo-chip {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: var(--g-100);
+  color: var(--g-00);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Empty state */
+.projects-empty {
+  background: var(--surface);
+  border: 1px dashed var(--rule);
+  border-radius: 2px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.projects-empty-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.projects-empty-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.projects-empty-sub {
+  font-size: 0.86rem;
+  color: var(--body);
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* Unit reference table */
+.units-overview {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.units-overview-head {
+  padding: 14px 22px;
+  background: var(--g-05);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.unit-row {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--rule-soft);
+  transition: background var(--t-fast);
+}
+.unit-row:last-child { border-bottom: none; }
+.unit-row:hover { background: var(--g-05); }
+.unit-num {
+  width: 40px; height: 40px;
+  border-radius: 2px;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--g-10);
+  color: var(--muted);
+}
+.unit-num.u1 { background: var(--u1-lt); color: var(--u1); }
+.unit-num.u2 { background: var(--u2-lt); color: var(--u2); }
+.unit-num.u3 { background: var(--u3-lt); color: var(--u3); }
+.unit-num.u4 { background: var(--u4-lt); color: var(--u4); }
+.unit-num.u5 { background: var(--u5-lt); color: var(--u5); }
+.unit-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+  letter-spacing: -0.005em;
+}
+.unit-question { font-size: 0.8rem; color: var(--muted); }
+.unit-output {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-align: right;
+  letter-spacing: 0.04em;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18,22,25,0.55);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid);
+}
+.modal-overlay.visible { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface);
+  border-radius: 2px;
+  padding: 28px;
+  width: 460px;
+  max-width: 92vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  transform: translateY(12px);
+  transition: transform var(--t-mid);
+}
+.modal-overlay.visible .modal { transform: translateY(0); }
+.modal-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.modal-sub {
+  font-size: 0.85rem;
+  color: var(--body);
+  margin-bottom: 22px;
+  line-height: 1.55;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Skeleton */
+.sk-card {
+  height: 96px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--g-10) 25%, var(--g-05) 50%, var(--g-10) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.btn-ghost { color: var(--muted); }
+.btn-ghost:hover { color: var(--danger); background: var(--danger-lt); }
+
+@media (max-width: 640px) {
+  .hero-title { font-size: 1.5rem; }
+  .new-project-grid { grid-template-columns: 1fr; }
+  .new-project-field-full { grid-column: span 1; }
+  .project-card { grid-template-columns: 1fr; }
+  .project-card-actions { flex-direction: row; align-items: center; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="topbar-brand" href="index.html">
+    <span class="topbar-mark">CM</span>
+    <span class="topbar-title">Change Management Platform</span>
+  </a>
+  <div class="topbar-center"></div>
+  <div class="topbar-right">
+    <span class="save-indicator" id="status-text">Connecting</span>
+  </div>
+</header>
+
+<div class="dash-wrap">
+
+  <div class="hero">
+    <div class="hero-eyebrow">A structured environment for leading change</div>
+    <h1 class="hero-title">Your change projects, in one workspace.</h1>
+    <p class="hero-sub">Work a change initiative across five connected units — vision, forces, stakeholders, communication, momentum. Each project is one continuous living case, not five separate exercises.</p>
+  </div>
+
+  <div class="section-head">
+    <div class="section-title">New project</div>
+  </div>
+  <div class="new-project">
+    <div class="new-project-grid">
+      <div class="field-group" style="margin:0;">
+        <label class="label">Project title</label>
+        <input class="field-input" id="np-title" placeholder="e.g. AI Copilot Introduction" maxlength="120">
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="label">Organisation</label>
+        <input class="field-input" id="np-org" placeholder="e.g. University of Valais" maxlength="120">
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="label">Your role</label>
+        <input class="field-input" id="np-role" placeholder="e.g. Change Lead, HR Director" maxlength="120">
+      </div>
+      <div class="field-group new-project-field-full" style="margin:0;">
+        <label class="label">What is this change about? (optional)</label>
+        <textarea class="field-textarea" id="np-summary" style="min-height:64px;" placeholder="One or two sentences on what's changing and why it matters"></textarea>
+      </div>
+    </div>
+    <div class="new-project-actions">
+      <button class="btn btn-primary" id="btn-create" onclick="createProject()">Create project →</button>
+      <label class="label-file">
+        Import JSON
+        <input type="file" accept=".json" style="display:none;" onchange="importProject(event)">
+      </label>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="section-title">Your projects</div>
+    <div class="section-meta" id="projects-count"></div>
+  </div>
+  <div class="projects-list" id="projects-list">
+    <div class="sk-card"></div>
+    <div class="sk-card" style="opacity:0.6;"></div>
+  </div>
+
+  <div class="section-head">
+    <div class="section-title">The five units</div>
+  </div>
+  <div class="units-overview">
+    <div class="units-overview-head">Reality → People → Meaning → Behaviour → Action</div>
+    <div class="unit-row">
+      <div class="unit-num u1">01</div>
+      <div>
+        <div class="unit-name">Shape your change vision</div>
+        <div class="unit-question">Why does this change need to happen? Where are we going?</div>
+      </div>
+      <div class="unit-output">vision · case for change</div>
+    </div>
+    <div class="unit-row">
+      <div class="unit-num u2">02</div>
+      <div>
+        <div class="unit-name">Understand the forces</div>
+        <div class="unit-question">What is pushing the change forward — and what is blocking it?</div>
+      </div>
+      <div class="unit-output">driving · restraining forces</div>
+    </div>
+    <div class="unit-row">
+      <div class="unit-num u3">03</div>
+      <div>
+        <div class="unit-name">Map your stakeholders</div>
+        <div class="unit-question">Who matters? How do they stand? What do they need?</div>
+      </div>
+      <div class="unit-output">stakeholder map · influence</div>
+    </div>
+    <div class="unit-row">
+      <div class="unit-num u4">04</div>
+      <div>
+        <div class="unit-name">Communicate with impact</div>
+        <div class="unit-question">How do we move people? What must they know, feel, and do?</div>
+      </div>
+      <div class="unit-output">messages · channels · framing</div>
+    </div>
+    <div class="unit-row">
+      <div class="unit-num u5">05</div>
+      <div>
+        <div class="unit-name">Nudge &amp; build momentum</div>
+        <div class="unit-question">What interventions actually change behaviour and sustain adoption?</div>
+      </div>
+      <div class="unit-output">nudges · adoption · actions</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <div class="modal-title">Delete this project?</div>
+    <div class="modal-sub">This will permanently delete the project and all its unit data. This cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-primary" style="background:var(--danger);" id="btn-confirm-delete" onclick="confirmDelete()">Delete project</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="cmt-client.js"></script>
+<script>
+'use strict';
+
+const UNIT_FILES = {
+  unit_1:   'unit1-vision.html',
+  unit_2:   'unit2-forces.html',
+  unit_3:   'unit3-stakeholders.html',
+  unit_4:   'unit4-communication.html',
+  unit_5:   'unit5-nudges.html',
+  complete: 'unit1-vision.html',
+};
+const STAGE_LABELS = {
+  unit_1: 'Unit 1 — Vision', unit_2: 'Unit 2 — Forces', unit_3: 'Unit 3 — Stakeholders',
+  unit_4: 'Unit 4 — Communication', unit_5: 'Unit 5 — Momentum', complete: 'Complete',
+};
+const STAGE_TO_NUM = { unit_1:1, unit_2:2, unit_3:3, unit_4:4, unit_5:5, complete:5 };
+
+let deleteTargetId = null;
+
+async function init() {
+  const { ok } = await CMT.ping();
+  const text = document.getElementById('status-text');
+  if (ok) { text.textContent = 'Connected'; text.className = 'save-indicator saved'; }
+  else { text.textContent = 'Offline'; }
+  loadProjects();
+}
+
+async function loadProjects() {
+  const list = document.getElementById('projects-list');
+  const count = document.getElementById('projects-count');
+  try {
+    const projects = await CMT.getProjects();
+    count.textContent = projects.length + ' project' + (projects.length !== 1 ? 's' : '');
+    if (!projects.length) {
+      list.innerHTML = '<div class="projects-empty">'
+        + '<div class="projects-empty-label">No projects yet</div>'
+        + '<div class="projects-empty-title">Start your first change project</div>'
+        + '<div class="projects-empty-sub">Each project works through all five units as one connected case.</div>'
+        + '</div>';
+      return;
+    }
+    list.innerHTML = projects.map(p => renderProjectCard(p)).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="projects-empty"><div class="projects-empty-title">Could not load projects</div><div class="projects-empty-sub">' + esc(e.message) + '</div></div>';
+  }
+}
+
+function renderProjectCard(p) {
+  const stageNum = STAGE_TO_NUM[p.stage] || 1;
+  const segs = [1,2,3,4,5].map(n => {
+    const cls = n < stageNum ? 'done' : n === stageNum ? 'active' : '';
+    return '<div class="progress-seg ' + cls + '"></div>';
+  }).join('');
+  const updated = new Date(p.updated_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+
+  return '<div class="project-card" onclick="openProject(\'' + p.id + '\')">'
+    + '<div class="project-card-main">'
+    +   (p.organization ? '<div class="project-card-org">' + esc(p.organization) + '</div>' : '')
+    +   '<div class="project-card-title">' + esc(p.title) + (p.is_demo ? '<span class="demo-chip">Demo</span>' : '') + '</div>'
+    +   (p.summary ? '<div class="project-card-summary">' + esc(p.summary) + '</div>' : '')
+    +   '<div class="project-card-meta">'
+    +     '<div class="progress-track">' + segs + '</div>'
+    +     '<div class="progress-label">' + (STAGE_LABELS[p.stage] || 'Unit 1') + '</div>'
+    +     '<div class="project-card-date">Updated ' + updated + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="project-card-actions" onclick="event.stopPropagation()">'
+    +   '<span class="stage-badge stage-' + p.stage + '">' + (STAGE_LABELS[p.stage] || 'Unit 1') + '</span>'
+    +   (p.is_demo
+        ? ''
+        : '<button class="btn btn-sm btn-ghost" onclick="promptDelete(\'' + p.id + '\')">Delete</button>')
+    + '</div>'
+    + '</div>';
+}
+
+function openProject(projectId) {
+  CMT.setCurrentProjectId(projectId);
+  CMT.getProject(projectId).then(p => {
+    if (!p) return;
+    const file = UNIT_FILES[p.stage] || 'unit1-vision.html';
+    window.location.href = file + '?project=' + projectId;
+  });
+}
+
+async function createProject() {
+  const title   = document.getElementById('np-title').value.trim();
+  const org     = document.getElementById('np-org').value.trim();
+  const role    = document.getElementById('np-role').value.trim();
+  const summary = document.getElementById('np-summary').value.trim();
+  if (!title) {
+    document.getElementById('np-title').focus();
+    showToast('Please give your project a title.', 'error');
+    return;
+  }
+  const btn = document.getElementById('btn-create');
+  btn.disabled = true; btn.textContent = 'Creating';
+  try {
+    const project = await CMT.createProject({ title, organization: org, your_role: role, summary });
+    showToast('Project created.', 'ok');
+    window.location.href = 'unit1-vision.html?project=' + project.id;
+  } catch (e) {
+    showToast('Could not create project: ' + e.message, 'error');
+    btn.disabled = false; btn.textContent = 'Create project →';
+  }
+}
+
+async function importProject(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    showToast('Importing');
+    await CMT.importProject(file);
+    showToast('Project imported.', 'ok');
+    await loadProjects();
+  } catch (e) {
+    showToast('Import failed: ' + e.message, 'error');
+  }
+  event.target.value = '';
+}
+
+function promptDelete(projectId) {
+  deleteTargetId = projectId;
+  document.getElementById('delete-modal').classList.add('visible');
+}
+function closeDeleteModal() {
+  deleteTargetId = null;
+  document.getElementById('delete-modal').classList.remove('visible');
+}
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+  try {
+    await CMT.deleteProject(deleteTargetId);
+    showToast('Project deleted.', 'ok');
+    closeDeleteModal();
+    loadProjects();
+  } catch (e) {
+    showToast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.getElementById('delete-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeDeleteModal();
+});
+
+init();
+</script>
+</body>
+</html>

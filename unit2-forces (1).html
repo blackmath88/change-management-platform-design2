@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 · Force Field Analysis</title>
+<link rel="stylesheet" href="cmt-shell.css">
+<style>
+:root { --unit-accent: var(--u2); }
+
+/* Net pressure bar */
+.net-wrap {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.net-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.net-title {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.net-score {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.net-score.positive { color: var(--ok); }
+.net-score.negative { color: var(--danger); }
+.net-bar-track {
+  height: 8px;
+  background: var(--danger-lt);
+  border-radius: 1px;
+  position: relative;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.net-bar-fill {
+  height: 100%;
+  background: var(--ok);
+  transition: width 400ms cubic-bezier(.2,0,.38,.9);
+}
+.net-bar-center {
+  position: absolute;
+  left: 50%; top: -3px; bottom: -3px;
+  width: 1px;
+  background: var(--g-70);
+}
+.net-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.net-interp {
+  font-size: 0.85rem;
+  color: var(--body);
+  line-height: 1.55;
+  max-width: 620px;
+}
+
+/* Force field columns */
+.ff-diagram {
+  display: grid;
+  grid-template-columns: 1fr 72px 1fr;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ff-col { padding: 18px 18px; display: flex; flex-direction: column; }
+.ff-col.driving   { background: var(--g-05); border-right: 1px solid var(--rule); }
+.ff-col.resisting { background: var(--g-05); border-left: 1px solid var(--rule); }
+.ff-center {
+  background: var(--g-100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.8);
+  font-family: var(--mono);
+}
+.ff-center-label {
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+.ff-arrow {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+}
+.ff-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.ff-col-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ff-col-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ff-col.driving   .ff-col-dot { background: var(--ok); }
+.ff-col.resisting .ff-col-dot { background: var(--danger); }
+.ff-col-count {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Force item */
+.force-item {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: border-color var(--t-fast);
+}
+.force-item:hover { border-color: var(--g-30); }
+.force-item-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.force-label-input {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  min-width: 0;
+  padding: 2px 0;
+}
+.force-label-input::placeholder { color: var(--muted); font-weight: 400; }
+.force-type-chip {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 3px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  border: none;
+  transition: background var(--t-fast);
+}
+.chip-rational  { background: var(--accent-lt); color: var(--accent); }
+.chip-emotional { background: var(--u3-lt);     color: var(--u3); }
+.force-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  transition: color var(--t-fast);
+}
+.force-remove:hover { color: var(--danger); }
+.strength-wrap { display: flex; align-items: center; gap: 10px; }
+.strength-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--g-10);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.strength-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width var(--t-fast);
+}
+.driving   .strength-bar-fill { background: var(--ok); }
+.resisting .strength-bar-fill { background: var(--danger); }
+.strength-val {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 16px;
+  text-align: right;
+}
+
+.add-force-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  background: transparent;
+  border: 1px dashed var(--g-30);
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.add-force-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
+
+/* Analysis tab */
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.analysis-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  padding: 16px 18px;
+  border-radius: 2px;
+}
+.analysis-card-title {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.analysis-card-body {
+  font-size: 0.84rem;
+  color: var(--body);
+  line-height: 1.6;
+}
+.analysis-card-body ul { padding-left: 16px; }
+.analysis-card-body li { margin-bottom: 4px; }
+.analysis-card-body strong { color: var(--ink); font-weight: 600; }
+
+/* AI */
+.ai-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.ai-mode-card { background: var(--surface); border: 1px solid var(--rule); padding: 14px 16px; cursor: pointer; transition: all var(--t-fast); border-radius: 2px; }
+.ai-mode-card:hover { border-color: var(--g-30); }
+.ai-mode-card.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-lt); }
+.ai-mode-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.ai-mode-desc { font-size: 0.76rem; color: var(--body); line-height: 1.5; }
+
+.prompt-box { background: var(--surface); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.prompt-box-head { padding: 12px 18px; background: var(--g-05); border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; }
+.prompt-box-label { font-family: var(--mono); font-size: 0.66rem; font-weight: 500; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.prompt-text { font-family: var(--mono); font-size: 0.74rem; color: var(--body); padding: 18px; line-height: 1.7; white-space: pre-wrap; max-height: 360px; overflow-y: auto; }
+.prompt-actions { padding: 14px 18px; border-top: 1px solid var(--rule); display: flex; gap: 10px; flex-wrap: wrap; }
+
+@media (max-width: 720px) {
+  .ff-diagram { grid-template-columns: 1fr; }
+  .ff-center { display: none; }
+  .analysis-grid, .ai-mode-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="topbar-brand" href="index.html">
+    <span class="topbar-mark">CM</span>
+    <span class="topbar-title">Change Management Platform</span>
+  </a>
+  <div class="topbar-center">
+    <span class="topbar-project" id="topbar-project"></span>
+    <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
+    <span class="topbar-org" id="topbar-org"></span>
+  </div>
+  <div class="topbar-right">
+    <span class="save-indicator" id="save-indicator">—</span>
+  </div>
+</header>
+
+<div class="app-layout">
+  <div id="cmt-sidebar-mount"></div>
+
+  <div class="unit-main">
+    <div class="tabbar">
+      <button class="tab-btn active" onclick="switchTab('map',this)">Force Map</button>
+      <button class="tab-btn" onclick="switchTab('analysis',this)">Analysis</button>
+      <button class="tab-btn" onclick="switchTab('ai',this)">AI &amp; Export</button>
+    </div>
+
+    <div class="workspace"><div class="content">
+
+      <div class="pane active" id="pane-map">
+        <div class="wrap-wide">
+          <div class="pane-head">
+            <div class="pane-eyebrow">Unit 2 · Force Field Analysis</div>
+            <h1 class="pane-title">What is pushing this change — and what is blocking it?</h1>
+            <p class="pane-desc">Map the forces on both sides. Adjust strength with the bar. Toggle between Rational (logic, data, business case) and Emotional (fear, pride, identity, trust) to understand the full picture.</p>
+          </div>
+
+          <div id="vision-carry" class="hint-box" style="display:none;">
+            <strong>From your vision:</strong> <span id="vision-carry-text"></span>
+          </div>
+
+          <div class="net-wrap">
+            <div class="net-head">
+              <span class="net-title">Net change pressure</span>
+              <span class="net-score" id="net-score">0</span>
+            </div>
+            <div class="net-bar-track">
+              <div class="net-bar-fill" id="net-bar-fill" style="width:50%"></div>
+              <div class="net-bar-center"></div>
+            </div>
+            <div class="net-labels">
+              <span>← Resistance dominates</span>
+              <span>Balanced</span>
+              <span>Driving dominates →</span>
+            </div>
+            <div class="net-interp" id="net-interp">Add forces to see the balance.</div>
+          </div>
+
+          <div class="ff-diagram">
+            <div class="ff-col driving">
+              <div class="ff-col-head">
+                <div class="ff-col-title"><span class="ff-col-dot"></span>Driving forces</div>
+                <div class="ff-col-count" id="driving-count">0</div>
+              </div>
+              <div id="driving-list"></div>
+              <button class="add-force-btn" onclick="addForce('driving')">+ Add driving force</button>
+            </div>
+            <div class="ff-center">
+              <span class="ff-arrow">→</span>
+              <span class="ff-center-label">Change</span>
+              <span class="ff-arrow">←</span>
+            </div>
+            <div class="ff-col resisting">
+              <div class="ff-col-head">
+                <div class="ff-col-title"><span class="ff-col-dot"></span>Restraining forces</div>
+                <div class="ff-col-count" id="resisting-count">0</div>
+              </div>
+              <div id="resisting-list"></div>
+              <button class="add-force-btn" onclick="addForce('resisting')">+ Add restraining force</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-analysis">
+        <div class="wrap">
+          <div class="pane-head">
+            <div class="pane-eyebrow">Unit 2 · Analysis</div>
+            <h1 class="pane-title">What does the force field tell you?</h1>
+            <p class="pane-desc">The force field is only useful if you draw conclusions from it. Use this analysis to identify leverage points, hidden dynamics, and strategic priorities.</p>
+          </div>
+          <div class="analysis-grid" id="analysis-grid"></div>
+          <div class="field-group">
+            <label class="label">Your analysis — what does this force field tell you?</label>
+            <textarea class="field-textarea" id="forces-summary" rows="5" style="min-height:120px;" placeholder="Summarise the key insight. What is the dominant pattern? What are the most important levers? What would you do first?" oninput="autosave()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-ai">
+        <div class="wrap">
+          <div class="pane-head">
+            <div class="pane-eyebrow">Unit 2 · AI &amp; Export</div>
+            <h1 class="pane-title">Take your force field to an AI thinking partner</h1>
+            <p class="pane-desc">Choose a mode and copy the prompt. Your full force field data is embedded automatically.</p>
+          </div>
+          <div class="ai-mode-grid">
+            <div class="ai-mode-card active" onclick="setMode('diagnose',this)">
+              <div class="ai-mode-title">Diagnose the field</div>
+              <div class="ai-mode-desc">Analyse the balance, identify hidden dynamics, highlight the most dangerous restraining force.</div>
+            </div>
+            <div class="ai-mode-card" onclick="setMode('leverage',this)">
+              <div class="ai-mode-title">Find leverage points</div>
+              <div class="ai-mode-desc">Which forces can be amplified or weakened? What single intervention would shift the balance most?</div>
+            </div>
+            <div class="ai-mode-card" onclick="setMode('stakeholders',this)">
+              <div class="ai-mode-title">Link to stakeholders</div>
+              <div class="ai-mode-desc">Which forces are carried by which stakeholder groups? Prepares you for Unit 3.</div>
+            </div>
+            <div class="ai-mode-card" onclick="setMode('emotional',this)">
+              <div class="ai-mode-title">Emotional layer</div>
+              <div class="ai-mode-desc">What do the emotional forces reveal about the psychological reality of this change?</div>
+            </div>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div>
+            <div class="prompt-text" id="prompt-output">Add forces to generate a prompt.</div>
+            <div class="prompt-actions">
+              <button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button>
+              <a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a>
+              <a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="cmt-client.js"></script>
+<script src="cmt-sidebar.js"></script>
+<script>
+'use strict';
+
+let projectId = null, activeMode = 'diagnose', saveTimer = null, vision = {};
+let data = { driving: [], resisting: [], summary: '' };
+
+function uid() { return Math.random().toString(36).slice(2, 9); }
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  projectId = params.get('project') || localStorage.getItem('cmt_current_project');
+
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.forces) data = { ...data, ...allModules.forces };
+  } catch(e) {
+    console.warn('Failed to load from Supabase, using localStorage', e);
+    const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
+    if (vRaw) { try { vision = JSON.parse(vRaw); } catch(e) {} }
+    const saved = localStorage.getItem('cmt_module_' + projectId + '_forces');
+    if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e) {} }
+  }
+
+  const vtext = vision.vision_statement || vision.ctx_title;
+  if (vtext) {
+    document.getElementById('vision-carry-text').textContent = vtext;
+    document.getElementById('vision-carry').style.display = 'block';
+  }
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) {
+    document.getElementById('topbar-org').textContent = vision.ctx_org;
+    document.getElementById('topbar-sep').style.display = 'inline';
+  }
+
+  renderForces('driving');
+  renderForces('resisting');
+  updateNetBar();
+  updateAnalysis();
+  updatePrompt();
+  if (data.summary) document.getElementById('forces-summary').value = data.summary;
+}
+
+function addForce(side) {
+  data[side].push({ id: uid(), label: '', strength: 3, type: 'rational' });
+  renderForces(side);
+  const inputs = document.getElementById(side + '-list').querySelectorAll('.force-label-input');
+  inputs[inputs.length - 1]?.focus();
+  autosave();
+}
+
+function renderForces(side) {
+  const list = document.getElementById(side + '-list');
+  list.innerHTML = data[side].map((f, i) =>
+    '<div class="force-item ' + side + '">'
+    + '<div class="force-item-top">'
+    +   '<input class="force-label-input" value="' + esc(f.label) + '" placeholder="Describe this force…" oninput="updateForceLabel(\'' + side + '\',' + i + ',this.value)">'
+    +   '<button class="force-type-chip chip-' + f.type + '" onclick="toggleType(\'' + side + '\',' + i + ')" title="Rational/Emotional">' + (f.type === 'rational' ? 'R' : 'E') + '</button>'
+    +   '<button class="force-remove" onclick="removeForce(\'' + side + '\',' + i + ')">×</button>'
+    + '</div>'
+    + '<div class="strength-wrap">'
+    +   '<div class="strength-bar-track ' + side + '" onclick="setStrengthClick(\'' + side + '\',' + i + ',event)">'
+    +     '<div class="strength-bar-fill" style="width:' + (f.strength * 20) + '%"></div>'
+    +   '</div>'
+    +   '<span class="strength-val">' + f.strength + '</span>'
+    + '</div>'
+    + '</div>'
+  ).join('');
+  document.getElementById(side + '-count').textContent = data[side].length;
+}
+
+function updateForceLabel(side, i, val) { data[side][i].label = val; autosave(); }
+function toggleType(side, i) { data[side][i].type = data[side][i].type === 'rational' ? 'emotional' : 'rational'; renderForces(side); autosave(); }
+function removeForce(side, i) { data[side].splice(i, 1); renderForces(side); updateNetBar(); updateAnalysis(); autosave(); }
+function setStrengthClick(side, i, e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const v = Math.max(1, Math.min(5, Math.round(pct * 5)));
+  data[side][i].strength = v;
+  renderForces(side); updateNetBar(); updateAnalysis(); autosave();
+}
+
+function updateNetBar() {
+  const dSum = data.driving.reduce((a, f) => a + f.strength, 0);
+  const rSum = data.resisting.reduce((a, f) => a + f.strength, 0);
+  const net = dSum - rSum;
+  const total = dSum + rSum || 1;
+  const pct = Math.round((dSum / total) * 100);
+
+  const scoreEl = document.getElementById('net-score');
+  scoreEl.textContent = net > 0 ? '+' + net : String(net);
+  scoreEl.className = 'net-score ' + (net > 0 ? 'positive' : net < 0 ? 'negative' : '');
+  document.getElementById('net-bar-fill').style.width = pct + '%';
+
+  let interp = '';
+  if (!data.driving.length && !data.resisting.length) interp = 'Add forces to see the balance.';
+  else if (net > 6)   interp = 'Strong momentum for change. Watch for complacency — even strong driving forces need active management.';
+  else if (net > 2)   interp = 'Driving forces outweigh resistance. Maintain momentum while addressing key blockers.';
+  else if (net >= -2) interp = 'Forces are roughly balanced. Small interventions in either direction could shift the outcome.';
+  else if (net >= -6) interp = 'Resistance is stronger than momentum. Focus on reducing the top restraining forces before pushing harder.';
+  else                interp = 'Heavy resistance. This change faces significant headwinds — a different approach or phasing may be needed.';
+  document.getElementById('net-interp').textContent = interp;
+}
+
+function updateAnalysis() {
+  const grid = document.getElementById('analysis-grid');
+  if (!grid) return;
+  const allForces = [...data.driving, ...data.resisting];
+  if (!allForces.length) {
+    grid.innerHTML = '<div style="grid-column:span 2;font-size:0.85rem;color:var(--muted);padding:16px 0;">Add forces in the Force Map tab to see analysis.</div>';
+    return;
+  }
+  const topDriving = [...data.driving].sort((a, b) => b.strength - a.strength).slice(0, 3);
+  const topResisting = [...data.resisting].sort((a, b) => b.strength - a.strength).slice(0, 3);
+  const emotional = allForces.filter(f => f.type === 'emotional');
+  const rationalR = data.resisting.filter(f => f.type === 'rational');
+
+  grid.innerHTML =
+    '<div class="analysis-card"><div class="analysis-card-title">Strongest driving forces</div><div class="analysis-card-body"><ul>'
+    + (topDriving.map(f => '<li><strong>' + esc(f.label || '(unlabelled)') + '</strong> — ' + f.strength + '/5 · ' + f.type + '</li>').join('') || '<li>None added yet</li>')
+    + '</ul></div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Strongest restraining forces</div><div class="analysis-card-body"><ul>'
+    + (topResisting.map(f => '<li><strong>' + esc(f.label || '(unlabelled)') + '</strong> — ' + f.strength + '/5 · ' + f.type + '</li>').join('') || '<li>None added yet</li>')
+    + '</ul></div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Emotional forces (' + emotional.length + ')</div><div class="analysis-card-body">'
+    + (emotional.length
+       ? '<ul>' + emotional.map(f => '<li>' + esc(f.label || '(unlabelled)') + ' <span style="color:var(--muted)">(' + f.strength + '/5)</span></li>').join('') + '</ul>'
+       : '<span style="color:var(--muted)">No emotional forces tagged yet. Consider — fears, pride, identity concerns?</span>')
+    + '</div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Rational blockers (' + rationalR.length + ')</div><div class="analysis-card-body">'
+    + (rationalR.length
+       ? '<ul>' + rationalR.map(f => '<li>' + esc(f.label || '(unlabelled)') + ' <span style="color:var(--muted)">(' + f.strength + '/5)</span></li>').join('') + '</ul>'
+       : '<span style="color:var(--muted)">No rational restraining forces yet.</span>')
+    + '</div></div>';
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tab === 'analysis') updateAnalysis();
+  if (tab === 'ai') updatePrompt();
+}
+
+function autosave() {
+  data.summary = document.getElementById('forces-summary')?.value || '';
+  updateNetBar();
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = 'Saving'; ind.className = 'save-indicator saving';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      await CMT.saveModule(projectId, 'forces', data);
+    } catch(e) {
+      console.warn('Supabase save failed, using localStorage fallback', e);
+      localStorage.setItem('cmt_module_' + projectId + '_forces', JSON.stringify(data));
+    }
+    if (window.CMTSidebar) window.CMTSidebar.refresh();
+    ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
+    setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
+  }, 800);
+}
+
+function setMode(mode, card) {
+  activeMode = mode;
+  document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  updatePrompt();
+}
+
+function updatePrompt() {
+  const dList = data.driving.map(f => '  + ' + (f.label || '(unlabelled)') + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (none added)';
+  const rList = data.resisting.map(f => '  - ' + (f.label || '(unlabelled)') + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (none added)';
+  const dSum = data.driving.reduce((a, f) => a + f.strength, 0);
+  const rSum = data.resisting.reduce((a, f) => a + f.strength, 0);
+  const net = dSum - rSum;
+
+  const base = 'CHANGE MANAGEMENT CONTEXT — Unit 2: Force Field Analysis\n\n'
+    + 'Initiative: ' + (vision.ctx_title || '(not set)') + '\n'
+    + 'Organisation: ' + (vision.ctx_org || '(not set)') + '\n'
+    + 'Vision: ' + (vision.vision_statement || '(not set)') + '\n\n'
+    + 'DRIVING FORCES (total: ' + dSum + '):\n' + dList + '\n\n'
+    + 'RESTRAINING FORCES (total: ' + rSum + '):\n' + rList + '\n\n'
+    + 'NET PRESSURE: ' + (net > 0 ? '+' : '') + net + ' (' + (net > 0 ? 'driving dominates' : net < 0 ? 'resistance dominates' : 'balanced') + ')\n\n'
+    + 'PRACTITIONER ANALYSIS:\n' + (data.summary || '(not completed)');
+
+  const modes = {
+    diagnose: base + '\n\nTASK: Act as an experienced change consultant. Analyse this force field:\n1. What is the single most important insight from this force field?\n2. Which restraining force is most dangerous — and why?\n3. Is there a pattern in the emotional vs rational split? What does it reveal?\n4. What does this force field suggest about the readiness for change?',
+    leverage: base + '\n\nTASK: Identify leverage points in this force field:\n1. Which driving force, if amplified, would have the biggest positive impact? How?\n2. Which restraining force, if reduced, would most shift the balance? What would reduce it?\n3. Is there a restraining force that could be reframed as a driving force?\n4. What is the one intervention that would change this picture most in the next 30 days?',
+    stakeholders: base + '\n\nTASK: Bridge this force field to stakeholder mapping (Unit 3):\n1. For each of the top 3 restraining forces — which stakeholder group is most likely carrying it?\n2. For each of the top 3 driving forces — which stakeholder group could champion it?\n3. What does the emotional force profile suggest about which groups need most attention?\n4. What 4-5 stakeholder groups should be mapped first?',
+    emotional: base + '\n\nTASK: Analyse the emotional layer:\n1. What do the emotional forces reveal about the psychological reality of this change for the people involved?\n2. Are the emotional restraining forces more or less dangerous than the rational ones? Why?\n3. What are the underlying fears, losses, or identity threats these emotional forces point to?\n4. What communication or leadership approaches would address the emotional resistance specifically?',
+  };
+  document.getElementById('prompt-output').textContent = modes[activeMode];
+}
+
+function copyPrompt(btn) {
+  navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => {
+    const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+(async () => { await init(); })();
+</script>
+</body>
+</html>
