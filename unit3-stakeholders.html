@@ -93,6 +93,7 @@
     </main>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="cmt-client.js"></script>
   <script>
 'use strict';
 let projectId = null, selected = null, activeMode = 'prioritise', saveTimer = null;
@@ -101,23 +102,27 @@ const STANCE_COLORS = { supporter:'#1f7a4d', neutral:'#9b6200', skeptical:'#b85c
 const READINESS = ['Unaware','Aware','Experimenting','Using','Advocating'];
 let data = { stakeholders: [] };
 function uid() { return Math.random().toString(36).slice(2, 9); }
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
-  const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
-  if (vRaw) {
-    vision = JSON.parse(vRaw);
-    if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
-    if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.forces) forces = allModules.forces;
+    if (allModules.stakeholders) data = { stakeholders: [], ...allModules.stakeholders };
+  } catch(e) {
+    const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
+    if (vRaw) { try { vision = JSON.parse(vRaw); } catch(e2) {} }
+    const fRaw = localStorage.getItem('cmt_module_' + projectId + '_forces');
+    if (fRaw) { try { forces = JSON.parse(fRaw); } catch(e2) {} }
+    const saved = localStorage.getItem('cmt_module_' + projectId + '_stakeholders');
+    if (saved) { try { data = JSON.parse(saved); } catch(e2) {} }
   }
-  const fRaw = localStorage.getItem('cmt_module_' + projectId + '_forces');
-  if (fRaw) {
-    forces = JSON.parse(fRaw);
-    const topRes = (forces.resisting || []).sort((a, b) => b.strength - a.strength).slice(0, 3).map(f => f.label).filter(Boolean);
-    if (topRes.length) { document.getElementById('forces-carry-text').textContent = 'Top restraining forces: ' + topRes.join(' · '); document.getElementById('forces-carry').style.display = 'block'; }
-  }
-  const saved = localStorage.getItem('cmt_module_' + projectId + '_stakeholders');
-  if (saved) { try { data = JSON.parse(saved); } catch(e) {} }
+  if (!data.stakeholders) data.stakeholders = [];
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+  const topRes = (forces.resisting || []).sort((a, b) => b.strength - a.strength).slice(0, 3).map(f => f.label).filter(Boolean);
+  if (topRes.length) { document.getElementById('forces-carry-text').textContent = 'Top restraining forces: ' + topRes.join(' · '); document.getElementById('forces-carry').style.display = 'block'; }
   renderInnerSidebar(); renderTable(); updatePrompt();
 }
 function addStakeholder() {
@@ -182,7 +187,7 @@ function renderMap() {
   });
 }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'profile') renderProfile(); if (tab === 'map') renderMap(); if (tab === 'ai') updatePrompt(); }
-function autosave() { const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_stakeholders', JSON.stringify(data)); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
+function autosave() { const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_stakeholders', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'stakeholders', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
 function updatePrompt() {
   const shList = data.stakeholders.map(s => '  ' + (s.name || 'Unnamed') + ' (' + (s.role || s.group || '—') + ') — Power ' + s.power + '/5, Interest ' + s.interest + '/5, Stance: ' + (s.stance || 'unknown') + ', Readiness: ' + (READINESS[s.readiness] || 'unknown') + '\n    Motivations: ' + (s.motivations || 'not specified') + '\n    Concerns: ' + (s.concerns || 'not specified') + '\n    Needs: ' + (s.needs || 'not specified')).join('\n\n') || '  (no stakeholders added yet)';

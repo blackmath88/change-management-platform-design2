@@ -47,6 +47,7 @@
     </div></main>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="cmt-client.js"></script>
   <script>
 'use strict';
 let projectId = null, activeMode = 'strengthen', saveTimer = null;
@@ -64,13 +65,27 @@ const MISFIRES = [
 ];
 let data = { core_problem:'', core_solution:'', core_impact:'', core_outlook:'', obj_know:'', obj_feel:'', obj_do:'', audiences: [], comms_risk_notes:'', flagged_misfires: [] };
 function uid() { return Math.random().toString(36).slice(2, 9); }
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
-  const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
-  if (vRaw) { vision = JSON.parse(vRaw); const vtext = vision.vision_statement || vision.ctx_title; if (vtext) { document.getElementById('vision-carry-text').textContent = vtext; document.getElementById('vision-carry').style.display = 'block'; } if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title; if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; } }
-  const shRaw = localStorage.getItem('cmt_module_' + projectId + '_stakeholders'); if (shRaw) stakeholdersData = JSON.parse(shRaw);
-  const saved = localStorage.getItem('cmt_module_' + projectId + '_communication'); if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e) {} }
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.stakeholders) stakeholdersData = { stakeholders: [], ...allModules.stakeholders };
+    if (allModules.communication) data = { ...data, ...allModules.communication };
+  } catch(e) {
+    const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
+    if (vRaw) { try { vision = JSON.parse(vRaw); } catch(e2) {} }
+    const shRaw = localStorage.getItem('cmt_module_' + projectId + '_stakeholders');
+    if (shRaw) { try { stakeholdersData = JSON.parse(shRaw); } catch(e2) {} }
+    const saved = localStorage.getItem('cmt_module_' + projectId + '_communication');
+    if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e2) {} }
+  }
+  if (!stakeholdersData.stakeholders) stakeholdersData.stakeholders = [];
+  const vtext = vision.vision_statement || vision.ctx_title;
+  if (vtext) { document.getElementById('vision-carry-text').textContent = vtext; document.getElementById('vision-carry').style.display = 'block'; }
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
   setField('core-problem', data.core_problem); setField('core-solution', data.core_solution); setField('core-impact', data.core_impact); setField('core-outlook', data.core_outlook); setField('obj-know', data.obj_know); setField('obj-feel', data.obj_feel); setField('obj-do', data.obj_do); if (data.comms_risk_notes) setField('comms-risk-notes', data.comms_risk_notes);
   if (!data.audiences.length && stakeholdersData.stakeholders?.length) { data.audiences = stakeholdersData.stakeholders.map((s, i) => ({ id: uid(), name: s.name || 'Unnamed', source_stakeholder_id: s.id, color: COLORS[i % COLORS.length], know:'', feel:'', do:'', tone:'', notes:'' })); document.getElementById('stakeholder-carry').style.display = 'block'; }
   renderAudiences(); renderMisfires(); updatePrompt();
@@ -90,7 +105,7 @@ function addCustomAudience() { data.audiences.push({ id: uid(), name: 'New audie
 function renderMisfires() { const grid = document.getElementById('misfire-grid'); grid.innerHTML = MISFIRES.map((m, i) => '<div class="misfire-card' + (data.flagged_misfires.includes(i) ? ' flagged' : '') + '" onclick="toggleMisfire(' + i + ')"><div class="misfire-title">' + m.title + '</div><div class="misfire-desc">' + m.desc + '</div></div>').join(''); }
 function toggleMisfire(i) { const idx = data.flagged_misfires.indexOf(i); if (idx >= 0) data.flagged_misfires.splice(idx, 1); else data.flagged_misfires.push(i); renderMisfires(); autosave(); }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'audiences') renderAudiences(); if (tab === 'ai') updatePrompt(); }
-function autosave() { data.core_problem = val('core-problem'); data.core_solution = val('core-solution'); data.core_impact = val('core-impact'); data.core_outlook = val('core-outlook'); data.obj_know = val('obj-know'); data.obj_feel = val('obj-feel'); data.obj_do = val('obj-do'); data.comms_risk_notes = val('comms-risk-notes'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_communication', JSON.stringify(data)); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
+function autosave() { data.core_problem = val('core-problem'); data.core_solution = val('core-solution'); data.core_impact = val('core-impact'); data.core_outlook = val('core-outlook'); data.obj_know = val('obj-know'); data.obj_feel = val('obj-feel'); data.obj_do = val('obj-do'); data.comms_risk_notes = val('comms-risk-notes'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_communication', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'communication', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
 function updatePrompt() {
   const audText = data.audiences.map(a => '  ' + a.name + ':\n    Know: ' + (a.know || 'not specified') + '\n    Feel: ' + (a.feel || 'not specified') + '\n    Do: ' + (a.do || 'not specified') + '\n    Tone: ' + (a.tone || 'not specified')).join('\n\n') || '  (no audiences defined)';

@@ -138,24 +138,29 @@
     </main>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="cmt-client.js"></script>
   <script>
 'use strict';
 let projectId = null, activeMode = 'diagnose', saveTimer = null, vision = {};
 let data = { driving: [], resisting: [], summary: '' };
 function uid() { return Math.random().toString(36).slice(2, 9); }
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
-  const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
-  if (vRaw) {
-    vision = JSON.parse(vRaw);
-    const vtext = vision.vision_statement || vision.ctx_title;
-    if (vtext) { document.getElementById('vision-carry-text').textContent = vtext; document.getElementById('vision-carry').style.display = 'block'; }
-    if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
-    if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.forces) data = { ...data, ...allModules.forces };
+  } catch(e) {
+    const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
+    if (vRaw) { try { vision = JSON.parse(vRaw); } catch(e2) {} }
+    const saved = localStorage.getItem('cmt_module_' + projectId + '_forces');
+    if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e2) {} }
   }
-  const saved = localStorage.getItem('cmt_module_' + projectId + '_forces');
-  if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e) {} }
+  const vtext = vision.vision_statement || vision.ctx_title;
+  if (vtext) { document.getElementById('vision-carry-text').textContent = vtext; document.getElementById('vision-carry').style.display = 'block'; }
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
   renderForces('driving'); renderForces('resisting'); updateNetBar(); updateAnalysis(); updatePrompt();
   if (data.summary) document.getElementById('forces-summary').value = data.summary;
 }
@@ -242,6 +247,7 @@ function autosave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     localStorage.setItem('cmt_module_' + projectId + '_forces', JSON.stringify(data));
+    if (window.CMT) CMT.saveModule(projectId, 'forces', data).catch(() => {});
     ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
     setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
   }, 800);

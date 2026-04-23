@@ -26,6 +26,7 @@
     </div></main>
   </div>
   <div class="toast" id="toast"></div>
+  <script src="cmt-client.js"></script>
   <script>
 'use strict';
 let projectId = null, activeMode = 'nudges', saveTimer = null;
@@ -35,14 +36,28 @@ const EAST_TYPES = ['easy','attractive','social','timely'];
 const MOMENTUM_SIGNALS = ['At least one group has moved up the adoption curve','Champions are visible and actively sharing their experience','Sceptics are asking practical questions, not just rejecting','Leadership is visibly role-modelling the new behaviour','Early pilot results are being shared across the organisation','The change is referenced in day-to-day conversations','Requests for support or training are increasing','Resistance in key groups is reducing in intensity'];
 let data = { adoption_map: [], nudges: [], momentum_checked: [], momentum_accelerators: '', momentum_blockers: '', momentum_tipping: '' };
 function uid() { return Math.random().toString(36).slice(2, 9); }
-function init() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
-  const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision'); if (vRaw) { vision = JSON.parse(vRaw); if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title; if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; } }
-  const fRaw = localStorage.getItem('cmt_module_' + projectId + '_forces'); if (fRaw) forces = JSON.parse(fRaw);
-  const shRaw = localStorage.getItem('cmt_module_' + projectId + '_stakeholders'); if (shRaw) shData = JSON.parse(shRaw);
-  const cRaw = localStorage.getItem('cmt_module_' + projectId + '_communication'); if (cRaw) { commsData = JSON.parse(cRaw); const objDo = commsData.obj_do; if (objDo) { document.getElementById('comms-carry-text').textContent = 'Desired action from Unit 4: "' + objDo + '"'; document.getElementById('comms-carry').style.display = 'block'; } }
-  const saved = localStorage.getItem('cmt_module_' + projectId + '_nudges'); if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e) {} }
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.forces) forces = allModules.forces;
+    if (allModules.stakeholders) shData = { stakeholders: [], ...allModules.stakeholders };
+    if (allModules.communication) commsData = { audiences: [], ...allModules.communication };
+    if (allModules.nudges) data = { ...data, ...allModules.nudges };
+  } catch(e) {
+    const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision'); if (vRaw) { try { vision = JSON.parse(vRaw); } catch(e2) {} }
+    const fRaw = localStorage.getItem('cmt_module_' + projectId + '_forces'); if (fRaw) { try { forces = JSON.parse(fRaw); } catch(e2) {} }
+    const shRaw = localStorage.getItem('cmt_module_' + projectId + '_stakeholders'); if (shRaw) { try { shData = JSON.parse(shRaw); } catch(e2) {} }
+    const cRaw = localStorage.getItem('cmt_module_' + projectId + '_communication'); if (cRaw) { try { commsData = JSON.parse(cRaw); } catch(e2) {} }
+    const saved = localStorage.getItem('cmt_module_' + projectId + '_nudges'); if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e2) {} }
+  }
+  if (!shData.stakeholders) shData.stakeholders = [];
+  if (!commsData.audiences) commsData.audiences = [];
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+  const objDo = commsData.obj_do; if (objDo) { document.getElementById('comms-carry-text').textContent = 'Desired action from Unit 4: "' + objDo + '"'; document.getElementById('comms-carry').style.display = 'block'; }
   if (!data.adoption_map.length && shData.stakeholders?.length) { data.adoption_map = shData.stakeholders.map(s => ({ id: s.id, name: s.name || 'Unnamed', role: s.role || s.group || '', current_stage: s.readiness || 0, target_stage: Math.min((s.readiness || 0) + 2, 4), desired_behaviour: '', barrier: '' })); }
   setF('momentum-accelerators', data.momentum_accelerators); setF('momentum-blockers', data.momentum_blockers); setF('momentum-tipping', data.momentum_tipping);
   renderAdoptionCards(); renderNudges(); renderMomentumSignals(); updateMomentumScore(); updatePrompt();
@@ -70,7 +85,7 @@ function renderMomentumSignals() { const container = document.getElementById('mo
 function toggleSignal(i) { const idx = data.momentum_checked.indexOf(i); if (idx >= 0) data.momentum_checked.splice(idx, 1); else data.momentum_checked.push(i); renderMomentumSignals(); updateMomentumScore(); autosave(); }
 function updateMomentumScore() { const score = Math.round((data.momentum_checked.length / MOMENTUM_SIGNALS.length) * 100); document.getElementById('momentum-score').textContent = score + '%'; document.getElementById('momentum-fill').style.width = score + '%'; let status = ''; if (score === 0) status = 'Check the signals that are true in your change right now.'; else if (score <= 25) status = 'Early signals only — momentum is fragile. Focus on 1–2 visible wins.'; else if (score <= 50) status = 'Building momentum. Strengthen the social signals and visible leadership.'; else if (score <= 75) status = 'Good momentum. Protect the energy and address the remaining gaps.'; else status = 'Strong momentum. Shift focus to sustaining and institutionalising the change.'; document.getElementById('momentum-status').textContent = status; }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'ai') updatePrompt(); }
-function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
+function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'nudges', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 function exportProject() { const payload = { meta: { exported_at: new Date().toISOString(), schema_version: '1.0', source: 'Change Management Platform' }, project: { title: vision.ctx_title || 'Untitled', organization: vision.ctx_org || '', your_role: vision.ctx_role || '' }, modules: { vision, forces, stakeholders: shData, communication: commsData, nudges: data } }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = (vision.ctx_title || 'project').replace(/\s+/g, '-').toLowerCase() + '.json'; a.click(); URL.revokeObjectURL(url); }
 function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
 function updatePrompt() {

@@ -255,6 +255,7 @@
 
   <div class="toast" id="toast"></div>
 
+  <script src="cmt-client.js"></script>
   <script>
   'use strict';
 
@@ -279,19 +280,21 @@
   };
   CRITERIA.forEach(c => { data.criteria[c.id] = { score:0, notes:'' }; });
 
-  function init() {
+  async function init() {
     const params = new URLSearchParams(window.location.search);
     projectId = params.get('project') || localStorage.getItem('cmt_current_project');
 
-    const saved = localStorage.getItem('cmt_module_' + projectId + '_vision');
-    if (saved) {
-      try {
-        data = { ...data, ...JSON.parse(saved) };
-        if (!data.criteria) data.criteria = {};
-        if (!data.signals)  data.signals  = [];
-        CRITERIA.forEach(c => { if (!data.criteria[c.id]) data.criteria[c.id] = { score:0, notes:'' }; });
-      } catch(e) {}
+    try {
+      const allModules = await CMT.loadAllModules(projectId);
+      if (allModules.vision) data = { ...data, ...allModules.vision };
+    } catch(e) {
+      const saved = localStorage.getItem('cmt_module_' + projectId + '_vision');
+      if (saved) { try { data = { ...data, ...JSON.parse(saved) }; } catch(e2) {} }
     }
+
+    if (!data.criteria) data.criteria = {};
+    if (!data.signals)  data.signals  = [];
+    CRITERIA.forEach(c => { if (!data.criteria[c.id]) data.criteria[c.id] = { score:0, notes:'' }; });
 
     setField('ctx-title', data.ctx_title);
     setField('ctx-org', data.ctx_org);
@@ -507,6 +510,7 @@
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       localStorage.setItem('cmt_module_' + projectId + '_vision', JSON.stringify(data));
+      if (window.CMT) CMT.saveModule(projectId, 'vision', data).catch(() => {});
       if (projectId && data.ctx_title) {
         const projects = JSON.parse(localStorage.getItem('cmt_projects') || '[]');
         const idx = projects.findIndex(p => p.id === projectId);
