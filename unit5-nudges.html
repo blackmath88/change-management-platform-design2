@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Unit 5 · Nudge &amp; Build Momentum</title>
+  <meta property="og:title" content="Change Management Platform">
+  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
+  <meta property="og:type" content="website">
+  <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Product navigation">
-      <div class="brand"><a class="brand-lockup" href="index.html"><div class="brand-mark">CM</div><div><div class="brand-title">Change Management Platform</div><div class="brand-subtitle">Operating workspace</div></div></a></div>
-      <div class="side-section"><div class="side-title meta-label">Workspace</div><nav class="nav-list"><a class="nav-item" href="index.html"><span class="nav-icon">▦</span><span>Command Center</span></a><a class="nav-item" href="unit1-vision.html"><span class="nav-icon">◈</span><span>Vision</span></a><a class="nav-item" href="unit2-forces.html"><span class="nav-icon">↔</span><span>Forces</span></a><a class="nav-item" href="unit3-stakeholders.html"><span class="nav-icon">◎</span><span>Stakeholders</span></a><a class="nav-item" href="unit4-communication.html"><span class="nav-icon">□</span><span>Messaging</span></a><a class="nav-item is-active" href="unit5-nudges.html"><span class="nav-icon">◇</span><span>Nudges</span></a></nav></div>
-      <div class="sidebar-footer"><div class="workspace-chip"><div class="meta-label">Active project</div><div class="workspace-chip-title" id="topbar-project"></div><div class="workspace-chip-sub" id="topbar-org"></div></div></div>
-    </aside>
+    <div id="sidebar-mount" data-active="unit5-nudges.html"></div>
     <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 5</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
     <main class="main"><div class="main-inner">
       <section class="page-head"><div><div class="eyebrow">Unit 5 · Adoption Map</div><h1 class="page-title">Where are your stakeholders on the adoption curve?</h1><p class="page-subtitle">Behaviour change happens in stages. Map each group, design EAST nudges, and monitor the momentum signals that show whether adoption is actually moving.</p></div></section>

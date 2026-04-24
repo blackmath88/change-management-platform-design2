@@ -42,9 +42,9 @@ The original platform ships with:
 | `unit3-stakeholders.html` | Unit 3 workspace |
 | `unit4-communication.html` | Unit 4 workspace |
 | `unit5-nudges.html` | Unit 5 workspace |
-| `cmt-shell.css` | Shared design tokens, topbar, sidebar, layout, components |
+| `cmt-system.css` | Shared design tokens, topbar, sidebar, layout, components |
 | `cmt-client.js` | Supabase API wrapper + localStorage cache |
-| `cmt-sidebar.js` | Sidebar renderer (injected into `#cmt-sidebar-mount`) |
+| `cmt-shell.js` | Shared sidebar renderer (injected into `#sidebar-mount`) |
 
 ---
 
@@ -148,7 +148,7 @@ npx serve .
 ## Roadmap
 
 - [x] README — scope and design direction documented
-- [ ] Design tokens — update `cmt-shell.css` with v2 token values
+- [ ] Design tokens — update `cmt-system.css` with v2 token values
 - [ ] Typography — swap fonts, refine scale
 - [ ] Component refresh — topbar, sidebar, cards, forms, buttons
 - [ ] Dashboard (`index.html`) — apply updated components
