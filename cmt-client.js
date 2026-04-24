@@ -1,12 +1,15 @@
 /**
  * cmt-client.js
- * Change Management Platform — Supabase Client v2
+ * Change Management Platform — Supabase Client v2.1
  * ─────────────────────────────────────────────────
  * Include in every HTML file:
  *   <script src="cmt-client.js"></script>
  *
  * Supabase is the primary persistence layer.
  * localStorage is a write-through cache for instant reads.
+ *
+ * v2.1 change: every request now includes an `x-session-token` header so
+ * server-side RLS policies can enforce per-token access. See rls-fix.sql.
  *
  * Public API:
  *   await CMT.getProjects()
@@ -17,6 +20,7 @@
  *   await CMT.saveModule(projectId, module, data)
  *   await CMT.loadModule(projectId, module)
  *   await CMT.loadAllModules(projectId)
+ *   CMT.getCarryOver(allModules, moduleName, pickFn)
  *   await CMT.exportProject(projectId)
  *   await CMT.importProject(file)
  *   await CMT.ping()
@@ -35,13 +39,6 @@ const CMT = (() => {
   // Seeded via seed-swiss-demo-cases.sql. Editable — re-run the SQL to restore.
   const DEMO_TOKEN = 'demo-swiss-policy-2026';
 
-  const BASE_HEADERS = {
-    'Content-Type':  'application/json',
-    'apikey':        SB_KEY,
-    'Authorization': `Bearer ${SB_KEY}`,
-    'Prefer':        'return=representation',
-  };
-
   // ── SESSION TOKEN ─────────────────────────────────────────
   function getSessionToken() {
     let t = localStorage.getItem('cmt_session_token');
@@ -50,6 +47,20 @@ const CMT = (() => {
       localStorage.setItem('cmt_session_token', t);
     }
     return t;
+  }
+
+  // ── HEADERS ───────────────────────────────────────────────
+  // Built lazily per-request so the session token is always current —
+  // important if it ever changes within a session (e.g. reset workspace).
+  function buildHeaders(extra) {
+    return {
+      'Content-Type':    'application/json',
+      'apikey':          SB_KEY,
+      'Authorization':   `Bearer ${SB_KEY}`,
+      'Prefer':          'return=representation',
+      'x-session-token': getSessionToken(),
+      ...(extra || {}),
+    };
   }
 
   // ── CURRENT PROJECT ───────────────────────────────────────
@@ -82,7 +93,7 @@ const CMT = (() => {
   async function req(path, options = {}) {
     const { headers: extraHeaders, ...rest } = options;
     const res = await fetch(`${SB_URL}/rest/v1/${path}`, {
-      headers: { ...BASE_HEADERS, ...(extraHeaders || {}) },
+      headers: buildHeaders(extraHeaders),
       ...rest,
     });
     if (res.status === 204) return null;
@@ -97,11 +108,13 @@ const CMT = (() => {
     const token = getSessionToken();
     // Fetch projects matching either the user's token OR the demo token.
     // PostgREST `or=(...)` syntax. Demo projects show up for every visitor.
+    // Note: RLS also enforces this filter server-side — the client-side filter
+    // is kept so the intent stays visible and so requests return exactly the
+    // expected shape.
     const filter = `or=(session_token.eq.${encodeURIComponent(token)},session_token.eq.${encodeURIComponent(DEMO_TOKEN)})`;
     const rows = await req(
       `projects?${filter}&order=updated_at.desc&select=*`
     );
-    // Mark demo rows so the UI can render them differently.
     return (rows || []).map(r => ({ ...r, is_demo: r.session_token === DEMO_TOKEN }));
   }
 
