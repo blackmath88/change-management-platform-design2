@@ -5,11 +5,316 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unit 3 · Stakeholder Mapping</title>
   <link rel="stylesheet" href="cmt-system.css">
+  <style>
+    /* ===== Enhanced Stakeholder Map (scoped to this page) ===== */
+
+    .map-canvas {
+      position: relative;
+      min-height: 620px;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(180deg, #fbfcfe 0%, #f6f8fb 100%);
+      background-size: 52px 52px, 52px 52px, auto;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    .map-canvas::before,
+    .map-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .map-canvas::before {
+      background:
+        linear-gradient(to right, transparent 49.8%, rgba(15, 23, 42, 0.08) 50%, transparent 50.2%),
+        linear-gradient(to bottom, transparent 49.8%, rgba(15, 23, 42, 0.08) 50%, transparent 50.2%);
+    }
+
+    .map-canvas::after {
+      background:
+        linear-gradient(135deg, rgba(180, 35, 24, 0.04), transparent 35%) top right / 50% 50% no-repeat,
+        linear-gradient(315deg, rgba(31, 122, 77, 0.03), transparent 35%) bottom right / 50% 50% no-repeat;
+    }
+
+    .map-zone {
+      position: absolute;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0.65;
+    }
+
+    .map-zone.manage-closely {
+      top: 6%; right: 6%; width: 38%; height: 38%;
+      background: linear-gradient(180deg, rgba(180, 35, 24, 0.06), rgba(180, 35, 24, 0.02));
+      border: 1px solid rgba(180, 35, 24, 0.08);
+    }
+
+    .map-zone.keep-informed {
+      bottom: 6%; right: 6%; width: 38%; height: 38%;
+      background: linear-gradient(180deg, rgba(31, 122, 77, 0.05), rgba(31, 122, 77, 0.015));
+      border: 1px solid rgba(31, 122, 77, 0.08);
+    }
+
+    .map-zone.keep-satisfied {
+      top: 6%; left: 6%; width: 38%; height: 38%;
+      background: linear-gradient(180deg, rgba(155, 98, 0, 0.04), rgba(155, 98, 0, 0.015));
+      border: 1px solid rgba(155, 98, 0, 0.08);
+    }
+
+    .map-zone.monitor {
+      bottom: 6%; left: 6%; width: 38%; height: 38%;
+      background: linear-gradient(180deg, rgba(140, 150, 163, 0.04), rgba(140, 150, 163, 0.015));
+      border: 1px solid rgba(140, 150, 163, 0.08);
+    }
+
+    .map-axis {
+      position: absolute;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: rgba(15, 23, 42, 0.58);
+      z-index: 2;
+    }
+
+    .map-quadrant {
+      position: absolute;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: rgba(15, 23, 42, 0.55);
+      background: rgba(255,255,255,0.66);
+      backdrop-filter: blur(6px);
+      padding: 6px 10px;
+      border: 1px solid rgba(15,23,42,0.06);
+      border-radius: 999px;
+      z-index: 2;
+    }
+
+    /* Override the simple round node from cmt-system.css with the card design */
+    .map-canvas .map-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      border-radius: 18px;
+      padding: 10px 12px;
+      min-width: 130px;
+      max-width: 180px;
+      width: auto;
+      height: auto;
+      color: #111827;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow:
+        0 10px 24px rgba(15, 23, 42, 0.10),
+        0 2px 8px rgba(15, 23, 42, 0.06);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      user-select: none;
+      display: block;
+      font-weight: 400;
+      font-size: inherit;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      z-index: 3;
+    }
+
+    .map-canvas .map-node:hover {
+      transform: translate(-50%, -50%) scale(1.03);
+      box-shadow:
+        0 16px 32px rgba(15, 23, 42, 0.14),
+        0 4px 12px rgba(15, 23, 42, 0.08);
+      z-index: 7;
+    }
+
+    .map-canvas .map-node.selected {
+      border-color: rgba(37, 99, 235, 0.35);
+      box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.10),
+        0 16px 32px rgba(15, 23, 42, 0.14);
+    }
+
+    .map-canvas .map-node.priority {
+      border-color: rgba(180, 35, 24, 0.24);
+    }
+
+    .map-canvas .map-node.risk {
+      animation: mapPulse 2.2s infinite;
+    }
+
+    @keyframes mapPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(180,35,24,0.14), 0 10px 24px rgba(15, 23, 42, 0.10); }
+      70%  { box-shadow: 0 0 0 12px rgba(180,35,24,0), 0 10px 24px rgba(15, 23, 42, 0.10); }
+      100% { box-shadow: 0 0 0 0 rgba(180,35,24,0), 0 10px 24px rgba(15, 23, 42, 0.10); }
+    }
+
+    .map-node-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .map-node-name {
+      font-size: 0.84rem;
+      line-height: 1.15;
+      font-weight: 800;
+      color: var(--ink, #111827);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .map-node-badge {
+      flex: 0 0 auto;
+      font-size: 0.62rem;
+      font-weight: 900;
+      line-height: 1;
+      padding: 5px 7px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    .map-node-role {
+      margin-top: 4px;
+      font-size: 0.69rem;
+      color: var(--muted, #6b7280);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .map-node-meta {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .map-meta-chip {
+      font-size: 0.63rem;
+      font-weight: 700;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.06);
+      color: rgba(15, 23, 42, 0.74);
+    }
+
+    .map-readiness {
+      margin-top: 9px;
+      height: 6px;
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .map-readiness-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .map-node-halo {
+      position: absolute;
+      inset: -7px;
+      border-radius: 22px;
+      pointer-events: none;
+      opacity: 0.18;
+    }
+
+    .map-canvas .map-node.influence-low  .map-node-halo { opacity: 0.08; }
+    .map-canvas .map-node.influence-medium .map-node-halo { opacity: 0.14; }
+    .map-canvas .map-node.influence-high .map-node-halo { opacity: 0.22; inset: -10px; }
+
+    .map-tooltip {
+      position: absolute;
+      display: none;
+      min-width: 220px;
+      max-width: 280px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(17,24,39,0.94);
+      color: #fff;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .map-summary {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .map-summary-card {
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: linear-gradient(180deg, #ffffff, #fafbfd);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .map-summary-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted, #6b7280);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .map-summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .map-summary-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--ink, #111827);
+    }
+
+    .map-summary-item strong { font-weight: 800; }
+
+    .map-summary-item .tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.06);
+      color: rgba(15,23,42,0.7);
+    }
+
+    @media (max-width: 980px) {
+      .map-summary { grid-template-columns: 1fr; }
+      .map-canvas .map-node { min-width: 118px; max-width: 150px; padding: 9px 10px; }
+      .map-canvas { min-height: 560px; }
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Product navigation">
-      <div class="brand"><a class="brand-lockup" href="index.html"><div class="brand-mark">CM</div><div><div class="brand-title">Change Management Platform</div><div class="brand-subtitle">Operating workspace</div></div></a></div>
+      <div class="brand">
+        <a class="brand-lockup" href="index.html">
+          <div class="brand-mark">CM</div>
+          <div>
+            <div class="brand-title">Change Management Platform</div>
+            <div class="brand-subtitle">Operating workspace</div>
+          </div>
+        </a>
+      </div>
       <div class="side-section">
         <div class="side-title meta-label">Workspace</div>
         <nav class="nav-list">
@@ -21,12 +326,27 @@
           <a class="nav-item" href="unit5-nudges.html"><span class="nav-icon">◇</span><span>Nudges</span></a>
         </nav>
       </div>
-      <div class="sidebar-footer"><div class="workspace-chip"><div class="meta-label">Active project</div><div class="workspace-chip-title" id="topbar-project"></div><div class="workspace-chip-sub" id="topbar-org"></div></div></div>
+      <div class="sidebar-footer">
+        <div class="workspace-chip">
+          <div class="meta-label">Active project</div>
+          <div class="workspace-chip-title" id="topbar-project"></div>
+          <div class="workspace-chip-sub" id="topbar-org"></div>
+        </div>
+      </div>
     </aside>
 
     <header class="topbar">
-      <nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 3</span><span class="meta-label">/</span><span class="meta-label crumb-current">Stakeholder Mapping</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav>
-      <div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><a class="btn btn-primary" href="unit4-communication.html">Messaging</a></div>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <span class="meta-label">Unit 3</span>
+        <span class="meta-label">/</span>
+        <span class="meta-label crumb-current">Stakeholder Mapping</span>
+        <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
+      </nav>
+      <div class="topbar-actions">
+        <span class="save-indicator" id="save-indicator">—</span>
+        <button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button>
+        <a class="btn btn-primary" href="unit4-communication.html">Messaging</a>
+      </div>
     </header>
 
     <main class="main">
@@ -38,70 +358,141 @@
             <p class="page-subtitle">Identify the individuals and groups who influence or are affected by the change. Add them in the registry, then profile each one.</p>
           </div>
         </section>
+
         <div class="tabbar">
           <button class="tab-btn active" data-tab="identify" onclick="switchTab('identify',this)">Identify</button>
           <button class="tab-btn" data-tab="profile" onclick="switchTab('profile',this)">Profile</button>
           <button class="tab-btn" data-tab="map" onclick="switchTab('map',this)">Map</button>
           <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button>
         </div>
+
         <div class="stakeholder-workspace">
           <aside class="inner-sb">
-            <div class="inner-sb-head"><span class="inner-sb-label">Stakeholders (<span id="sh-count">0</span>)</span><button class="btn-add" onclick="addStakeholder()">+ Add</button></div>
-            <div class="inner-sb-list" id="inner-sb-list"><div class="inner-sb-empty">Add stakeholders using the button above.</div></div>
+            <div class="inner-sb-head">
+              <span class="inner-sb-label">Stakeholders (<span id="sh-count">0</span>)</span>
+              <button class="btn-add" onclick="addStakeholder()">+ Add</button>
+            </div>
+            <div class="inner-sb-list" id="inner-sb-list">
+              <div class="inner-sb-empty">Add stakeholders using the button above.</div>
+            </div>
           </aside>
+
           <section class="module">
             <div class="module-body">
+
               <div class="pane active" id="pane-identify">
-                <div class="pane-head"><div class="pane-eyebrow">Unit 3 · Stakeholder Mapping</div><h1 class="pane-title">Who matters in this change?</h1><p class="pane-desc">Identify the individuals and groups who influence or are affected by the change. Add them in the left panel, then profile each one.</p></div>
-                <div id="forces-carry" class="hint-box" style="display:none;"><strong>From your force field:</strong> <span id="forces-carry-text"></span></div>
-                <div class="hint-box"><strong>Who to include:</strong> Decision-makers, those with power to block, those most affected, those who could champion the change, and those whose silence you cannot afford to assume is support.</div>
+                <div class="pane-head">
+                  <div class="pane-eyebrow">Unit 3 · Stakeholder Mapping</div>
+                  <h1 class="pane-title">Who matters in this change?</h1>
+                  <p class="pane-desc">Identify the individuals and groups who influence or are affected by the change. Add them in the left panel, then profile each one.</p>
+                </div>
+                <div id="forces-carry" class="hint-box" style="display:none;">
+                  <strong>From your force field:</strong> <span id="forces-carry-text"></span>
+                </div>
+                <div class="hint-box">
+                  <strong>Who to include:</strong> Decision-makers, those with power to block, those most affected, those who could champion the change, and those whose silence you cannot afford to assume is support.
+                </div>
                 <div class="sh-table">
-                  <div class="sh-table-head"><span>Name / Role</span><span>Power</span><span>Interest</span><span>Stance</span><span></span></div>
-                  <div id="sh-table-body"><div style="padding:28px;text-align:center;color:var(--muted);font-size:0.85rem;">No stakeholders yet. Add using the left panel.</div></div>
+                  <div class="sh-table-head">
+                    <span>Name / Role</span><span>Power</span><span>Interest</span><span>Stance</span><span></span>
+                  </div>
+                  <div id="sh-table-body">
+                    <div style="padding:28px;text-align:center;color:var(--muted);font-size:0.85rem;">No stakeholders yet. Add using the left panel.</div>
+                  </div>
                 </div>
               </div>
+
               <div class="pane" id="pane-profile">
-                <div class="pane-head"><div class="pane-eyebrow">Unit 3 · Profile</div><h1 class="pane-title">Understand each stakeholder</h1><p class="pane-desc">Select a stakeholder from the left panel to profile them. The richer your understanding, the more targeted your communication and actions will be.</p></div>
-                <div id="profile-panel"><div class="no-selection"><div class="no-selection-label">No selection</div><div class="no-selection-text">Select a stakeholder from the left panel to view and edit their profile.</div></div></div>
+                <div class="pane-head">
+                  <div class="pane-eyebrow">Unit 3 · Profile</div>
+                  <h1 class="pane-title">Understand each stakeholder</h1>
+                  <p class="pane-desc">Select a stakeholder from the left panel to profile them. The richer your understanding, the more targeted your communication and actions will be.</p>
+                </div>
+                <div id="profile-panel">
+                  <div class="no-selection">
+                    <div class="no-selection-label">No selection</div>
+                    <div class="no-selection-text">Select a stakeholder from the left panel to view and edit their profile.</div>
+                  </div>
+                </div>
               </div>
+
               <div class="pane" id="pane-map">
-                <div class="pane-head"><div class="pane-eyebrow">Unit 3 · Power / Interest Map</div><h1 class="pane-title">See who sits where</h1><p class="pane-desc">Nodes are positioned by power (vertical) and interest (horizontal). Colour shows stance. Hover to see details.</p></div>
+                <div class="pane-head">
+                  <div class="pane-eyebrow">Unit 3 · Power / Interest Map</div>
+                  <h1 class="pane-title">See who sits where</h1>
+                  <p class="pane-desc">Nodes are positioned by power (vertical) and interest (horizontal). Colour shows stance. Cards also show readiness, influence and strategic priority.</p>
+                </div>
                 <div class="map-canvas-wrap">
                   <div class="map-canvas" id="map-canvas">
                     <div class="map-axis" style="bottom:8px;left:50%;transform:translateX(-50%);">Interest →</div>
                     <div class="map-axis" style="left:8px;top:50%;transform:translateY(-50%) rotate(-90deg);">Power</div>
-                    <div class="map-quadrant" style="top:10%;right:10%;">Manage closely</div><div class="map-quadrant" style="top:10%;left:10%;">Keep satisfied</div><div class="map-quadrant" style="bottom:10%;right:10%;">Keep informed</div><div class="map-quadrant" style="bottom:10%;left:10%;">Monitor</div>
+                    <div class="map-quadrant" style="top:10%;right:10%;">Manage closely</div>
+                    <div class="map-quadrant" style="top:10%;left:10%;">Keep satisfied</div>
+                    <div class="map-quadrant" style="bottom:10%;right:10%;">Keep informed</div>
+                    <div class="map-quadrant" style="bottom:10%;left:10%;">Monitor</div>
                     <div class="map-tooltip" id="map-tooltip"></div>
                   </div>
-                  <div class="map-legend"><span class="map-legend-item"><span class="map-legend-dot" style="background:var(--green)"></span>Supporter</span><span class="map-legend-item"><span class="map-legend-dot" style="background:var(--amber)"></span>Neutral</span><span class="map-legend-item"><span class="map-legend-dot" style="background:#b85c00"></span>Skeptical</span><span class="map-legend-item"><span class="map-legend-dot" style="background:var(--red)"></span>Blocker</span></div>
                 </div>
               </div>
+
               <div class="pane" id="pane-ai">
-                <div class="pane-head"><div class="pane-eyebrow">Unit 3 · AI &amp; Export</div><h1 class="pane-title">Take your stakeholder map to an AI thinking partner</h1><p class="pane-desc">All stakeholder data is embedded. Choose a mode and copy the prompt.</p></div>
-                <div class="ai-mode-grid">
-                  <div class="ai-mode-card active" onclick="setMode('prioritise',this)"><div class="ai-mode-title">Prioritise engagement</div><div class="ai-mode-desc">Which stakeholders need most attention? In what order should you engage them?</div></div>
-                  <div class="ai-mode-card" onclick="setMode('blockers',this)"><div class="ai-mode-title">Address blockers</div><div class="ai-mode-desc">For each skeptic or blocker, what is the underlying concern and how should you approach them?</div></div>
-                  <div class="ai-mode-card" onclick="setMode('champions',this)"><div class="ai-mode-title">Build a coalition</div><div class="ai-mode-desc">Who are your best potential champions and how could they influence others?</div></div>
-                  <div class="ai-mode-card" onclick="setMode('comms',this)"><div class="ai-mode-title">Communication bridge</div><div class="ai-mode-desc">Translate each stakeholder into an audience for Unit 4.</div></div>
+                <div class="pane-head">
+                  <div class="pane-eyebrow">Unit 3 · AI &amp; Export</div>
+                  <h1 class="pane-title">Take your stakeholder map to an AI thinking partner</h1>
+                  <p class="pane-desc">All stakeholder data is embedded. Choose a mode and copy the prompt.</p>
                 </div>
-                <div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div><div class="prompt-text" id="prompt-output">Add stakeholders to generate a prompt.</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div>
+                <div class="ai-mode-grid">
+                  <div class="ai-mode-card active" onclick="setMode('prioritise',this)">
+                    <div class="ai-mode-title">Prioritise engagement</div>
+                    <div class="ai-mode-desc">Which stakeholders need most attention? In what order should you engage them?</div>
+                  </div>
+                  <div class="ai-mode-card" onclick="setMode('blockers',this)">
+                    <div class="ai-mode-title">Address blockers</div>
+                    <div class="ai-mode-desc">For each skeptic or blocker, what is the underlying concern and how should you approach them?</div>
+                  </div>
+                  <div class="ai-mode-card" onclick="setMode('champions',this)">
+                    <div class="ai-mode-title">Build a coalition</div>
+                    <div class="ai-mode-desc">Who are your best potential champions and how could they influence others?</div>
+                  </div>
+                  <div class="ai-mode-card" onclick="setMode('comms',this)">
+                    <div class="ai-mode-title">Communication bridge</div>
+                    <div class="ai-mode-desc">Translate each stakeholder into an audience for Unit 4.</div>
+                  </div>
+                </div>
+                <div class="prompt-box">
+                  <div class="prompt-box-head">
+                    <span class="prompt-box-label">Generated prompt</span>
+                  </div>
+                  <div class="prompt-text" id="prompt-output">Add stakeholders to generate a prompt.</div>
+                  <div class="prompt-actions">
+                    <button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button>
+                    <a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a>
+                    <a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a>
+                  </div>
+                </div>
               </div>
+
             </div>
           </section>
         </div>
       </div>
     </main>
   </div>
+
   <div class="toast" id="toast"></div>
+
   <script src="cmt-client.js"></script>
   <script>
 'use strict';
+
 let projectId = null, selected = null, activeMode = 'prioritise', saveTimer = null;
 let vision = {}, forces = {};
 const STANCE_COLORS = { supporter:'#1f7a4d', neutral:'#9b6200', skeptical:'#b85c00', blocker:'#b42318', '':'#8c96a3' };
 const READINESS = ['Unaware','Aware','Experimenting','Using','Advocating'];
 let data = { stakeholders: [] };
+
 function uid() { return Math.random().toString(36).slice(2, 9); }
+
 async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
@@ -119,90 +510,447 @@ async function init() {
     if (saved) { try { data = JSON.parse(saved); } catch(e2) {} }
   }
   if (!data.stakeholders) data.stakeholders = [];
+
   if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
-  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+  if (vision.ctx_org) {
+    document.getElementById('topbar-org').textContent = vision.ctx_org;
+    document.getElementById('topbar-sep').style.display = 'inline';
+  }
+
   const topRes = (forces.resisting || []).sort((a, b) => b.strength - a.strength).slice(0, 3).map(f => f.label).filter(Boolean);
-  if (topRes.length) { document.getElementById('forces-carry-text').textContent = 'Top restraining forces: ' + topRes.join(' · '); document.getElementById('forces-carry').style.display = 'block'; }
+  if (topRes.length) {
+    document.getElementById('forces-carry-text').textContent = 'Top restraining forces: ' + topRes.join(' · ');
+    document.getElementById('forces-carry').style.display = 'block';
+  }
+
   renderInnerSidebar(); renderTable(); updatePrompt();
 }
+
 function addStakeholder() {
   const sh = { id: uid(), name: 'New stakeholder', role: '', group: '', power: 3, interest: 3, stance: '', readiness: 0, motivations: '', concerns: '', needs: '', notes: '', influence: 'medium' };
-  data.stakeholders.push(sh); selected = sh.id; renderInnerSidebar(); renderTable(); switchTab('profile', document.querySelectorAll('.tab-btn')[1]); renderProfile(); autosave(); setTimeout(() => document.getElementById('sh-name')?.focus(), 50);
+  data.stakeholders.push(sh); selected = sh.id;
+  renderInnerSidebar(); renderTable();
+  switchTab('profile', document.querySelectorAll('.tab-btn')[1]);
+  renderProfile(); autosave();
+  setTimeout(() => document.getElementById('sh-name')?.focus(), 50);
 }
-function deleteStakeholder(id) { data.stakeholders = data.stakeholders.filter(s => s.id !== id); if (selected === id) selected = data.stakeholders[0]?.id || null; renderInnerSidebar(); renderTable(); renderProfile(); renderMap(); autosave(); }
-function selectStakeholder(id) { selected = id; renderInnerSidebar(); switchTab('profile', document.querySelectorAll('.tab-btn')[1]); renderProfile(); }
+
+function deleteStakeholder(id) {
+  data.stakeholders = data.stakeholders.filter(s => s.id !== id);
+  if (selected === id) selected = data.stakeholders[0]?.id || null;
+  renderInnerSidebar(); renderTable(); renderProfile(); renderMap(); autosave();
+}
+
+function selectStakeholder(id) {
+  selected = id;
+  renderInnerSidebar();
+  switchTab('profile', document.querySelectorAll('.tab-btn')[1]);
+  renderProfile();
+}
+
 function renderInnerSidebar() {
   document.getElementById('sh-count').textContent = data.stakeholders.length;
   const list = document.getElementById('inner-sb-list');
-  if (!data.stakeholders.length) { list.innerHTML = '<div class="inner-sb-empty">Add stakeholders using the button above.</div>'; return; }
+  if (!data.stakeholders.length) {
+    list.innerHTML = '<div class="inner-sb-empty">Add stakeholders using the button above.</div>';
+    return;
+  }
   list.innerHTML = data.stakeholders.map(s => {
     const initials = (s.name || '?').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
     const color = STANCE_COLORS[s.stance] || '#8c96a3';
-    return '<div class="sh-item' + (selected === s.id ? ' active' : '') + '" onclick="selectStakeholder(\'' + s.id + '\')"><div class="sh-avatar" style="background:' + color + '">' + initials + '</div><div class="sh-info"><div class="sh-name">' + esc(s.name || 'Unnamed') + '</div><div class="sh-role">' + esc(s.role || s.group || '—') + '</div></div><div class="sh-dot" style="background:' + color + '"></div></div>';
+    return '<div class="sh-item' + (selected === s.id ? ' active' : '') + '" onclick="selectStakeholder(\'' + s.id + '\')">'
+      + '<div class="sh-avatar" style="background:' + color + '">' + initials + '</div>'
+      + '<div class="sh-info"><div class="sh-name">' + esc(s.name || 'Unnamed') + '</div><div class="sh-role">' + esc(s.role || s.group || '—') + '</div></div>'
+      + '<div class="sh-dot" style="background:' + color + '"></div>'
+      + '</div>';
   }).join('');
 }
+
 function renderTable() {
   const body = document.getElementById('sh-table-body');
-  if (!data.stakeholders.length) { body.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:0.85rem;">No stakeholders yet. Add using the left panel.</div>'; return; }
+  if (!data.stakeholders.length) {
+    body.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:0.85rem;">No stakeholders yet. Add using the left panel.</div>';
+    return;
+  }
   body.innerHTML = data.stakeholders.map(s => {
     const color = STANCE_COLORS[s.stance] || '#8c96a3';
     const stanceLabel = s.stance ? s.stance[0].toUpperCase() + s.stance.slice(1) : '—';
-    return '<div class="sh-table-row" onclick="selectStakeholder(\'' + s.id + '\')"><div><div style="font-size:0.86rem;font-weight:800;color:var(--ink);">' + esc(s.name || 'Unnamed') + '</div><div style="font-size:0.72rem;color:var(--muted);">' + esc(s.role || '—') + '</div></div><div class="sh-table-num">' + s.power + '/5</div><div class="sh-table-num">' + s.interest + '/5</div><div style="text-align:center;"><span class="sh-stance-chip" style="background:' + color + '1a;color:' + color + ';">' + stanceLabel + '</span></div><div style="text-align:center;"><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteStakeholder(\'' + s.id + '\')">Remove</button></div></div>';
+    return '<div class="sh-table-row" onclick="selectStakeholder(\'' + s.id + '\')">'
+      + '<div><div style="font-size:0.86rem;font-weight:800;color:var(--ink);">' + esc(s.name || 'Unnamed') + '</div><div style="font-size:0.72rem;color:var(--muted);">' + esc(s.role || '—') + '</div></div>'
+      + '<div class="sh-table-num">' + s.power + '/5</div>'
+      + '<div class="sh-table-num">' + s.interest + '/5</div>'
+      + '<div style="text-align:center;"><span class="sh-stance-chip" style="background:' + color + '1a;color:' + color + ';">' + stanceLabel + '</span></div>'
+      + '<div style="text-align:center;"><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteStakeholder(\'' + s.id + '\')">Remove</button></div>'
+      + '</div>';
   }).join('');
 }
+
 function renderProfile() {
   const panel = document.getElementById('profile-panel');
-  if (!selected) { panel.innerHTML = '<div class="no-selection"><div class="no-selection-label">No selection</div><div class="no-selection-text">Select a stakeholder from the left panel to view and edit their profile.</div></div>'; return; }
-  const sh = data.stakeholders.find(s => s.id === selected); if (!sh) return;
+  if (!selected) {
+    panel.innerHTML = '<div class="no-selection"><div class="no-selection-label">No selection</div><div class="no-selection-text">Select a stakeholder from the left panel to view and edit their profile.</div></div>';
+    return;
+  }
+  const sh = data.stakeholders.find(s => s.id === selected);
+  if (!sh) return;
   const stanceChips = ['supporter','neutral','skeptical','blocker'].map(st => '<div class="stance-chip' + (sh.stance === st ? ' ' + st : '') + '" onclick="setStance(\'' + sh.id + '\',\'' + st + '\')">' + st[0].toUpperCase() + st.slice(1) + '</div>').join('');
   const readinessSteps = READINESS.map((r, i) => '<div class="readiness-step' + (sh.readiness === i ? ' active' : '') + '" onclick="setReadiness(\'' + sh.id + '\',' + i + ')">' + r + '</div>').join('');
   panel.innerHTML =
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;"><div style="font-family:Manrope,Arial,sans-serif;font-size:1.3rem;font-weight:800;color:var(--ink);letter-spacing:-0.01em;">' + esc(sh.name || 'Unnamed stakeholder') + '</div><button class="btn btn-sm btn-danger" onclick="deleteStakeholder(\'' + sh.id + '\')">Remove</button></div>'
-    + '<div class="grid-2"><div class="field-group"><label class="label">Name</label><input class="field-input" id="sh-name" value="' + esc(sh.name) + '" placeholder="Full name or group name" oninput="updateField(\'' + sh.id + '\',\'name\',this.value)"></div><div class="field-group"><label class="label">Role / title</label><input class="field-input" value="' + esc(sh.role) + '" placeholder="e.g. Head of Finance" oninput="updateField(\'' + sh.id + '\',\'role\',this.value)"></div><div class="field-group"><label class="label">Group</label><input class="field-input" value="' + esc(sh.group) + '" placeholder="e.g. Leadership, End users, IT" oninput="updateField(\'' + sh.id + '\',\'group\',this.value)"></div><div class="field-group"><label class="label">Influence level</label><select class="field-select" onchange="updateField(\'' + sh.id + '\',\'influence\',this.value)"><option' + (sh.influence === 'low' ? ' selected' : '') + '>low</option><option' + (sh.influence === 'medium' ? ' selected' : '') + '>medium</option><option' + (sh.influence === 'high' ? ' selected' : '') + '>high</option></select></div></div>'
-    + '<div class="field-group"><label class="label">Stance toward change</label><div class="stance-chips">' + stanceChips + '</div></div><div class="field-group"><label class="label">Adoption readiness</label><div class="readiness-strip">' + readinessSteps + '</div></div>'
-    + '<div class="grid-2" style="margin-top:8px;"><div class="field-group"><label class="label">Power (1–5)</label><div class="slider-row"><input type="range" min="1" max="5" value="' + sh.power + '" oninput="updateField(\'' + sh.id + '\',\'power\',+this.value);this.nextElementSibling.textContent=this.value;renderMap();"><span class="slider-val">' + sh.power + '</span></div></div><div class="field-group"><label class="label">Interest (1–5)</label><div class="slider-row"><input type="range" min="1" max="5" value="' + sh.interest + '" oninput="updateField(\'' + sh.id + '\',\'interest\',+this.value);this.nextElementSibling.textContent=this.value;renderMap();"><span class="slider-val">' + sh.interest + '</span></div></div></div><div class="divider"></div>'
-    + '<div class="grid-2"><div class="field-group"><label class="label">Motivations — what do they care about?</label><textarea class="field-textarea" placeholder="What drives them? What do they want from this change — or from stopping it?" oninput="updateField(\'' + sh.id + '\',\'motivations\',this.value)">' + esc(sh.motivations) + '</textarea></div><div class="field-group"><label class="label">Concerns &amp; fears</label><textarea class="field-textarea" placeholder="What are they worried about? What might they lose?" oninput="updateField(\'' + sh.id + '\',\'concerns\',this.value)">' + esc(sh.concerns) + '</textarea></div><div class="field-group"><label class="label">What do they need from us?</label><textarea class="field-textarea" placeholder="Information, reassurance, involvement, recognition?" oninput="updateField(\'' + sh.id + '\',\'needs\',this.value)">' + esc(sh.needs) + '</textarea></div><div class="field-group"><label class="label">Notes</label><textarea class="field-textarea" placeholder="Anything else important about this stakeholder or how to approach them" oninput="updateField(\'' + sh.id + '\',\'notes\',this.value)">' + esc(sh.notes) + '</textarea></div></div>';
+    + '<div class="grid-2">'
+    +   '<div class="field-group"><label class="label">Name</label><input class="field-input" id="sh-name" value="' + esc(sh.name) + '" placeholder="Full name or group name" oninput="updateField(\'' + sh.id + '\',\'name\',this.value)"></div>'
+    +   '<div class="field-group"><label class="label">Role / title</label><input class="field-input" value="' + esc(sh.role) + '" placeholder="e.g. Head of Finance" oninput="updateField(\'' + sh.id + '\',\'role\',this.value)"></div>'
+    +   '<div class="field-group"><label class="label">Group</label><input class="field-input" value="' + esc(sh.group) + '" placeholder="e.g. Leadership, End users, IT" oninput="updateField(\'' + sh.id + '\',\'group\',this.value)"></div>'
+    +   '<div class="field-group"><label class="label">Influence level</label><select class="field-select" onchange="updateField(\'' + sh.id + '\',\'influence\',this.value)"><option' + (sh.influence === 'low' ? ' selected' : '') + '>low</option><option' + (sh.influence === 'medium' ? ' selected' : '') + '>medium</option><option' + (sh.influence === 'high' ? ' selected' : '') + '>high</option></select></div>'
+    + '</div>'
+    + '<div class="field-group"><label class="label">Stance toward change</label><div class="stance-chips">' + stanceChips + '</div></div>'
+    + '<div class="field-group"><label class="label">Adoption readiness</label><div class="readiness-strip">' + readinessSteps + '</div></div>'
+    + '<div class="grid-2" style="margin-top:8px;">'
+    +   '<div class="field-group"><label class="label">Power (1–5)</label><div class="slider-row"><input type="range" min="1" max="5" value="' + sh.power + '" oninput="updateField(\'' + sh.id + '\',\'power\',+this.value);this.nextElementSibling.textContent=this.value;"><span class="slider-val">' + sh.power + '</span></div></div>'
+    +   '<div class="field-group"><label class="label">Interest (1–5)</label><div class="slider-row"><input type="range" min="1" max="5" value="' + sh.interest + '" oninput="updateField(\'' + sh.id + '\',\'interest\',+this.value);this.nextElementSibling.textContent=this.value;"><span class="slider-val">' + sh.interest + '</span></div></div>'
+    + '</div>'
+    + '<div class="divider"></div>'
+    + '<div class="grid-2">'
+    +   '<div class="field-group"><label class="label">Motivations — what do they care about?</label><textarea class="field-textarea" placeholder="What drives them? What do they want from this change — or from stopping it?" oninput="updateField(\'' + sh.id + '\',\'motivations\',this.value)">' + esc(sh.motivations) + '</textarea></div>'
+    +   '<div class="field-group"><label class="label">Concerns &amp; fears</label><textarea class="field-textarea" placeholder="What are they worried about? What might they lose?" oninput="updateField(\'' + sh.id + '\',\'concerns\',this.value)">' + esc(sh.concerns) + '</textarea></div>'
+    +   '<div class="field-group"><label class="label">What do they need from us?</label><textarea class="field-textarea" placeholder="Information, reassurance, involvement, recognition?" oninput="updateField(\'' + sh.id + '\',\'needs\',this.value)">' + esc(sh.needs) + '</textarea></div>'
+    +   '<div class="field-group"><label class="label">Notes</label><textarea class="field-textarea" placeholder="Anything else important about this stakeholder or how to approach them" oninput="updateField(\'' + sh.id + '\',\'notes\',this.value)">' + esc(sh.notes) + '</textarea></div>'
+    + '</div>';
 }
-function updateField(id, field, val) { const sh = data.stakeholders.find(s => s.id === id); if (!sh) return; sh[field] = val; if (field === 'name' || field === 'stance') { renderInnerSidebar(); renderTable(); } autosave(); }
-function setStance(id, stance) { updateField(id, 'stance', stance); renderProfile(); renderInnerSidebar(); renderTable(); }
-function setReadiness(id, i) { updateField(id, 'readiness', i); renderProfile(); }
+
+function updateField(id, field, val) {
+  const sh = data.stakeholders.find(s => s.id === id);
+  if (!sh) return;
+  sh[field] = val;
+  if (field === 'name' || field === 'stance' || field === 'role' || field === 'group') {
+    renderInnerSidebar(); renderTable();
+  }
+  const mapAffects = ['name', 'role', 'group', 'power', 'interest', 'stance', 'readiness', 'influence', 'motivations', 'concerns'];
+  if (mapAffects.includes(field) && document.getElementById('pane-map')?.classList.contains('active')) {
+    renderMap();
+  }
+  autosave();
+}
+
+function setStance(id, stance) {
+  updateField(id, 'stance', stance);
+  renderProfile(); renderInnerSidebar(); renderTable();
+  if (document.getElementById('pane-map')?.classList.contains('active')) renderMap();
+}
+function setReadiness(id, i) {
+  updateField(id, 'readiness', i);
+  renderProfile();
+  if (document.getElementById('pane-map')?.classList.contains('active')) renderMap();
+}
+
+/* ================================================================
+   ENHANCED MAP RENDERER — cards, zones, summary, collision
+   ================================================================ */
+
 function renderMap() {
-  const canvas = document.getElementById('map-canvas'); if (!canvas) return;
-  canvas.querySelectorAll('.map-node').forEach(n => n.remove());
+  const canvas = document.getElementById('map-canvas');
+  if (!canvas) return;
+
+  ensureMapSummaryContainer();
+  canvas.querySelectorAll('.map-node, .map-zone').forEach(n => n.remove());
+
   const tooltip = document.getElementById('map-tooltip');
-  data.stakeholders.forEach(s => {
-    const xPct = ((s.interest - 1) / 4) * 80 + 10;
-    const yPct = (1 - (s.power - 1) / 4) * 80 + 10;
+  if (tooltip) tooltip.style.display = 'none';
+
+  addMapZones(canvas);
+
+  if (!data.stakeholders.length) {
+    renderMapSummary([], []);
+    return;
+  }
+
+  const enriched = data.stakeholders.map((s, index) => ({
+    ...s,
+    _index: index,
+    _priority: getStakeholderPriority(s),
+    _risk: isHighRiskStakeholder(s),
+    _quadrant: getQuadrant(s),
+  }));
+
+  const topPriorityIds = enriched.slice().sort((a, b) => b._priority - a._priority).slice(0, 3).map(s => s.id);
+  const positioned = resolveMapCollisions(enriched);
+
+  positioned.forEach(s => {
     const color = STANCE_COLORS[s.stance] || '#8c96a3';
-    const initials = (s.name || '?').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-    const size = 30 + (s.influence === 'high' ? 8 : s.influence === 'low' ? -4 : 0);
+    const badgeLabel = getStanceLabel(s.stance);
+    const readinessPct = Math.max(0, Math.min(100, ((+s.readiness || 0) / 4) * 100));
+    const isPriority = topPriorityIds.includes(s.id);
+    const isSelected = selected === s.id;
+    const influence = (s.influence || 'medium').toLowerCase();
+
     const node = document.createElement('div');
-    node.className = 'map-node';
-    node.style.cssText = 'left:' + xPct + '%;top:' + yPct + '%;width:' + size + 'px;height:' + size + 'px;background:' + color + ';font-size:' + (size > 32 ? '0.64rem' : '0.56rem') + ';';
-    node.textContent = initials;
-    node.addEventListener('mouseenter', () => { tooltip.style.display = 'block'; tooltip.style.left = (xPct + 4) + '%'; tooltip.style.top = (yPct + 4) + '%'; tooltip.innerHTML = '<strong>' + esc(s.name) + '</strong><br>' + esc(s.role || s.group || '') + '<br>Power ' + s.power + ' · Interest ' + s.interest + '<br>' + (s.stance || 'stance unknown'); });
-    node.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
-    node.addEventListener('click', () => { selectStakeholder(s.id); switchTab('profile', document.querySelectorAll('.tab-btn')[1]); });
+    node.className = 'map-node'
+      + (isPriority ? ' priority' : '')
+      + (s._risk ? ' risk' : '')
+      + (isSelected ? ' selected' : '')
+      + ' influence-' + influence;
+    node.style.left = s._x + '%';
+    node.style.top = s._y + '%';
+    node.style.zIndex = isSelected ? '12' : isPriority ? '9' : '5';
+
+    const minWidth = influence === 'high' ? 154 : influence === 'low' ? 122 : 138;
+    node.style.minWidth = minWidth + 'px';
+
+    node.innerHTML = `
+      <div class="map-node-halo" style="background:${hexToRgba(color, 0.35)};"></div>
+      <div class="map-node-header">
+        <div class="map-node-name">${esc(s.name || 'Unnamed')}</div>
+        <div class="map-node-badge" style="background:${color};">${badgeLabel}</div>
+      </div>
+      <div class="map-node-role">${esc(s.role || s.group || '—')}</div>
+      <div class="map-node-meta">
+        <span class="map-meta-chip">P ${s.power}/5</span>
+        <span class="map-meta-chip">I ${s.interest}/5</span>
+        <span class="map-meta-chip">${capitalize(influence)}</span>
+        ${isPriority ? '<span class="map-meta-chip" style="background:rgba(180,35,24,0.08);color:#b42318;">Top priority</span>' : ''}
+      </div>
+      <div class="map-readiness">
+        <div class="map-readiness-fill" style="width:${readinessPct}%;background:${color};"></div>
+      </div>
+    `;
+
+    node.addEventListener('mouseenter', e => showMapTooltip(e, s, tooltip));
+    node.addEventListener('mousemove',  e => showMapTooltip(e, s, tooltip));
+    node.addEventListener('mouseleave', () => { if (tooltip) tooltip.style.display = 'none'; });
+    node.addEventListener('click', () => {
+      selectStakeholder(s.id);
+      switchTab('profile', document.querySelectorAll('.tab-btn')[1]);
+    });
+
     canvas.appendChild(node);
   });
+
+  renderMapSummary(enriched, topPriorityIds);
 }
-function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'profile') renderProfile(); if (tab === 'map') renderMap(); if (tab === 'ai') updatePrompt(); }
-function autosave() { const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_stakeholders', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'stakeholders', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
-function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
+
+function ensureMapSummaryContainer() {
+  const wrap = document.querySelector('.map-canvas-wrap');
+  if (!wrap) return;
+  let summary = document.getElementById('map-summary');
+  if (!summary) {
+    summary = document.createElement('div');
+    summary.id = 'map-summary';
+    summary.className = 'map-summary';
+    wrap.appendChild(summary);
+  }
+}
+
+function addMapZones(canvas) {
+  ['manage-closely','keep-satisfied','keep-informed','monitor'].forEach(cls => {
+    const zone = document.createElement('div');
+    zone.className = 'map-zone ' + cls;
+    canvas.appendChild(zone);
+  });
+}
+
+function resolveMapCollisions(stakeholders) {
+  const buckets = new Map();
+  stakeholders.forEach(s => {
+    const baseX = ((s.interest - 1) / 4) * 80 + 10;
+    const baseY = (1 - (s.power - 1) / 4) * 80 + 10;
+    const key = `${s.power}-${s.interest}`;
+    if (!buckets.has(key)) buckets.set(key, []);
+    buckets.get(key).push({ ...s, _baseX: baseX, _baseY: baseY });
+  });
+  const out = [];
+  buckets.forEach(group => {
+    if (group.length === 1) {
+      out.push({ ...group[0], _x: clamp(group[0]._baseX, 8, 92), _y: clamp(group[0]._baseY, 8, 92) });
+      return;
+    }
+    const radius = group.length <= 3 ? 4.4 : group.length <= 6 ? 6.6 : 8.2;
+    group.forEach((s, index) => {
+      const angle = (Math.PI * 2 * index) / group.length;
+      const dx = Math.cos(angle) * radius;
+      const dy = Math.sin(angle) * radius;
+      out.push({ ...s, _x: clamp(s._baseX + dx, 8, 92), _y: clamp(s._baseY + dy, 8, 92) });
+    });
+  });
+  return out;
+}
+
+function showMapTooltip(evt, s, tooltip) {
+  if (!tooltip) return;
+  const readinessLabel = READINESS[s.readiness] || 'Unknown';
+  const concerns = s.concerns ? esc(trimText(s.concerns, 110)) : 'Not specified';
+  const motivations = s.motivations ? esc(trimText(s.motivations, 110)) : 'Not specified';
+  tooltip.innerHTML = `
+    <strong>${esc(s.name || 'Unnamed')}</strong><br>
+    ${esc(s.role || s.group || '—')}<br>
+    Power ${s.power}/5 · Interest ${s.interest}/5 · ${capitalize(s.influence || 'medium')} influence<br>
+    Stance: ${capitalize(s.stance || 'unknown')} · Readiness: ${esc(readinessLabel)}<br><br>
+    <strong>Motivations:</strong> ${motivations}<br>
+    <strong>Concerns:</strong> ${concerns}
+  `;
+  const rect = evt.currentTarget.closest('.map-canvas').getBoundingClientRect();
+  const x = evt.clientX - rect.left + 14;
+  const y = evt.clientY - rect.top + 14;
+  tooltip.style.display = 'block';
+  tooltip.style.left = Math.min(x, rect.width - 240) + 'px';
+  tooltip.style.top = Math.min(y, rect.height - 150) + 'px';
+}
+
+function renderMapSummary(stakeholders, topPriorityIds) {
+  const summary = document.getElementById('map-summary');
+  if (!summary) return;
+  if (!stakeholders.length) {
+    summary.innerHTML = `
+      <div class="map-summary-card">
+        <div class="map-summary-title">No map insights yet</div>
+        <div style="font-size:0.84rem;color:var(--muted);">Add stakeholders to see priority, risk, and quadrant-based summaries.</div>
+      </div>
+    `;
+    return;
+  }
+  const topPriority = stakeholders.filter(s => topPriorityIds.includes(s.id)).sort((a, b) => b._priority - a._priority).slice(0, 3);
+  const risks = stakeholders.filter(s => s._risk).sort((a, b) => b._priority - a._priority).slice(0, 4);
+  const quadrants = {
+    'manage-closely': stakeholders.filter(s => s._quadrant === 'manage-closely').length,
+    'keep-satisfied': stakeholders.filter(s => s._quadrant === 'keep-satisfied').length,
+    'keep-informed':  stakeholders.filter(s => s._quadrant === 'keep-informed').length,
+    'monitor':        stakeholders.filter(s => s._quadrant === 'monitor').length,
+  };
+  summary.innerHTML = `
+    <div class="map-summary-card">
+      <div class="map-summary-title">Engage first</div>
+      <div class="map-summary-list">
+        ${topPriority.map(s => `<div class="map-summary-item"><strong>${esc(s.name || 'Unnamed')}</strong><span class="tag">Score ${s._priority.toFixed(1)}</span></div>`).join('') || '<div style="font-size:0.82rem;color:var(--muted);">No priorities calculated.</div>'}
+      </div>
+    </div>
+    <div class="map-summary-card">
+      <div class="map-summary-title">Critical risks</div>
+      <div class="map-summary-list">
+        ${risks.length ? risks.map(s => `<div class="map-summary-item"><strong>${esc(s.name || 'Unnamed')}</strong><span class="tag">${capitalize(s.stance || 'unknown')}</span></div>`).join('') : '<div style="font-size:0.82rem;color:var(--muted);">No high-power blockers or skeptics detected.</div>'}
+      </div>
+    </div>
+    <div class="map-summary-card">
+      <div class="map-summary-title">Quadrant balance</div>
+      <div class="map-summary-list">
+        <div class="map-summary-item"><strong>Manage closely</strong><span class="tag">${quadrants['manage-closely']}</span></div>
+        <div class="map-summary-item"><strong>Keep satisfied</strong><span class="tag">${quadrants['keep-satisfied']}</span></div>
+        <div class="map-summary-item"><strong>Keep informed</strong><span class="tag">${quadrants['keep-informed']}</span></div>
+        <div class="map-summary-item"><strong>Monitor</strong><span class="tag">${quadrants['monitor']}</span></div>
+      </div>
+    </div>
+  `;
+}
+
+function getStakeholderPriority(s) {
+  let score = 0;
+  score += (+s.power || 0) * 2.2;
+  score += (+s.interest || 0) * 1.6;
+  if (s.influence === 'high')   score += 2.0;
+  if (s.influence === 'medium') score += 1.0;
+  if (s.stance === 'blocker')        score += 3.2;
+  else if (s.stance === 'skeptical') score += 2.0;
+  else if (s.stance === 'neutral')   score += 0.8;
+  else if (s.stance === 'supporter') score += 0.4;
+  if ((+s.power || 0) >= 4 && (s.stance === 'blocker' || s.stance === 'skeptical')) score += 2.4;
+  if ((+s.readiness || 0) <= 1) score += 0.9;
+  return score;
+}
+
+function isHighRiskStakeholder(s) {
+  return (+s.power || 0) >= 4 && (s.stance === 'blocker' || s.stance === 'skeptical');
+}
+
+function getQuadrant(s) {
+  const highPower = (+s.power || 0) >= 3;
+  const highInterest = (+s.interest || 0) >= 3;
+  if (highPower && highInterest) return 'manage-closely';
+  if (highPower && !highInterest) return 'keep-satisfied';
+  if (!highPower && highInterest) return 'keep-informed';
+  return 'monitor';
+}
+
+function getStanceLabel(stance) {
+  return { supporter:'Supporter', neutral:'Neutral', skeptical:'Skeptical', blocker:'Blocker' }[stance] || 'Unknown';
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tab === 'profile') renderProfile();
+  if (tab === 'map') renderMap();
+  if (tab === 'ai') updatePrompt();
+}
+
+function autosave() {
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = 'Saving'; ind.className = 'save-indicator saving';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem('cmt_module_' + projectId + '_stakeholders', JSON.stringify(data));
+    if (window.CMT) CMT.saveModule(projectId, 'stakeholders', data).catch(() => {});
+    ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
+    setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
+  }, 800);
+}
+
+function setMode(mode, card) {
+  activeMode = mode;
+  document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  updatePrompt();
+}
+
 function updatePrompt() {
-  const shList = data.stakeholders.map(s => '  ' + (s.name || 'Unnamed') + ' (' + (s.role || s.group || '—') + ') — Power ' + s.power + '/5, Interest ' + s.interest + '/5, Stance: ' + (s.stance || 'unknown') + ', Readiness: ' + (READINESS[s.readiness] || 'unknown') + '\n    Motivations: ' + (s.motivations || 'not specified') + '\n    Concerns: ' + (s.concerns || 'not specified') + '\n    Needs: ' + (s.needs || 'not specified')).join('\n\n') || '  (no stakeholders added yet)';
-  const base = 'CHANGE MANAGEMENT CONTEXT — Unit 3: Stakeholder Mapping\n\nInitiative: ' + (vision.ctx_title || '(not set)') + '\nOrganisation: ' + (vision.ctx_org || '(not set)') + '\nVision: ' + (vision.vision_statement || '(not set)') + '\n\nSTAKEHOLDERS (' + data.stakeholders.length + '):\n' + shList;
+  const shList = data.stakeholders.map(s =>
+    '  ' + (s.name || 'Unnamed') + ' (' + (s.role || s.group || '—') + ') — Power ' + s.power + '/5, Interest ' + s.interest + '/5, Stance: ' + (s.stance || 'unknown') + ', Readiness: ' + (READINESS[s.readiness] || 'unknown') + '\n'
+    + '    Motivations: ' + (s.motivations || 'not specified') + '\n'
+    + '    Concerns: ' + (s.concerns || 'not specified') + '\n'
+    + '    Needs: ' + (s.needs || 'not specified')
+  ).join('\n\n') || '  (no stakeholders added yet)';
+
+  const base = 'CHANGE MANAGEMENT CONTEXT — Unit 3: Stakeholder Mapping\n\n'
+    + 'Initiative: ' + (vision.ctx_title || '(not set)') + '\n'
+    + 'Organisation: ' + (vision.ctx_org || '(not set)') + '\n'
+    + 'Vision: ' + (vision.vision_statement || '(not set)') + '\n\n'
+    + 'STAKEHOLDERS (' + data.stakeholders.length + '):\n' + shList;
+
   const modes = {
     prioritise: base + '\n\nTASK: Act as a change management consultant. Prioritise stakeholder engagement:\n1. Which 3 stakeholders need the most urgent attention and why?\n2. In what sequence should engagement happen — who must be moved before others can be influenced?\n3. Are there any stakeholders whose position is likely to influence others significantly?\n4. What is the biggest engagement risk if someone is neglected?',
     blockers: base + '\n\nTASK: Focus on the skeptics and blockers:\n1. For each skeptic or blocker, what is the likely underlying concern driving their resistance?\n2. Is their resistance rational, emotional, or political?\n3. What is the most effective approach for each — direct conversation, co-creation, peer influence, or something else?\n4. Which blocker, if moved to neutral, would most change the overall dynamic?',
     champions: base + '\n\nTASK: Identify coalition-building opportunities:\n1. Who are the strongest potential champions, and why would people listen to them?\n2. How could each champion influence a specific skeptic or resistant group?\n3. What would each champion need to feel confident in their advocacy role?\n4. Suggest a simple coalition-building sequence: who activates whom?',
-    comms: base + '\n\nTASK: Translate this stakeholder map into a communication design brief for Unit 4. For each stakeholder (or group of similar stakeholders), define:\n- KNOW: What is the one thing they must understand after our first communication?\n- FEEL: What emotional shift do we need to create?\n- DO: What specific action or behaviour change do we want from them?\n- TONE: What communication approach will land with this audience?',
+    comms: base + '\n\nTASK: Translate this stakeholder map into a communication design brief for Unit 4. For each stakeholder (or group of similar stakeholders), define:\n- KNOW: What is the one thing they must understand after our first communication?\n- FEEL: What emotional shift do we need to create?\n- DO: What specific action or behaviour change do we want from them?\n- TONE: What communication approach will land with this audience?'
   };
   document.getElementById('prompt-output').textContent = modes[activeMode];
 }
-function copyPrompt(btn) { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => { const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000); }); }
+
+function copyPrompt(btn) {
+  navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => {
+    const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
 function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }
+
+function hexToRgba(hex, alpha) {
+  if (!hex || typeof hex !== 'string') return `rgba(140,150,163,${alpha})`;
+  const cleaned = hex.replace('#', '');
+  const full = cleaned.length === 3 ? cleaned.split('').map(c => c + c).join('') : cleaned;
+  const num = parseInt(full, 16);
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+function trimText(str, max) {
+  const text = String(str || '').trim();
+  if (text.length <= max) return text;
+  return text.slice(0, max - 1).trimEnd() + '…';
+}
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function capitalize(str) { const s = String(str || ''); return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 init();
   </script>
 </body>
