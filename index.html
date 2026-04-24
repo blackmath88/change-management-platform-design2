@@ -162,7 +162,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="cmt-client.js"></script>
-  <script>
+ <script>
   'use strict';
 
   const UNIT_FILES = {
@@ -182,10 +182,18 @@
   let deleteTargetId = null;
 
   async function init() {
-    const { ok } = await CMT.ping();
-    const text = document.getElementById('status-text');
-    if (ok) { text.textContent = 'Connected'; text.className = 'workspace-chip-title save-indicator saved'; }
-    else { text.textContent = 'Offline'; text.className = 'workspace-chip-title save-indicator'; }
+    // Connectivity indicator (optional — the element may have been removed
+    // from the sidebar in a past refactor, so guard against null).
+    try {
+      const { ok } = await CMT.ping();
+      const text = document.getElementById('status-text');
+      if (text) {
+        if (ok) { text.textContent = 'Connected'; text.className = 'workspace-chip-title save-indicator saved'; }
+        else    { text.textContent = 'Offline';   text.className = 'workspace-chip-title save-indicator'; }
+      }
+    } catch (e) {
+      console.warn('Ping failed:', e);
+    }
     loadProjects();
   }
 
