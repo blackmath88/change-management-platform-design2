@@ -173,6 +173,33 @@ const CMT = (() => {
     return result;
   }
 
+  // ── CARRY-OVER HELPER ─────────────────────────────────────
+  /**
+   * Extract a display-ready value from an already-loaded module.
+   *
+   * @param {object} allModules - The object returned by loadAllModules()
+   * @param {string} moduleName - One of: vision, forces, stakeholders, communication, nudges
+   * @param {function} pickFn - A function (module) => value | null | undefined
+   * @returns {any | null} The picked value, or null if the module or value is missing
+   *
+   * Example:
+   *   const topResistors = CMT.getCarryOver(all, 'forces', f =>
+   *     (f.resisting || []).sort((a,b) => b.strength - a.strength).slice(0,3).map(x => x.label).filter(Boolean)
+   *   );
+   */
+  function getCarryOver(allModules, moduleName, pickFn) {
+    if (!allModules || !moduleName || typeof pickFn !== 'function') return null;
+    const mod = allModules[moduleName];
+    if (!mod) return null;
+    try {
+      const result = pickFn(mod);
+      return (result === undefined || result === null) ? null : result;
+    } catch(e) {
+      console.warn('CMT.getCarryOver: pickFn threw', e);
+      return null;
+    }
+  }
+
   // ── STAGE PROGRESSION ─────────────────────────────────────
   const STAGE_ORDER  = ['unit_1','unit_2','unit_3','unit_4','unit_5','complete'];
   const MODULE_STAGE = { vision:'unit_1', forces:'unit_2', stakeholders:'unit_3', communication:'unit_4', nudges:'unit_5' };
@@ -250,7 +277,7 @@ const CMT = (() => {
     DEMO_TOKEN,
     getSessionToken, getCurrentProjectId, setCurrentProjectId,
     getProjects, getProject, createProject, updateProject, deleteProject,
-    saveModule, loadModule, loadAllModules,
+    saveModule, loadModule, loadAllModules, getCarryOver,
     exportProject, importProject,
     ping,
   };

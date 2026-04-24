@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Unit 3 · Stakeholder Mapping</title>
+  <meta property="og:title" content="Change Management Platform">
+  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
+  <meta property="og:type" content="website">
+  <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
   <style>
     /* ===== Enhanced Stakeholder Map (scoped to this page) ===== */
@@ -305,35 +310,7 @@
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Product navigation">
-      <div class="brand">
-        <a class="brand-lockup" href="index.html">
-          <div class="brand-mark">CM</div>
-          <div>
-            <div class="brand-title">Change Management Platform</div>
-            <div class="brand-subtitle">Operating workspace</div>
-          </div>
-        </a>
-      </div>
-      <div class="side-section">
-        <div class="side-title meta-label">Workspace</div>
-        <nav class="nav-list">
-          <a class="nav-item" href="index.html"><span class="nav-icon">▦</span><span>Command Center</span></a>
-          <a class="nav-item" href="unit1-vision.html"><span class="nav-icon">◈</span><span>Vision</span></a>
-          <a class="nav-item" href="unit2-forces.html"><span class="nav-icon">↔</span><span>Forces</span></a>
-          <a class="nav-item is-active" href="unit3-stakeholders.html"><span class="nav-icon">◎</span><span>Stakeholders</span></a>
-          <a class="nav-item" href="unit4-communication.html"><span class="nav-icon">□</span><span>Messaging</span></a>
-          <a class="nav-item" href="unit5-nudges.html"><span class="nav-icon">◇</span><span>Nudges</span></a>
-        </nav>
-      </div>
-      <div class="sidebar-footer">
-        <div class="workspace-chip">
-          <div class="meta-label">Active project</div>
-          <div class="workspace-chip-title" id="topbar-project"></div>
-          <div class="workspace-chip-sub" id="topbar-org"></div>
-        </div>
-      </div>
-    </aside>
+    <div id="sidebar-mount" data-active="unit3-stakeholders.html"></div>
 
     <header class="topbar">
       <nav class="crumbs" aria-label="Breadcrumb">

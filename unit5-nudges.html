@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Unit 5 · Nudge &amp; Build Momentum</title>
+  <meta property="og:title" content="Change Management Platform">
+  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
+  <meta property="og:type" content="website">
+  <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Product navigation">
-      <div class="brand"><a class="brand-lockup" href="index.html"><div class="brand-mark">CM</div><div><div class="brand-title">Change Management Platform</div><div class="brand-subtitle">Operating workspace</div></div></a></div>
-      <div class="side-section"><div class="side-title meta-label">Workspace</div><nav class="nav-list"><a class="nav-item" href="index.html"><span class="nav-icon">▦</span><span>Command Center</span></a><a class="nav-item" href="unit1-vision.html"><span class="nav-icon">◈</span><span>Vision</span></a><a class="nav-item" href="unit2-forces.html"><span class="nav-icon">↔</span><span>Forces</span></a><a class="nav-item" href="unit3-stakeholders.html"><span class="nav-icon">◎</span><span>Stakeholders</span></a><a class="nav-item" href="unit4-communication.html"><span class="nav-icon">□</span><span>Messaging</span></a><a class="nav-item is-active" href="unit5-nudges.html"><span class="nav-icon">◇</span><span>Nudges</span></a></nav></div>
-      <div class="sidebar-footer"><div class="workspace-chip"><div class="meta-label">Active project</div><div class="workspace-chip-title" id="topbar-project"></div><div class="workspace-chip-sub" id="topbar-org"></div></div></div>
-    </aside>
+    <div id="sidebar-mount" data-active="unit5-nudges.html"></div>
     <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 5</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
     <main class="main"><div class="main-inner">
       <section class="page-head"><div><div class="eyebrow">Unit 5 · Adoption Map</div><h1 class="page-title">Where are your stakeholders on the adoption curve?</h1><p class="page-subtitle">Behaviour change happens in stages. Map each group, design EAST nudges, and monitor the momentum signals that show whether adoption is actually moving.</p></div></section>
@@ -86,7 +87,23 @@ function toggleSignal(i) { const idx = data.momentum_checked.indexOf(i); if (idx
 function updateMomentumScore() { const score = Math.round((data.momentum_checked.length / MOMENTUM_SIGNALS.length) * 100); document.getElementById('momentum-score').textContent = score + '%'; document.getElementById('momentum-fill').style.width = score + '%'; let status = ''; if (score === 0) status = 'Check the signals that are true in your change right now.'; else if (score <= 25) status = 'Early signals only — momentum is fragile. Focus on 1–2 visible wins.'; else if (score <= 50) status = 'Building momentum. Strengthen the social signals and visible leadership.'; else if (score <= 75) status = 'Good momentum. Protect the energy and address the remaining gaps.'; else status = 'Strong momentum. Shift focus to sustaining and institutionalising the change.'; document.getElementById('momentum-status').textContent = status; }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'ai') updatePrompt(); }
 function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'nudges', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
-function exportProject() { const payload = { meta: { exported_at: new Date().toISOString(), schema_version: '1.0', source: 'Change Management Platform' }, project: { title: vision.ctx_title || 'Untitled', organization: vision.ctx_org || '', your_role: vision.ctx_role || '' }, modules: { vision, forces, stakeholders: shData, communication: commsData, nudges: data } }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = (vision.ctx_title || 'project').replace(/\s+/g, '-').toLowerCase() + '.json'; a.click(); URL.revokeObjectURL(url); }
+async function exportProject() {
+  // Flush any pending autosave first so the export reflects the latest edits
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    data.momentum_accelerators = valF('momentum-accelerators');
+    data.momentum_blockers = valF('momentum-blockers');
+    data.momentum_tipping = valF('momentum-tipping');
+    localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data));
+    try { await CMT.saveModule(projectId, 'nudges', data); } catch(e) {}
+  }
+  try {
+    await CMT.exportProject(projectId);
+  } catch(e) {
+    console.error('Export failed:', e);
+    alert('Export failed. Please try again.');
+  }
+}
 function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
 function updatePrompt() {
   const drivingStr = (forces.driving || []).map(f => '  + ' + f.label + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (not mapped)';
