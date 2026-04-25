@@ -280,6 +280,7 @@
   async function init() {
     const params = new URLSearchParams(window.location.search);
     projectId = params.get('project') || localStorage.getItem('cmt_current_project');
+    if (projectId) CMT.setCurrentProjectId(projectId);
 
     try {
       const allModules = await CMT.loadAllModules(projectId);
