@@ -157,6 +157,7 @@ function uid() { return Math.random().toString(36).slice(2, 9); }
 async function init() {
   const params = new URLSearchParams(window.location.search);
   projectId = params.get('project') || localStorage.getItem('cmt_current_project');
+  if (projectId) CMT.setCurrentProjectId(projectId);
   try {
     const allModules = await CMT.loadAllModules(projectId);
     if (allModules.vision) vision = allModules.vision;

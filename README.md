@@ -20,6 +20,24 @@ The platform itself is a browser-based, Supabase-backed workbook that walks a ch
 
 ---
 
+## Scope and limitations
+
+This is a **demonstration platform** for IMD's CHM 2026 change management course. It is not intended for production use with sensitive organizational data.
+
+**Authentication model:** The platform uses a client-generated `session_token` stored in browser `localStorage` as the access boundary. Server-side Row-Level Security (RLS) policies enforce that requests can only read or modify rows matching the requesting browser's token. This protects against drive-by access through the public Supabase anon key, but is not a substitute for real authentication.
+
+**What this means in practice:**
+- Project data is scoped per browser/profile, not per identified user
+- Anyone with access to the same browser session sees the same projects
+- Module data (vision, stakeholders, etc.) is cached unencrypted in `localStorage` for offline reads
+- Two seeded Swiss policy demo cases are intentionally readable by all visitors (read-only via RLS)
+
+**Production deployment** would require migrating to authenticated identity (e.g. Supabase Auth, SSO, or the customer's existing identity provider). This is a deliberate scope choice — the course context does not require account management, and the backend infrastructure will be reshaped when the platform is integrated into a customer environment.
+
+For production-stable accessibility (full keyboard navigation, ARIA roles), see the open accessibility work in the issue tracker.
+
+---
+
 ## Current design (v1 baseline)
 
 The original platform ships with:
