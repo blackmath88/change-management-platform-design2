@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Unit 3 · Stakeholder Mapping</title>
+  <title>Unit 03 · Stakeholder Mapping</title>
   <meta property="og:title" content="Change Management Platform">
   <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
   <meta property="og:type" content="website">
@@ -82,11 +82,16 @@
     }
     .map-quadrant {
       position: absolute;
-      font-size: 0.66rem; font-weight: 800;
-      letter-spacing: 0.06em;
-      color: rgba(15, 23, 42, 0.35);
-      text-transform: uppercase;
       z-index: 2; pointer-events: none;
+      font-size: 0.84rem; font-weight: 800;
+      letter-spacing: 0.06em;
+      color: rgba(15, 23, 42, 0.55);
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 999px;
     }
 
     /* ===== PILL — default (unexpanded) node ===== */
@@ -337,7 +342,7 @@
 
     <header class="topbar">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <span class="meta-label">Unit 3</span>
+        <span class="meta-label">Unit 03</span>
         <span class="meta-label">/</span>
         <span class="meta-label crumb-current">Stakeholder Mapping</span>
         <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
@@ -353,16 +358,16 @@
       <div class="main-inner">
         <section class="page-head">
           <div>
-            <div class="eyebrow">Unit 3 · Stakeholder Mapping</div>
+            <div class="eyebrow">Unit 03 · Stakeholder Mapping</div>
             <h1 class="page-title">Who matters in this change?</h1>
             <p class="page-subtitle">Identify the individuals and groups who influence or are affected by the change. Add them in the registry, then profile each one.</p>
           </div>
         </section>
 
         <div class="tabbar">
-          <button class="tab-btn active" data-tab="identify" onclick="switchTab('identify',this)">Identify</button>
-          <button class="tab-btn" data-tab="profile" onclick="switchTab('profile',this)">Profile</button>
-          <button class="tab-btn" data-tab="map" onclick="switchTab('map',this)">Map</button>
+          <button class="tab-btn active" data-tab="identify" onclick="switchTab('identify',this)"><span class="tab-dot" data-tabdot="identify"></span>Identify</button>
+          <button class="tab-btn" data-tab="profile" onclick="switchTab('profile',this)"><span class="tab-dot" data-tabdot="profile"></span>Profile</button>
+          <button class="tab-btn" data-tab="map" onclick="switchTab('map',this)"><span class="tab-dot" data-tabdot="map"></span>Map</button>
           <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button>
         </div>
 
@@ -382,7 +387,7 @@
 
               <div class="pane active" id="pane-identify">
                 <div class="pane-head">
-                  <div class="pane-eyebrow">Unit 3 · Stakeholder Mapping</div>
+                  <div class="pane-eyebrow">Unit 03 · Stakeholder Mapping</div>
                   <h1 class="pane-title">Who matters in this change?</h1>
                   <p class="pane-desc">Identify the individuals and groups who influence or are affected by the change. Add them in the left panel, then profile each one.</p>
                 </div>
@@ -404,7 +409,7 @@
 
               <div class="pane" id="pane-profile">
                 <div class="pane-head">
-                  <div class="pane-eyebrow">Unit 3 · Profile</div>
+                  <div class="pane-eyebrow">Unit 03 · Profile</div>
                   <h1 class="pane-title">Understand each stakeholder</h1>
                   <p class="pane-desc">Select a stakeholder from the left panel to profile them. The richer your understanding, the more targeted your communication and actions will be.</p>
                 </div>
@@ -418,7 +423,7 @@
 
               <div class="pane" id="pane-map">
                 <div class="pane-head">
-                  <div class="pane-eyebrow">Unit 3 · Power / Interest Map</div>
+                  <div class="pane-eyebrow">Unit 03 · Power / Interest Map</div>
                   <h1 class="pane-title">See who sits where</h1>
                   <p class="pane-desc">Colour shows stance. Hover a stakeholder for a quick read, click to expand, double-click to edit. Press <kbd style="padding:2px 5px;border:1px solid rgba(15,23,42,0.15);border-radius:4px;background:#f5f6f8;font-family:inherit;font-size:0.72rem;">F</kbd> or the enlarge button for fullscreen.</p>
                 </div>
@@ -438,28 +443,11 @@
 
               <div class="pane" id="pane-ai">
                 <div class="pane-head">
-                  <div class="pane-eyebrow">Unit 3 · AI &amp; Export</div>
+                  <div class="pane-eyebrow">Unit 03 · AI &amp; Export</div>
                   <h1 class="pane-title">Take your stakeholder map to an AI thinking partner</h1>
                   <p class="pane-desc">All stakeholder data is embedded. Choose a mode and copy the prompt.</p>
                 </div>
-                <div class="ai-mode-grid">
-                  <div class="ai-mode-card active" onclick="setMode('prioritise',this)">
-                    <div class="ai-mode-title">Prioritise engagement</div>
-                    <div class="ai-mode-desc">Which stakeholders need most attention? In what order should you engage them?</div>
-                  </div>
-                  <div class="ai-mode-card" onclick="setMode('blockers',this)">
-                    <div class="ai-mode-title">Address blockers</div>
-                    <div class="ai-mode-desc">For each skeptic or blocker, what is the underlying concern and how should you approach them?</div>
-                  </div>
-                  <div class="ai-mode-card" onclick="setMode('champions',this)">
-                    <div class="ai-mode-title">Build a coalition</div>
-                    <div class="ai-mode-desc">Who are your best potential champions and how could they influence others?</div>
-                  </div>
-                  <div class="ai-mode-card" onclick="setMode('comms',this)">
-                    <div class="ai-mode-title">Communication bridge</div>
-                    <div class="ai-mode-desc">Translate each stakeholder into an audience for Unit 4.</div>
-                  </div>
-                </div>
+                <div class="ai-mode-grid" id="ai-mode-grid"></div>
                 <div class="prompt-box">
                   <div class="prompt-box-head">
                     <span class="prompt-box-label">Generated prompt</span>
@@ -499,6 +487,40 @@
   <script src="cmt-client.js"></script>
   <script>
 'use strict';
+
+const AI_TASKS = {
+  prioritise:
+    'Act as a change management consultant. Prioritise stakeholder engagement:\n'
+    + '1. Which 3 stakeholders need the most urgent attention and why?\n'
+    + '2. In what sequence should engagement happen — who must be moved before others can be influenced?\n'
+    + '3. Are there any stakeholders whose position is likely to influence others significantly?\n'
+    + '4. What is the biggest engagement risk if someone is neglected?',
+  blockers:
+    'Focus on the skeptics and blockers:\n'
+    + '1. For each skeptic or blocker, what is the likely underlying concern driving their resistance?\n'
+    + '2. Is their resistance rational, emotional, or political?\n'
+    + '3. What is the most effective approach for each — direct conversation, co-creation, peer influence, or something else?\n'
+    + '4. Which blocker, if moved to neutral, would most change the overall dynamic?',
+  champions:
+    'Identify coalition-building opportunities:\n'
+    + '1. Who are the strongest potential champions, and why would people listen to them?\n'
+    + '2. How could each champion influence a specific skeptic or resistant group?\n'
+    + '3. What would each champion need to feel confident in their advocacy role?\n'
+    + '4. Suggest a simple coalition-building sequence: who activates whom?',
+  comms:
+    'Translate this stakeholder map into a communication design brief for Unit 4. For each stakeholder (or group of similar stakeholders), define:\n'
+    + '- KNOW: What is the one thing they must understand after our first communication?\n'
+    + '- FEEL: What emotional shift do we need to create?\n'
+    + '- DO: What specific action or behaviour change do we want from them?\n'
+    + '- TONE: What communication approach will land with this audience?',
+};
+
+const AI_MODES = [
+  { key:'prioritise', title:'Prioritise engagement', desc:'Which stakeholders need most attention? In what order should you engage them?' },
+  { key:'blockers',   title:'Address blockers',     desc:'For each skeptic or blocker, what is the underlying concern and how should you approach them?' },
+  { key:'champions',  title:'Build a coalition',    desc:'Who are your best potential champions and how could they influence others?' },
+  { key:'comms',      title:'Communication bridge', desc:'Translate each stakeholder into an audience for Unit 4.' },
+];
 
 let projectId = null, selected = null, activeMode = 'prioritise', saveTimer = null;
 let expandedId = null;
@@ -545,10 +567,45 @@ async function init() {
     document.getElementById('forces-carry').style.display = 'block';
   }
 
-  renderInnerSidebar(); renderTable(); updatePrompt();
+  renderInnerSidebar(); renderTable(); renderAiCards(); updatePrompt();
+  updateTabDots();
 
   document.addEventListener('keydown', onKeydown);
   document.addEventListener('click', onDocumentClick);
+}
+
+function tabFilled(tab) {
+  const list = data.stakeholders || [];
+  if (tab === 'identify') return list.length > 0;
+  if (tab === 'profile')  return list.some(s => (s.motivations || s.concerns || s.needs || s.notes || '').trim().length > 0);
+  if (tab === 'map')      return list.length > 0;
+  return false;
+}
+
+function updateTabDots() {
+  document.querySelectorAll('.tab-dot').forEach(el => {
+    const t = el.getAttribute('data-tabdot');
+    el.classList.toggle('filled', tabFilled(t));
+  });
+}
+
+function renderAiCards() {
+  const grid = document.getElementById('ai-mode-grid');
+  if (!grid) return;
+  grid.innerHTML = AI_MODES.map(m =>
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+    +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+    +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    + '</div>'
+  ).join('');
+}
+
+function selectMode(mode) {
+  activeMode = mode;
+  renderAiCards();
+  updatePrompt();
 }
 
 function addStakeholder() {
@@ -674,6 +731,7 @@ function setReadiness(id, i) {
    ================================================================ */
 
 function renderMap() {
+  // TODO: expanded card overflows canvas at edges (top/right) — addressed in a later pass.
   const canvas = document.getElementById('map-canvas');
   if (!canvas) return;
 
@@ -987,16 +1045,11 @@ function autosave() {
   saveTimer = setTimeout(() => {
     localStorage.setItem('cmt_module_' + projectId + '_stakeholders', JSON.stringify(data));
     if (window.CMT) CMT.saveModule(projectId, 'stakeholders', data).catch(() => {});
+    updateTabDots();
+    if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId);
     ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
     setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
   }, 800);
-}
-
-function setMode(mode, card) {
-  activeMode = mode;
-  document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  updatePrompt();
 }
 
 function updatePrompt() {
@@ -1013,13 +1066,7 @@ function updatePrompt() {
     + 'Vision: ' + (vision.vision_statement || '(not set)') + '\n\n'
     + 'STAKEHOLDERS (' + data.stakeholders.length + '):\n' + shList;
 
-  const modes = {
-    prioritise: base + '\n\nTASK: Act as a change management consultant. Prioritise stakeholder engagement:\n1. Which 3 stakeholders need the most urgent attention and why?\n2. In what sequence should engagement happen — who must be moved before others can be influenced?\n3. Are there any stakeholders whose position is likely to influence others significantly?\n4. What is the biggest engagement risk if someone is neglected?',
-    blockers: base + '\n\nTASK: Focus on the skeptics and blockers:\n1. For each skeptic or blocker, what is the likely underlying concern driving their resistance?\n2. Is their resistance rational, emotional, or political?\n3. What is the most effective approach for each — direct conversation, co-creation, peer influence, or something else?\n4. Which blocker, if moved to neutral, would most change the overall dynamic?',
-    champions: base + '\n\nTASK: Identify coalition-building opportunities:\n1. Who are the strongest potential champions, and why would people listen to them?\n2. How could each champion influence a specific skeptic or resistant group?\n3. What would each champion need to feel confident in their advocacy role?\n4. Suggest a simple coalition-building sequence: who activates whom?',
-    comms: base + '\n\nTASK: Translate this stakeholder map into a communication design brief for Unit 4. For each stakeholder (or group of similar stakeholders), define:\n- KNOW: What is the one thing they must understand after our first communication?\n- FEEL: What emotional shift do we need to create?\n- DO: What specific action or behaviour change do we want from them?\n- TONE: What communication approach will land with this audience?'
-  };
-  document.getElementById('prompt-output').textContent = modes[activeMode];
+  document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
 }
 
 function copyPrompt(btn) {
