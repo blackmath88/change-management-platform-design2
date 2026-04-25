@@ -20,14 +20,20 @@
       </div>
 
       <div class="side-section">
-        <div class="side-title meta-label">Workspace</div>
+        <div class="side-title meta-label">Overview</div>
         <nav class="nav-list">
           <a class="nav-item is-active" href="index.html"><span class="nav-icon">▦</span><span>Command Center</span></a>
-          <a class="nav-item" href="unit1-vision.html"><span class="nav-icon">◈</span><span>Vision</span></a>
-          <a class="nav-item" href="unit2-forces.html"><span class="nav-icon">↔</span><span>Forces</span></a>
-          <a class="nav-item" href="unit3-stakeholders.html"><span class="nav-icon">◎</span><span>Stakeholders</span></a>
-          <a class="nav-item" href="unit4-communication.html"><span class="nav-icon">□</span><span>Messaging</span></a>
-          <a class="nav-item" href="unit5-nudges.html"><span class="nav-icon">◇</span><span>Nudges</span></a>
+        </nav>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title meta-label">Workspace</div>
+        <nav class="nav-list" id="workspace-nav">
+          <a class="nav-item" href="unit1-vision.html" data-module="vision"><span class="nav-num">01</span><span>Vision</span><span class="nav-progress-dot" data-dot="vision"></span></a>
+          <a class="nav-item" href="unit2-forces.html" data-module="forces"><span class="nav-num">02</span><span>Forces</span><span class="nav-progress-dot" data-dot="forces"></span></a>
+          <a class="nav-item" href="unit3-stakeholders.html" data-module="stakeholders"><span class="nav-num">03</span><span>Stakeholders</span><span class="nav-progress-dot" data-dot="stakeholders"></span></a>
+          <a class="nav-item" href="unit4-communication.html" data-module="communication"><span class="nav-num">04</span><span>Messaging</span><span class="nav-progress-dot" data-dot="communication"></span></a>
+          <a class="nav-item" href="unit5-nudges.html" data-module="nudges"><span class="nav-num">05</span><span>Nudges</span><span class="nav-progress-dot" data-dot="nudges"></span></a>
         </nav>
       </div>
 
@@ -51,7 +57,7 @@
 
     <header class="topbar">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <span class="meta-label">A structured environment for leading change</span>
+        <span class="meta-label">Overview</span>
         <span class="meta-label">/</span>
         <span class="meta-label crumb-current">Command Center</span>
       </nav>
@@ -67,11 +73,11 @@
 
     <main class="main">
       <div class="main-inner">
-        <section class="page-head">
+        <section class="lobby-head">
           <div>
-            <div class="eyebrow">A structured environment for leading change</div>
-            <h1 class="page-title">Your change projects, in one workspace.</h1>
-            <p class="page-subtitle">Work a change initiative across five connected units — vision, forces, stakeholders, communication, momentum. Each project is one continuous living case, not five separate exercises.</p>
+            <div class="lobby-eyebrow">Overview</div>
+            <h1 class="lobby-title">Your change projects, in one workspace.</h1>
+            <p class="lobby-subtitle">Work a change initiative across five connected units — vision, forces, stakeholders, communication, momentum. Each project is one continuous living case, not five separate exercises.</p>
           </div>
           <button class="btn btn-primary" onclick="document.getElementById('np-title').focus()">Create Project</button>
         </section>
@@ -208,8 +214,8 @@
     complete: 'unit1-vision.html',
   };
   const STAGE_LABELS = {
-    unit_1: 'Unit 1 — Vision', unit_2: 'Unit 2 — Forces', unit_3: 'Unit 3 — Stakeholders',
-    unit_4: 'Unit 4 — Communication', unit_5: 'Unit 5 — Momentum', complete: 'Complete',
+    unit_1: 'Unit 01 — Vision', unit_2: 'Unit 02 — Forces', unit_3: 'Unit 03 — Stakeholders',
+    unit_4: 'Unit 04 — Communication', unit_5: 'Unit 05 — Momentum', complete: 'Complete',
   };
   const STAGE_TO_NUM = { unit_1:1, unit_2:2, unit_3:3, unit_4:4, unit_5:5, complete:5 };
 
@@ -221,6 +227,19 @@
     if (ok) { text.textContent = 'Connected'; text.className = 'workspace-chip-title save-indicator saved'; }
     else { text.textContent = 'Offline'; text.className = 'workspace-chip-title save-indicator'; }
     loadProjects();
+    refreshSidebarDots();
+  }
+
+  async function refreshSidebarDots() {
+    const projectId = CMT.getCurrentProjectId();
+    if (!projectId) return;
+    try {
+      const touched = await CMT.getTouchedModules(projectId);
+      document.querySelectorAll('.nav-progress-dot').forEach(el => {
+        const m = el.getAttribute('data-dot');
+        if (m && touched.includes(m)) el.classList.add('filled');
+      });
+    } catch (e) {}
   }
 
   async function loadProjects() {
@@ -258,12 +277,12 @@
       +   (p.summary ? '<div class="project-card-summary">' + esc(p.summary) + '</div>' : '')
       +   '<div class="project-card-meta">'
       +     '<div class="progress-track">' + segs + '</div>'
-      +     '<div class="progress-label">' + (STAGE_LABELS[p.stage] || 'Unit 1') + '</div>'
+      +     '<div class="progress-label">' + (STAGE_LABELS[p.stage] || 'Unit 01') + '</div>'
       +     '<div class="project-card-date">Updated ' + updated + '</div>'
       +   '</div>'
       + '</div>'
       + '<div class="project-card-actions" onclick="event.stopPropagation()">'
-      +   '<span class="stage-badge stage-' + p.stage + '">' + (STAGE_LABELS[p.stage] || 'Unit 1') + '</span>'
+      +   '<span class="stage-badge stage-' + p.stage + '">' + (STAGE_LABELS[p.stage] || 'Unit 01') + '</span>'
       +   (p.is_demo
           ? ''
           : '<button class="btn btn-sm btn-ghost" onclick="promptDelete(\'' + p.id + '\')">Delete</button>')
@@ -273,11 +292,7 @@
 
   function openProject(projectId) {
     CMT.setCurrentProjectId(projectId);
-    CMT.getProject(projectId).then(p => {
-      if (!p) return;
-      const file = UNIT_FILES[p.stage] || 'unit1-vision.html';
-      window.location.href = file + '?project=' + projectId;
-    });
+    window.location.href = 'unit1-vision.html?project=' + projectId;
   }
 
   async function createProject() {

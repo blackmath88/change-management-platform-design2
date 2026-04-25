@@ -173,6 +173,31 @@ const CMT = (() => {
     return result;
   }
 
+  // Returns module names with any saved data for this project.
+  // Unions Supabase and localStorage — current unit pages save only to
+  // localStorage, so the cache check is the primary signal until those
+  // pages are wired through saveModule.
+  async function getTouchedModules(projectId) {
+    if (!projectId) return [];
+    const knownModules = ['vision','forces','stakeholders','communication','nudges'];
+    const fromCache = knownModules.filter(m => {
+      const cached = cacheGet(projectId, m);
+      if (!cached) return false;
+      return Object.values(cached).some(v => {
+        if (typeof v === 'string') return v.trim().length > 0;
+        if (Array.isArray(v)) return v.length > 0;
+        if (v && typeof v === 'object') return Object.values(v).some(x => x && String(x).trim());
+        return false;
+      });
+    });
+    let fromRemote = [];
+    try {
+      const rows = await req(`change_modules?project_id=eq.${projectId}&select=module`);
+      fromRemote = knownModules.filter(m => (rows ?? []).some(r => r.module === m));
+    } catch (e) {}
+    return Array.from(new Set([...fromCache, ...fromRemote]));
+  }
+
   // ── STAGE PROGRESSION ─────────────────────────────────────
   const STAGE_ORDER  = ['unit_1','unit_2','unit_3','unit_4','unit_5','complete'];
   const MODULE_STAGE = { vision:'unit_1', forces:'unit_2', stakeholders:'unit_3', communication:'unit_4', nudges:'unit_5' };
@@ -250,7 +275,7 @@ const CMT = (() => {
     DEMO_TOKEN,
     getSessionToken, getCurrentProjectId, setCurrentProjectId,
     getProjects, getProject, createProject, updateProject, deleteProject,
-    saveModule, loadModule, loadAllModules,
+    saveModule, loadModule, loadAllModules, getTouchedModules,
     exportProject, importProject,
     ping,
   };
