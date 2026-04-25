@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Unit 1 · Shape Your Change Vision</title>
+  <title>Unit 01 · Shape Your Change Vision</title>
   <meta property="og:title" content="Change Management Platform">
   <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
   <meta property="og:type" content="website">
@@ -17,7 +17,7 @@
 
     <header class="topbar">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <span class="meta-label">Unit 1</span>
+        <span class="meta-label">Unit 01</span>
         <span class="meta-label">/</span>
         <span class="meta-label crumb-current">Shape Your Change Vision</span>
         <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
@@ -31,19 +31,29 @@
 
     <main class="main">
       <div class="main-inner">
+        <section class="vision-summary" id="vision-summary" style="display:none;">
+          <div>
+            <div class="vision-summary-eyebrow">Change case</div>
+            <h2 class="vision-summary-title" id="vs-title">Untitled change</h2>
+            <div class="vision-summary-sub" id="vs-sub"></div>
+            <div class="vision-summary-body" id="vs-body"></div>
+          </div>
+          <div class="vision-summary-actions" id="vs-actions"></div>
+        </section>
+
         <section class="page-head">
           <div>
-            <div class="eyebrow">Unit 1 · Change Vision</div>
+            <div class="eyebrow">Unit 01 · Change Vision</div>
             <h1 class="page-title">Shape your change vision.</h1>
             <p class="page-subtitle">Before defining a vision, ground yourself in the reality of the situation. This context becomes the foundation for everything that follows in the next four units.</p>
           </div>
         </section>
 
         <div class="tabbar" aria-label="Unit sections">
-          <button class="tab-btn active" data-tab="context" onclick="switchTab('context',this)">Context</button>
-          <button class="tab-btn" data-tab="vision" onclick="switchTab('vision',this)">Vision Statement</button>
-          <button class="tab-btn" data-tab="criteria" onclick="switchTab('criteria',this)">Six Criteria</button>
-          <button class="tab-btn" data-tab="northstar" onclick="switchTab('northstar',this)">North Star</button>
+          <button class="tab-btn active" data-tab="context" onclick="switchTab('context',this)"><span class="tab-dot" data-tabdot="context"></span>Context</button>
+          <button class="tab-btn" data-tab="vision" onclick="switchTab('vision',this)"><span class="tab-dot" data-tabdot="vision"></span>Vision Statement</button>
+          <button class="tab-btn" data-tab="criteria" onclick="switchTab('criteria',this)"><span class="tab-dot" data-tabdot="criteria"></span>Six Criteria</button>
+          <button class="tab-btn" data-tab="northstar" onclick="switchTab('northstar',this)"><span class="tab-dot" data-tabdot="northstar"></span>North Star</button>
           <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button>
         </div>
 
@@ -51,7 +61,7 @@
           <div class="module-body">
             <div class="pane active" id="pane-context">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 1 · Change Vision</div>
+                <div class="pane-eyebrow">Unit 01 · Change Vision</div>
                 <h1 class="pane-title">What is this change, and why does it matter?</h1>
                 <p class="pane-desc">Before defining a vision, ground yourself in the reality of the situation. This context becomes the foundation for everything that follows in the next four units.</p>
               </div>
@@ -106,7 +116,7 @@
 
             <div class="pane" id="pane-vision">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 1 · Vision Statement</div>
+                <div class="pane-eyebrow">Unit 01 · Vision Statement</div>
                 <h1 class="pane-title">Write your change vision</h1>
                 <p class="pane-desc">A strong change vision answers three questions in one sentence: Where are we going? Why does it matter? How will we know we've arrived? It should be short enough to remember, clear enough to act on, and inspiring enough to motivate.</p>
               </div>
@@ -133,7 +143,7 @@
 
             <div class="pane" id="pane-criteria">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 1 · Vision Criteria</div>
+                <div class="pane-eyebrow">Unit 01 · Vision Criteria</div>
                 <h1 class="pane-title">Test your vision against six criteria</h1>
                 <p class="pane-desc">A compelling change vision must pass six tests. Score each criterion 1–5 and add a brief note. Be honest — a low score is useful information, not a failure.</p>
               </div>
@@ -148,7 +158,7 @@
 
             <div class="pane" id="pane-northstar">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 1 · North Star</div>
+                <div class="pane-eyebrow">Unit 01 · North Star</div>
                 <h1 class="pane-title">Define your north star and success signals</h1>
                 <p class="pane-desc">The north star is the one sentence you return to when everything gets complicated. Success signals are the observable, concrete indicators that the change is actually happening — not hoped for.</p>
               </div>
@@ -174,29 +184,12 @@
 
             <div class="pane" id="pane-ai">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 1 · AI &amp; Export</div>
+                <div class="pane-eyebrow">Unit 01 · AI &amp; Export</div>
                 <h1 class="pane-title">Take your vision to an AI thinking partner</h1>
                 <p class="pane-desc">Choose a prompt mode, copy the generated prompt, and open Claude or ChatGPT. Your full context is embedded automatically.</p>
               </div>
 
-              <div class="ai-mode-grid">
-                <div class="ai-mode-card active" onclick="setMode('refine',this)">
-                  <div class="ai-mode-title">Refine the vision</div>
-                  <div class="ai-mode-desc">Get specific suggestions to sharpen the language, strengthen the case, and improve criteria scores.</div>
-                </div>
-                <div class="ai-mode-card" onclick="setMode('critique',this)">
-                  <div class="ai-mode-title">Challenge it</div>
-                  <div class="ai-mode-desc">Play devil's advocate — where is the vision weak, vague, or unlikely to land with a sceptical audience?</div>
-                </div>
-                <div class="ai-mode-card" onclick="setMode('stakeholder',this)">
-                  <div class="ai-mode-title">Stakeholder reactions</div>
-                  <div class="ai-mode-desc">Simulate how three different stakeholder types would react to this vision and what they'd push back on.</div>
-                </div>
-                <div class="ai-mode-card" onclick="setMode('forces',this)">
-                  <div class="ai-mode-title">Forces preview</div>
-                  <div class="ai-mode-desc">Based on this vision and context, what driving and restraining forces are likely? Prepares you for Unit 2.</div>
-                </div>
-              </div>
+              <div class="ai-mode-grid" id="ai-mode-grid"></div>
 
               <div class="prompt-box">
                 <div class="prompt-box-head">
@@ -231,6 +224,46 @@
     { id:'flexible',     name:'Flexible',     question:'Can it adapt as circumstances change?' },
     { id:'communicable', name:'Communicable', question:'Can it be explained clearly in under two minutes?' },
   ];
+
+  // AI tab — task text per mode is now visible on the card itself.
+  // updatePrompt() composes base + AI_TASKS[activeMode].
+  const AI_TASKS = {
+    refine:
+      'Act as an experienced change management consultant. Review this change vision and:\n'
+      + '1. Identify the 2-3 most important improvements to the vision statement — be specific about what to change and why\n'
+      + '2. Suggest a sharpened version of the vision statement\n'
+      + '3. Review the case for change — is the urgency compelling? What is missing?\n'
+      + '4. Flag any criteria scoring below 3 and suggest how to address those weaknesses',
+    critique:
+      'Play the role of a senior sceptic in the organisation — someone who has seen many change initiatives fail. Challenge this vision:\n'
+      + '1. What are the 3 strongest objections a sceptic would raise?\n'
+      + '2. Where is the vision vague, unrealistic, or leadership-centric?\n'
+      + '3. What uncomfortable questions does this vision fail to answer?\n'
+      + '4. What would need to be true for a sceptic to take this seriously?',
+    stakeholder:
+      'Simulate how three different stakeholder types would react to this vision:\n'
+      + '1. A senior leader who is cautiously supportive but focused on ROI and risk\n'
+      + '2. A frontline employee who is uncertain about what the change means for them personally\n'
+      + '3. A middle manager who has operational concerns and feels the change is being imposed\n'
+      + 'For each: initial reaction, key questions, main concerns, and what would make them more supportive.',
+    forces:
+      'Based on this vision and context, anticipate the force field for Unit 2:\n'
+      + '1. List 4-5 likely DRIVING forces (what will push this change forward) — note whether each is rational or emotional\n'
+      + '2. List 4-5 likely RESTRAINING forces (what will resist or block it) — note whether each is rational or emotional\n'
+      + '3. Identify the single most dangerous restraining force and explain why\n'
+      + '4. Suggest one driving force that could be amplified to shift the balance',
+  };
+
+  const AI_MODES = [
+    { key:'refine',      title:'Refine the vision',     desc:'Get specific suggestions to sharpen the language, strengthen the case, and improve criteria scores.' },
+    { key:'critique',    title:'Challenge it',          desc:"Play devil's advocate — where is the vision weak, vague, or unlikely to land with a sceptical audience?" },
+    { key:'stakeholder', title:'Stakeholder reactions', desc:"Simulate how three different stakeholder types would react to this vision and what they'd push back on." },
+    { key:'forces',      title:'Forces preview',        desc:'Based on this vision and context, what driving and restraining forces are likely? Prepares you for Unit 2.' },
+  ];
+
+  // Drives the "Continue to Unit XX →" button on the vision summary card.
+  const STAGE_TO_NUM = { unit_1:1, unit_2:2, unit_3:3, unit_4:4, unit_5:5, complete:5 };
+  const UNIT_FILES   = { unit_2:'unit2-forces.html', unit_3:'unit3-stakeholders.html', unit_4:'unit4-communication.html', unit_5:'unit5-nudges.html', complete:'unit5-nudges.html' };
 
   let activeMode = 'refine';
   let saveTimer  = null;
@@ -271,13 +304,102 @@
     setField('vision-case', data.vision_case);
     setField('north-star', data.north_star);
 
-    if (data.ctx_title) document.getElementById('topbar-project').textContent = data.ctx_title;
-    if (data.ctx_org) document.getElementById('topbar-org').textContent = data.ctx_org;
+    if (data.ctx_title) {
+      const t = document.getElementById('topbar-project');
+      if (t) t.textContent = data.ctx_title;
+    }
+    if (data.ctx_org) {
+      const o = document.getElementById('topbar-org');
+      if (o) o.textContent = data.ctx_org;
+    }
     updateTopbarSep();
     renderCriteria();
     renderSignals();
     updateVisionPreview();
     updateNorthStar();
+    renderAiCards();
+    updatePrompt();
+    updateTabDots();
+    loadVisionSummary();
+  }
+
+  // Vision summary card at the top of the page — case info + vision +
+  // north star + Continue button when stage > unit_1. Falls back to
+  // localStorage data when CMT isn't reachable.
+  async function loadVisionSummary() {
+    if (!projectId) return;
+    let project = null;
+    try { if (window.CMT) project = await CMT.getProject(projectId); } catch(e) {}
+
+    const card = document.getElementById('vision-summary');
+    const titleEl   = document.getElementById('vs-title');
+    const subEl     = document.getElementById('vs-sub');
+    const bodyEl    = document.getElementById('vs-body');
+    const actionsEl = document.getElementById('vs-actions');
+
+    const title = (project && project.title)        || data.ctx_title;
+    const org   = (project && project.organization) || data.ctx_org;
+    const role  = (project && project.your_role)    || data.ctx_role;
+    if (!title && !org && !role && !data.vision_statement && !data.north_star) return;
+
+    titleEl.textContent = title || 'Untitled change';
+    const subParts = [org, role].filter(Boolean);
+    subEl.textContent = subParts.join(' · ');
+    subEl.style.display = subParts.length ? '' : 'none';
+
+    const rows = [];
+    if (data.vision_statement) {
+      rows.push('<div class="vision-summary-row"><div class="vision-summary-label">Vision</div><div class="vision-summary-text">' + esc(data.vision_statement) + '</div></div>');
+    }
+    if (data.north_star) {
+      rows.push('<div class="vision-summary-row"><div class="vision-summary-label">North star</div><div class="vision-summary-text">' + esc(data.north_star) + '</div></div>');
+    }
+    bodyEl.innerHTML = rows.join('');
+
+    const stage = project ? project.stage : 'unit_1';
+    const stageNum = STAGE_TO_NUM[stage] || 1;
+    if (stageNum > 1) {
+      const file = UNIT_FILES[stage] || 'unit2-forces.html';
+      const num = String(Math.min(stageNum, 5)).padStart(2, '0');
+      actionsEl.innerHTML = '<a class="btn btn-primary" href="' + file + '?project=' + encodeURIComponent(projectId) + '">Continue to Unit ' + num + ' →</a>';
+    } else {
+      actionsEl.innerHTML = '';
+    }
+
+    card.style.display = '';
+  }
+
+  function tabFilled(tab) {
+    if (tab === 'context')   return !!data.ctx_title;
+    if (tab === 'vision')    return !!data.vision_statement;
+    if (tab === 'criteria')  return Object.values(data.criteria || {}).some(c => c && c.score > 0);
+    if (tab === 'northstar') return !!data.north_star;
+    return false;
+  }
+
+  function updateTabDots() {
+    document.querySelectorAll('.tab-dot').forEach(el => {
+      const t = el.getAttribute('data-tabdot');
+      el.classList.toggle('filled', tabFilled(t));
+    });
+  }
+
+  function renderAiCards() {
+    const grid = document.getElementById('ai-mode-grid');
+    if (!grid) return;
+    grid.innerHTML = AI_MODES.map(m =>
+      '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+      +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+      +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+      +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+      +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+      + '</div>'
+    ).join('');
+  }
+
+  function selectMode(mode) {
+    activeMode = mode;
+    renderAiCards();
     updatePrompt();
   }
 
@@ -485,17 +607,11 @@
           localStorage.setItem('cmt_projects', JSON.stringify(projects));
         }
       }
-      if (window.CMTSidebar) window.CMTSidebar.refresh();
+      updateTabDots();
+      if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId);
       ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
       setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
     }, 800);
-  }
-
-  function setMode(mode, card) {
-    activeMode = mode;
-    document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active'));
-    card.classList.add('active');
-    updatePrompt();
   }
 
   function updatePrompt() {
@@ -520,14 +636,7 @@
       + 'VISION CRITERIA SCORES:\n' + criteriaText + '\n\n'
       + 'SUCCESS SIGNALS:\n' + signalsText;
 
-    const modes = {
-      refine: base + '\n\nTASK: Act as an experienced change management consultant. Review this change vision and:\n1. Identify the 2-3 most important improvements to the vision statement — be specific about what to change and why\n2. Suggest a sharpened version of the vision statement\n3. Review the case for change — is the urgency compelling? What is missing?\n4. Flag any criteria scoring below 3 and suggest how to address those weaknesses',
-      critique: base + '\n\nTASK: Play the role of a senior sceptic in the organisation — someone who has seen many change initiatives fail. Challenge this vision:\n1. What are the 3 strongest objections a sceptic would raise?\n2. Where is the vision vague, unrealistic, or leadership-centric?\n3. What uncomfortable questions does this vision fail to answer?\n4. What would need to be true for a sceptic to take this seriously?',
-      stakeholder: base + '\n\nTASK: Simulate how three different stakeholder types would react to this vision:\n1. A senior leader who is cautiously supportive but focused on ROI and risk\n2. A frontline employee who is uncertain about what the change means for them personally\n3. A middle manager who has operational concerns and feels the change is being imposed\n\nFor each: initial reaction, key questions, main concerns, and what would make them more supportive.',
-      forces: base + '\n\nTASK: Based on this vision and context, anticipate the force field for Unit 2:\n1. List 4-5 likely DRIVING forces (what will push this change forward) — note whether each is rational or emotional\n2. List 4-5 likely RESTRAINING forces (what will resist or block it) — note whether each is rational or emotional\n3. Identify the single most dangerous restraining force and explain why\n4. Suggest one driving force that could be amplified to shift the balance',
-    };
-
-    document.getElementById('prompt-output').textContent = modes[activeMode];
+    document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
   }
 
   function copyPrompt(btn) {

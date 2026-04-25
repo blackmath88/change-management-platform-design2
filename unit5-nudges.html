@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Unit 5 · Nudge &amp; Build Momentum</title>
+  <title>Unit 05 · Nudge &amp; Build Momentum</title>
   <meta property="og:title" content="Change Management Platform">
   <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
   <meta property="og:type" content="website">
@@ -14,15 +14,15 @@
 <body>
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit5-nudges.html"></div>
-    <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 5</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
+    <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 05</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
     <main class="main"><div class="main-inner">
-      <section class="page-head"><div><div class="eyebrow">Unit 5 · Adoption Map</div><h1 class="page-title">Where are your stakeholders on the adoption curve?</h1><p class="page-subtitle">Behaviour change happens in stages. Map each group, design EAST nudges, and monitor the momentum signals that show whether adoption is actually moving.</p></div></section>
-      <div class="tabbar"><button class="tab-btn active" data-tab="adoption" onclick="switchTab('adoption',this)">Adoption Map</button><button class="tab-btn" data-tab="nudges" onclick="switchTab('nudges',this)">Nudge Plan</button><button class="tab-btn" data-tab="momentum" onclick="switchTab('momentum',this)">Momentum</button><button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button></div>
+      <section class="page-head"><div><div class="eyebrow">Unit 05 · Nudge &amp; Build Momentum</div><h1 class="page-title">Where are your stakeholders on the adoption curve?</h1><p class="page-subtitle">Behaviour change happens in stages. Map each group, design EAST nudges, and monitor the momentum signals that show whether adoption is actually moving.</p></div></section>
+      <div class="tabbar"><button class="tab-btn active" data-tab="adoption" onclick="switchTab('adoption',this)"><span class="tab-dot" data-tabdot="adoption"></span>Adoption Map</button><button class="tab-btn" data-tab="nudges" onclick="switchTab('nudges',this)"><span class="tab-dot" data-tabdot="nudges"></span>Nudge Plan</button><button class="tab-btn" data-tab="momentum" onclick="switchTab('momentum',this)"><span class="tab-dot" data-tabdot="momentum"></span>Momentum</button><button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button></div>
       <section class="module"><div class="module-body">
-        <div class="pane active" id="pane-adoption"><div class="pane-head"><div class="pane-eyebrow">Unit 5 · Adoption Map</div><h1 class="pane-title">Where are your stakeholders on the adoption curve?</h1><p class="pane-desc">Behaviour change happens in stages. Map each group to their current position, define the behaviour you want, and name the barrier stopping them from moving forward.</p></div><div id="comms-carry" class="hint-box" style="display:none;"><strong>From Unit 4:</strong> <span id="comms-carry-text"></span></div><div class="hint-box"><strong>Adoption stages:</strong> Unaware → Aware → Experimenting → Using → Advocating. Click a stage to mark where each stakeholder currently is. The right intervention depends entirely on where they are — not where you want them to be.</div><div id="adoption-cards"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Add stakeholders in Unit 3 to populate the adoption map.</div></div></div>
-        <div class="pane" id="pane-nudges"><div class="pane-head"><div class="pane-eyebrow">Unit 5 · Nudge Plan</div><h1 class="pane-title">Design interventions that make change easier</h1><p class="pane-desc">Use the EAST framework. Each nudge should respond to a specific diagnosed barrier — not be chosen at random. The question is always: what makes this next step easier, more appealing, more social, or better timed?</p></div><div class="east-grid"><div class="east-card east-easy"><span class="east-badge">Easy</span><div class="east-card-title">Reduce friction</div><div class="east-card-desc">Simplify the desired behaviour. Defaults, templates, one-click access, pre-filled forms. Make doing nothing harder than changing.</div></div><div class="east-card east-attractive"><span class="east-badge">Attractive</span><div class="east-card-title">Make it appealing</div><div class="east-card-desc">Personalise the benefit. Use recognition, visible progress, or identity alignment. People move toward things that feel rewarding.</div></div><div class="east-card east-social"><span class="east-badge">Social</span><div class="east-card-title">Use peer influence</div><div class="east-card-desc">Show that people similar to them are already doing it. Champions, peer stories, visible adoption by respected colleagues.</div></div><div class="east-card east-timely"><span class="east-badge">Timely</span><div class="east-card-title">Intervene at the right moment</div><div class="east-card-desc">Deliver when people are most receptive — at a decision point, after a frustrating experience, or when momentum is building.</div></div></div><div class="nudge-list" id="nudge-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">No nudges yet. Add one below.</div></div><button class="btn btn-secondary btn-sm" onclick="addNudge()">+ Add nudge</button></div>
-        <div class="pane" id="pane-momentum"><div class="pane-head"><div class="pane-eyebrow">Unit 5 · Momentum</div><h1 class="pane-title">Track what is working</h1><p class="pane-desc">Momentum is built and monitored — not assumed. Check the signals below to score your current momentum, then reflect on what is accelerating or stalling the change.</p></div><div class="momentum-wrap"><div class="momentum-score" id="momentum-score">0%</div><div class="momentum-bar-track"><div class="momentum-bar-fill" id="momentum-fill" style="width:0%"></div></div><div class="momentum-status" id="momentum-status">Check the signals that are true in your change right now.</div><div class="momentum-signals" id="momentum-signals"></div></div><div class="field-group"><label class="label">What is accelerating momentum right now?</label><textarea class="field-textarea" id="momentum-accelerators" placeholder="What is working? Where are you seeing energy, adoption, or positive signals?" oninput="autosave()"></textarea></div><div class="field-group"><label class="label">What is stalling momentum?</label><textarea class="field-textarea" id="momentum-blockers" placeholder="Where is adoption slower than expected? What barriers keep reappearing?" oninput="autosave()"></textarea></div><div class="field-group"><label class="label">What one thing would create a tipping point?</label><textarea class="field-textarea" id="momentum-tipping" placeholder="If this happened, it would significantly shift the momentum of this change" oninput="autosave()"></textarea></div></div>
-        <div class="pane" id="pane-ai"><div class="pane-head"><div class="pane-eyebrow">Unit 5 · AI &amp; Export</div><h1 class="pane-title">Take your vision to an AI thinking partner</h1><p class="pane-desc">Your entire change journey — vision, forces, stakeholders, communication, and momentum — is assembled here. Choose a mode and take it to Claude or ChatGPT.</p></div><div class="ai-mode-grid"><div class="ai-mode-card active" onclick="setMode('nudges',this)"><div class="ai-mode-title">Improve the nudges</div><div class="ai-mode-desc">Are the nudges specific enough? Are they matched to the right adoption stages and barriers?</div></div><div class="ai-mode-card" onclick="setMode('momentum',this)"><div class="ai-mode-title">Diagnose momentum</div><div class="ai-mode-desc">What is accelerating or stalling adoption? What would create a tipping point?</div></div><div class="ai-mode-card" onclick="setMode('resistance',this)"><div class="ai-mode-title">Address resistance</div><div class="ai-mode-desc">Design specific behavioural interventions for the most resistant stakeholders.</div></div><div class="ai-mode-card" onclick="setMode('system',this)"><div class="ai-mode-title">Full system review</div><div class="ai-mode-desc">Review the entire five-unit journey. Where are the weakest links? What would make it more coherent?</div></div></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span><span class="prompt-hint">Complete all five units for a richer prompt</span></div><div class="prompt-text" id="prompt-output">Loading</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div><div class="complete-box"><div class="complete-eyebrow"><span>Journey complete</span></div><div class="complete-title">Vision → Forces → Stakeholders → Communication → Momentum</div><div class="complete-sub">Your change case is now a living document. Return to any unit as the situation evolves.</div><button class="btn btn-secondary" onclick="exportProject()">Export as JSON</button></div></div>
+        <div class="pane active" id="pane-adoption"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · Adoption Map</div><h1 class="pane-title">Where are your stakeholders on the adoption curve?</h1><p class="pane-desc">Behaviour change happens in stages. Map each group to their current position, define the behaviour you want, and name the barrier stopping them from moving forward.</p></div><div id="comms-carry" class="hint-box" style="display:none;"><strong>From Unit 4:</strong> <span id="comms-carry-text"></span></div><div class="hint-box"><strong>Adoption stages:</strong> Unaware → Aware → Experimenting → Using → Advocating. Click a stage to mark where each stakeholder currently is. The right intervention depends entirely on where they are — not where you want them to be.</div><div id="adoption-cards"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Add stakeholders in Unit 3 to populate the adoption map.</div></div></div>
+        <div class="pane" id="pane-nudges"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · Nudge Plan</div><h1 class="pane-title">Design interventions that make change easier</h1><p class="pane-desc">Use the EAST framework. Each nudge should respond to a specific diagnosed barrier — not be chosen at random. The question is always: what makes this next step easier, more appealing, more social, or better timed?</p></div><div class="east-grid"><div class="east-card east-easy"><span class="east-badge">Easy</span><div class="east-card-title">Reduce friction</div><div class="east-card-desc">Simplify the desired behaviour. Defaults, templates, one-click access, pre-filled forms. Make doing nothing harder than changing.</div></div><div class="east-card east-attractive"><span class="east-badge">Attractive</span><div class="east-card-title">Make it appealing</div><div class="east-card-desc">Personalise the benefit. Use recognition, visible progress, or identity alignment. People move toward things that feel rewarding.</div></div><div class="east-card east-social"><span class="east-badge">Social</span><div class="east-card-title">Use peer influence</div><div class="east-card-desc">Show that people similar to them are already doing it. Champions, peer stories, visible adoption by respected colleagues.</div></div><div class="east-card east-timely"><span class="east-badge">Timely</span><div class="east-card-title">Intervene at the right moment</div><div class="east-card-desc">Deliver when people are most receptive — at a decision point, after a frustrating experience, or when momentum is building.</div></div></div><div class="nudge-list" id="nudge-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">No nudges yet. Add one below.</div></div><button class="btn btn-secondary btn-sm" onclick="addNudge()">+ Add nudge</button></div>
+        <div class="pane" id="pane-momentum"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · Momentum</div><h1 class="pane-title">Track what is working</h1><p class="pane-desc">Momentum is built and monitored — not assumed. Check the signals below to score your current momentum, then reflect on what is accelerating or stalling the change.</p></div><div class="momentum-wrap"><div class="momentum-score" id="momentum-score">0%</div><div class="momentum-bar-track"><div class="momentum-bar-fill" id="momentum-fill" style="width:0%"></div></div><div class="momentum-status" id="momentum-status">Check the signals that are true in your change right now.</div><div class="momentum-signals" id="momentum-signals"></div></div><div class="field-group"><label class="label">What is accelerating momentum right now?</label><textarea class="field-textarea" id="momentum-accelerators" placeholder="What is working? Where are you seeing energy, adoption, or positive signals?" oninput="autosave()"></textarea></div><div class="field-group"><label class="label">What is stalling momentum?</label><textarea class="field-textarea" id="momentum-blockers" placeholder="Where is adoption slower than expected? What barriers keep reappearing?" oninput="autosave()"></textarea></div><div class="field-group"><label class="label">What one thing would create a tipping point?</label><textarea class="field-textarea" id="momentum-tipping" placeholder="If this happened, it would significantly shift the momentum of this change" oninput="autosave()"></textarea></div></div>
+        <div class="pane" id="pane-ai"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · AI &amp; Export</div><h1 class="pane-title">Take your vision to an AI thinking partner</h1><p class="pane-desc">Your entire change journey — vision, forces, stakeholders, communication, and momentum — is assembled here. Choose a mode and take it to Claude or ChatGPT.</p></div><div class="ai-mode-grid" id="ai-mode-grid"></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span><span class="prompt-hint">Complete all five units for a richer prompt</span></div><div class="prompt-text" id="prompt-output">Loading</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div><div class="complete-box"><div class="complete-eyebrow"><span>Journey complete</span></div><div class="complete-title">Vision → Forces → Stakeholders → Communication → Momentum</div><div class="complete-sub">Your change case is now a living document. Return to any unit as the situation evolves.</div><button class="btn btn-secondary" onclick="exportProject()">Export as JSON</button></div></div>
       </div></section>
     </div></main>
   </div>
@@ -30,6 +30,43 @@
   <script src="cmt-client.js"></script>
   <script>
 'use strict';
+
+const AI_TASKS = {
+  nudges:
+    'Review the nudge plan as an experienced behaviour designer:\n'
+    + '1. Are the nudges matched to the right adoption stages? (training someone unaware is wasted effort)\n'
+    + '2. Are the EAST types correctly assigned — is each nudge actually Easy / Attractive / Social / Timely?\n'
+    + '3. Which nudge is most likely to create visible, shareable momentum?\n'
+    + '4. What important nudge is missing that would address the most critical barrier?\n'
+    + '5. Suggest one refined version of the weakest nudge in the current plan.',
+  momentum:
+    'Diagnose momentum as a change management consultant:\n'
+    + '1. What does the momentum score and active signals tell you about where this change is?\n'
+    + '2. What is the most significant gap between accelerators and stalls?\n'
+    + '3. What single action in the next 2 weeks would most shift the momentum score?\n'
+    + '4. What does the tipping point description suggest — is it realistic? What would need to be true for it to happen?',
+  resistance:
+    'Design targeted behavioural interventions for resistance:\n'
+    + '1. Identify the 2 stakeholders or groups with the highest resistance potential\n'
+    + '2. For each: what is the specific psychological barrier (fear, loss, identity threat, rational scepticism)?\n'
+    + '3. Design one EAST-based nudge specifically for each resistant group\n'
+    + '4. What is the one thing that, if said or done wrong, would harden their resistance permanently?',
+  system:
+    'Review the entire five-unit change system as an objective senior consultant:\n'
+    + '1. Is there a coherent thread from vision to nudges — or are there gaps where the logic breaks down?\n'
+    + '2. Which unit has the weakest or most underdeveloped content? What should be added?\n'
+    + '3. Are the nudges causally connected to the diagnosed barriers from the force field and stakeholder map?\n'
+    + '4. What is the single most important thing this change leader should do differently based on everything you can see?\n'
+    + '5. What would a sceptical board member say about the weakest link in this plan?',
+};
+
+const AI_MODES = [
+  { key:'nudges',     title:'Improve the nudges', desc:'Are the nudges specific enough? Are they matched to the right adoption stages and barriers?' },
+  { key:'momentum',   title:'Diagnose momentum',  desc:'What is accelerating or stalling adoption? What would create a tipping point?' },
+  { key:'resistance', title:'Address resistance', desc:'Design specific behavioural interventions for the most resistant stakeholders.' },
+  { key:'system',     title:'Full system review', desc:'Review the entire five-unit journey. Where are the weakest links? What would make it more coherent?' },
+];
+
 let projectId = null, activeMode = 'nudges', saveTimer = null;
 let vision = {}, forces = {}, shData = { stakeholders: [] }, commsData = { audiences: [] };
 const ADOPTION_STAGES = ['Unaware','Aware','Experimenting','Using','Advocating'];
@@ -61,7 +98,52 @@ async function init() {
   const objDo = commsData.obj_do; if (objDo) { document.getElementById('comms-carry-text').textContent = 'Desired action from Unit 4: "' + objDo + '"'; document.getElementById('comms-carry').style.display = 'block'; }
   if (!data.adoption_map.length && shData.stakeholders?.length) { data.adoption_map = shData.stakeholders.map(s => ({ id: s.id, name: s.name || 'Unnamed', role: s.role || s.group || '', current_stage: s.readiness || 0, target_stage: Math.min((s.readiness || 0) + 2, 4), desired_behaviour: '', barrier: '' })); }
   setF('momentum-accelerators', data.momentum_accelerators); setF('momentum-blockers', data.momentum_blockers); setF('momentum-tipping', data.momentum_tipping);
-  renderAdoptionCards(); renderNudges(); renderMomentumSignals(); updateMomentumScore(); updatePrompt();
+  renderAdoptionCards(); renderNudges(); renderMomentumSignals(); updateMomentumScore(); renderAiCards(); updatePrompt();
+  updateTabDots();
+}
+
+function tabFilled(tab) {
+  if (tab === 'adoption') {
+    return (data.adoption_map || []).some(item =>
+      (item.desired_behaviour || item.barrier || '').trim().length > 0
+      || (typeof item.current_stage === 'number' && item.current_stage > 0)
+      || (typeof item.target_stage === 'number' && item.target_stage > 0)
+    );
+  }
+  if (tab === 'nudges')   return (data.nudges || []).length > 0;
+  if (tab === 'momentum') {
+    return (data.momentum_checked || []).length > 0
+      || !!(data.momentum_accelerators && data.momentum_accelerators.trim())
+      || !!(data.momentum_blockers && data.momentum_blockers.trim())
+      || !!(data.momentum_tipping && data.momentum_tipping.trim());
+  }
+  return false;
+}
+
+function updateTabDots() {
+  document.querySelectorAll('.tab-dot').forEach(el => {
+    const t = el.getAttribute('data-tabdot');
+    el.classList.toggle('filled', tabFilled(t));
+  });
+}
+
+function renderAiCards() {
+  const grid = document.getElementById('ai-mode-grid');
+  if (!grid) return;
+  grid.innerHTML = AI_MODES.map(m =>
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+    +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+    +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    + '</div>'
+  ).join('');
+}
+
+function selectMode(mode) {
+  activeMode = mode;
+  renderAiCards();
+  updatePrompt();
 }
 function renderAdoptionCards() {
   const c = document.getElementById('adoption-cards');
@@ -86,7 +168,7 @@ function renderMomentumSignals() { const container = document.getElementById('mo
 function toggleSignal(i) { const idx = data.momentum_checked.indexOf(i); if (idx >= 0) data.momentum_checked.splice(idx, 1); else data.momentum_checked.push(i); renderMomentumSignals(); updateMomentumScore(); autosave(); }
 function updateMomentumScore() { const score = Math.round((data.momentum_checked.length / MOMENTUM_SIGNALS.length) * 100); document.getElementById('momentum-score').textContent = score + '%'; document.getElementById('momentum-fill').style.width = score + '%'; let status = ''; if (score === 0) status = 'Check the signals that are true in your change right now.'; else if (score <= 25) status = 'Early signals only — momentum is fragile. Focus on 1–2 visible wins.'; else if (score <= 50) status = 'Building momentum. Strengthen the social signals and visible leadership.'; else if (score <= 75) status = 'Good momentum. Protect the energy and address the remaining gaps.'; else status = 'Strong momentum. Shift focus to sustaining and institutionalising the change.'; document.getElementById('momentum-status').textContent = status; }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'ai') updatePrompt(); }
-function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'nudges', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
+function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'nudges', data).catch(() => {}); updateTabDots(); if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 async function exportProject() {
   // Flush any pending autosave first so the export reflects the latest edits
   if (saveTimer) {
@@ -104,7 +186,6 @@ async function exportProject() {
     alert('Export failed. Please try again.');
   }
 }
-function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
 function updatePrompt() {
   const drivingStr = (forces.driving || []).map(f => '  + ' + f.label + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (not mapped)';
   const resistingStr = (forces.resisting || []).map(f => '  - ' + f.label + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (not mapped)';
@@ -114,13 +195,7 @@ function updatePrompt() {
   const momentumScore = Math.round((data.momentum_checked.length / MOMENTUM_SIGNALS.length) * 100);
   const signalsActive = data.momentum_checked.map(i => '  ✓ ' + MOMENTUM_SIGNALS[i]).join('\n') || '  (none checked)';
   const base = 'CHANGE MANAGEMENT SYSTEM — Full Five-Unit Review\n\nUNIT 1 — VISION\nInitiative: ' + (vision.ctx_title || '(not set)') + '\nOrganisation: ' + (vision.ctx_org || '(not set)') + '\nVision: ' + (vision.vision_statement || '(not set)') + '\nNorth Star: ' + (vision.north_star || '(not set)') + '\nCase for change: ' + (vision.vision_case || '(not set)') + '\n\nUNIT 2 — FORCES\nDriving forces:\n' + drivingStr + '\nRestraining forces:\n' + resistingStr + '\n\nUNIT 3 — STAKEHOLDERS\n' + shStr + '\n\nUNIT 4 — COMMUNICATION\nCore problem: ' + (commsData.core_problem || '(not set)') + '\nCore solution: ' + (commsData.core_solution || '(not set)') + '\nKnow: ' + (commsData.obj_know || '(not set)') + '\nFeel: ' + (commsData.obj_feel || '(not set)') + '\nDo: ' + (commsData.obj_do || '(not set)') + '\n\nUNIT 5 — ADOPTION & NUDGES\nAdoption positions:\n' + adoptionStr + '\n\nNudge plan:\n' + nudgeStr + '\n\nMomentum score: ' + momentumScore + '%\nActive signals:\n' + signalsActive + '\n\nAccelerators: ' + (data.momentum_accelerators || '(not specified)') + '\nStalls: ' + (data.momentum_blockers || '(not specified)') + '\nTipping point: ' + (data.momentum_tipping || '(not specified)');
-  const modes = {
-    nudges: base + '\n\nTASK: Review the nudge plan as an experienced behaviour designer:\n1. Are the nudges matched to the right adoption stages? (training someone unaware is wasted effort)\n2. Are the EAST types correctly assigned — is each nudge actually Easy / Attractive / Social / Timely?\n3. Which nudge is most likely to create visible, shareable momentum?\n4. What important nudge is missing that would address the most critical barrier?\n5. Suggest one refined version of the weakest nudge in the current plan.',
-    momentum: base + '\n\nTASK: Diagnose momentum as a change management consultant:\n1. What does the momentum score (' + momentumScore + '%) and active signals tell you about where this change is?\n2. What is the most significant gap between accelerators and stalls?\n3. What single action in the next 2 weeks would most shift the momentum score?\n4. What does the tipping point description suggest — is it realistic? What would need to be true for it to happen?',
-    resistance: base + '\n\nTASK: Design targeted behavioural interventions for resistance:\n1. Identify the 2 stakeholders or groups with the highest resistance potential\n2. For each: what is the specific psychological barrier (fear, loss, identity threat, rational scepticism)?\n3. Design one EAST-based nudge specifically for each resistant group\n4. What is the one thing that, if said or done wrong, would harden their resistance permanently?',
-    system: base + '\n\nTASK: Review the entire five-unit change system as an objective senior consultant:\n1. Is there a coherent thread from vision to nudges — or are there gaps where the logic breaks down?\n2. Which unit has the weakest or most underdeveloped content? What should be added?\n3. Are the nudges causally connected to the diagnosed barriers from the force field and stakeholder map?\n4. What is the single most important thing this change leader should do differently based on everything you can see?\n5. What would a sceptical board member say about the weakest link in this plan?',
-  };
-  document.getElementById('prompt-output').textContent = modes[activeMode];
+  document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
 }
 function copyPrompt(btn) { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => { const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000); }); }
 function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }

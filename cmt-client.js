@@ -20,6 +20,7 @@
  *   await CMT.saveModule(projectId, module, data)
  *   await CMT.loadModule(projectId, module)
  *   await CMT.loadAllModules(projectId)
+ *   await CMT.getTouchedModules(projectId)
  *   CMT.getCarryOver(allModules, moduleName, pickFn)
  *   await CMT.exportProject(projectId)
  *   await CMT.importProject(file)
@@ -186,6 +187,37 @@ const CMT = (() => {
     return result;
   }
 
+  // Returns the names of modules that have any saved data for this project.
+  // Sources of truth, in order of preference:
+  //   1. change_modules rows in Supabase (authoritative once a save has synced)
+  //   2. localStorage cache (covers offline + the moment between save and sync)
+  // The union keeps the sidebar progress dots accurate even when one source
+  // is empty.
+  const KNOWN_MODULES = ['vision','forces','stakeholders','communication','nudges'];
+
+  function _hasMeaningfulValue(obj) {
+    if (!obj) return false;
+    return Object.values(obj).some(v => {
+      if (typeof v === 'string') return v.trim().length > 0;
+      if (Array.isArray(v))      return v.length > 0;
+      if (v && typeof v === 'object') {
+        return Object.values(v).some(x => x && String(x).trim());
+      }
+      return false;
+    });
+  }
+
+  async function getTouchedModules(projectId) {
+    if (!projectId) return [];
+    const fromCache = KNOWN_MODULES.filter(m => _hasMeaningfulValue(cacheGet(projectId, m)));
+    let fromRemote = [];
+    try {
+      const rows = await req(`change_modules?project_id=eq.${projectId}&select=module`);
+      fromRemote = KNOWN_MODULES.filter(m => (rows ?? []).some(r => r.module === m));
+    } catch(e) {}
+    return Array.from(new Set([...fromCache, ...fromRemote]));
+  }
+
   // ── CARRY-OVER HELPER ─────────────────────────────────────
   /**
    * Extract a display-ready value from an already-loaded module.
@@ -290,7 +322,7 @@ const CMT = (() => {
     DEMO_TOKEN,
     getSessionToken, getCurrentProjectId, setCurrentProjectId,
     getProjects, getProject, createProject, updateProject, deleteProject,
-    saveModule, loadModule, loadAllModules, getCarryOver,
+    saveModule, loadModule, loadAllModules, getCarryOver, getTouchedModules,
     exportProject, importProject,
     ping,
   };

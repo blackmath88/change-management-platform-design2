@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Unit 4 · Communicate with Impact</title>
+  <title>Unit 04 · Communicate with Impact</title>
   <meta property="og:title" content="Change Management Platform">
   <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
   <meta property="og:type" content="website">
@@ -15,15 +15,15 @@
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit4-communication.html"></div>
     <header class="topbar">
-      <nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 4</span><span class="meta-label">/</span><span class="meta-label crumb-current">Communicate with Impact</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 04</span><span class="meta-label">/</span><span class="meta-label crumb-current">Communicate with Impact</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav>
       <div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><a class="btn btn-primary" href="unit5-nudges.html">Nudges</a></div>
     </header>
     <main class="main"><div class="main-inner">
-      <section class="page-head"><div><div class="eyebrow">Unit 4 · Core Message</div><h1 class="page-title">What is the one truth this change must communicate?</h1><p class="page-subtitle">Before adapting for audiences, define the core message architecture. Every audience-specific version will be a translation of this — same truth, different emphasis and language.</p></div></section>
-      <div class="tabbar"><button class="tab-btn active" data-tab="core" onclick="switchTab('core',this)">Core Message</button><button class="tab-btn" data-tab="audiences" onclick="switchTab('audiences',this)">Audiences</button><button class="tab-btn" data-tab="risks" onclick="switchTab('risks',this)">Risks</button><button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button></div>
+      <section class="page-head"><div><div class="eyebrow">Unit 04 · Communicate with Impact</div><h1 class="page-title">What is the one truth this change must communicate?</h1><p class="page-subtitle">Before adapting for audiences, define the core message architecture. Every audience-specific version will be a translation of this — same truth, different emphasis and language.</p></div></section>
+      <div class="tabbar"><button class="tab-btn active" data-tab="core" onclick="switchTab('core',this)"><span class="tab-dot" data-tabdot="core"></span>Core Message</button><button class="tab-btn" data-tab="audiences" onclick="switchTab('audiences',this)"><span class="tab-dot" data-tabdot="audiences"></span>Audiences</button><button class="tab-btn" data-tab="risks" onclick="switchTab('risks',this)"><span class="tab-dot" data-tabdot="risks"></span>Risks</button><button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button></div>
       <section class="module"><div class="module-body">
         <div class="pane active" id="pane-core">
-          <div class="pane-head"><div class="pane-eyebrow">Unit 4 · Core Message</div><h1 class="pane-title">What is the one truth this change must communicate?</h1><p class="pane-desc">Before adapting for audiences, define the core message architecture. Every audience-specific version will be a translation of this — same truth, different emphasis and language.</p></div>
+          <div class="pane-head"><div class="pane-eyebrow">Unit 04 · Core Message</div><h1 class="pane-title">What is the one truth this change must communicate?</h1><p class="pane-desc">Before adapting for audiences, define the core message architecture. Every audience-specific version will be a translation of this — same truth, different emphasis and language.</p></div>
           <div id="vision-carry" class="hint-box" style="display:none;"><strong>From your vision:</strong> <span id="vision-carry-text"></span></div>
           <div class="core-grid">
             <div class="core-block"><div class="core-block-num">01</div><div class="core-block-title">The problem</div><div class="core-block-desc">What is the current situation that makes this change necessary?</div><textarea class="field-textarea" id="core-problem" style="min-height:80px;" placeholder="e.g. Administrative work is document-heavy and repetitive, and AI tools are being used informally without support" oninput="autosave()"></textarea></div>
@@ -34,9 +34,9 @@
           <div class="pane-eyebrow" style="margin-bottom:12px;">Communication objective</div><p style="font-size:0.85rem; color:var(--text); line-height:1.6; margin-bottom:14px; max-width:620px;">What must this change as a whole achieve with every audience? Define the baseline know / feel / do before translating for each group.</p>
           <div class="kfd-grid"><div class="kfd-card kfd-know"><span class="kfd-badge">Know</span><div class="kfd-card-title">What must people understand?</div><div class="kfd-card-desc">The rational insight everyone must walk away with.</div><textarea class="field-textarea" id="obj-know" placeholder="e.g. Copilot is being introduced in a limited, supported way — not a forced rollout." oninput="autosave()"></textarea></div><div class="kfd-card kfd-feel"><span class="kfd-badge">Feel</span><div class="kfd-card-title">What emotional shift is needed?</div><div class="kfd-card-desc">From anxiety toward what?</div><textarea class="field-textarea" id="obj-feel" placeholder="e.g. Cautiously curious and reassured that this is manageable." oninput="autosave()"></textarea></div><div class="kfd-card kfd-do"><span class="kfd-badge">Do</span><div class="kfd-card-title">What should people do next?</div><div class="kfd-card-desc">One concrete action or behaviour.</div><textarea class="field-textarea" id="obj-do" placeholder="e.g. Join the pilot, ask questions, engage with the support formats." oninput="autosave()"></textarea></div></div>
         </div>
-        <div class="pane" id="pane-audiences"><div class="pane-head"><div class="pane-eyebrow">Unit 4 · Audience Translations</div><h1 class="pane-title">Same truth, different language</h1><p class="pane-desc">Each audience has a different relationship to the change. Translate the core message into their language, their concerns, and their call to action.</p></div><div id="stakeholder-carry" class="hint-box" style="display:none;"><strong>Your stakeholders from Unit 3</strong> are pre-loaded as audiences below. Add know / feel / do for each.</div><div id="audience-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Loading audiences from Unit 3</div></div><button class="btn btn-secondary btn-sm" onclick="addCustomAudience()" style="margin-top:8px;">+ Add custom audience</button></div>
-        <div class="pane" id="pane-risks"><div class="pane-head"><div class="pane-eyebrow">Unit 4 · Communication Risks</div><h1 class="pane-title">What could go wrong?</h1><p class="pane-desc">Most communication failures are predictable. Flag the patterns you recognise in your current approach — before they damage trust.</p></div><div class="hint-box amber"><strong>Communication misfires are predictable.</strong> They're caused by a small set of recurring patterns. Spotting them early is far cheaper than recovering from them.</div><div class="misfire-grid" id="misfire-grid"></div><div class="field-group"><label class="label">Your biggest communication risk for this initiative</label><textarea class="field-textarea" id="comms-risk-notes" style="min-height:110px;" placeholder="What specific misfire are you most worried about, and why? What would you do to prevent it?" oninput="autosave()"></textarea></div></div>
-        <div class="pane" id="pane-ai"><div class="pane-head"><div class="pane-eyebrow">Unit 4 · AI &amp; Export</div><h1 class="pane-title">Take your communication plan to an AI thinking partner</h1><p class="pane-desc">Your full context, core message, and audience translations are embedded automatically.</p></div><div class="ai-mode-grid"><div class="ai-mode-card active" onclick="setMode('strengthen',this)"><div class="ai-mode-title">Strengthen the message</div><div class="ai-mode-desc">Make the core message sharper, more memorable, and harder to misunderstand.</div></div><div class="ai-mode-card" onclick="setMode('audience',this)"><div class="ai-mode-title">Audience check</div><div class="ai-mode-desc">For each audience, is the know / feel / do specific enough? What's missing or too vague?</div></div><div class="ai-mode-card" onclick="setMode('objections',this)"><div class="ai-mode-title">Anticipate objections</div><div class="ai-mode-desc">What are the most likely objections to each audience message, and how should you respond?</div></div><div class="ai-mode-card" onclick="setMode('nudge',this)"><div class="ai-mode-title">Bridge to nudges</div><div class="ai-mode-desc">Based on the know / feel / do gaps, what behavioural interventions make sense for Unit 5?</div></div></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div><div class="prompt-text" id="prompt-output">Fill in Tabs 1–3 to generate a prompt.</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div></div>
+        <div class="pane" id="pane-audiences"><div class="pane-head"><div class="pane-eyebrow">Unit 04 · Audience Translations</div><h1 class="pane-title">Same truth, different language</h1><p class="pane-desc">Each audience has a different relationship to the change. Translate the core message into their language, their concerns, and their call to action.</p></div><div id="stakeholder-carry" class="hint-box" style="display:none;"><strong>Your stakeholders from Unit 3</strong> are pre-loaded as audiences below. Add know / feel / do for each.</div><div id="audience-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Loading audiences from Unit 3</div></div><button class="btn btn-secondary btn-sm" onclick="addCustomAudience()" style="margin-top:8px;">+ Add custom audience</button></div>
+        <div class="pane" id="pane-risks"><div class="pane-head"><div class="pane-eyebrow">Unit 04 · Communication Risks</div><h1 class="pane-title">What could go wrong?</h1><p class="pane-desc">Most communication failures are predictable. Flag the patterns you recognise in your current approach — before they damage trust.</p></div><div class="hint-box amber"><strong>Communication misfires are predictable.</strong> They're caused by a small set of recurring patterns. Spotting them early is far cheaper than recovering from them.</div><div class="misfire-grid" id="misfire-grid"></div><div class="field-group"><label class="label">Your biggest communication risk for this initiative</label><textarea class="field-textarea" id="comms-risk-notes" style="min-height:110px;" placeholder="What specific misfire are you most worried about, and why? What would you do to prevent it?" oninput="autosave()"></textarea></div></div>
+        <div class="pane" id="pane-ai"><div class="pane-head"><div class="pane-eyebrow">Unit 04 · AI &amp; Export</div><h1 class="pane-title">Take your communication plan to an AI thinking partner</h1><p class="pane-desc">Your full context, core message, and audience translations are embedded automatically.</p></div><div class="ai-mode-grid" id="ai-mode-grid"></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div><div class="prompt-text" id="prompt-output">Fill in Tabs 1–3 to generate a prompt.</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div></div>
       </div></section>
     </div></main>
   </div>
@@ -44,6 +44,41 @@
   <script src="cmt-client.js"></script>
   <script>
 'use strict';
+
+const AI_TASKS = {
+  strengthen:
+    'Act as a communication strategist. Strengthen this change communication:\n'
+    + '1. Is the core message clear, memorable, and jargon-free? Suggest a sharper version.\n'
+    + '2. Does the know / feel / do objective create a complete and coherent shift? What is missing?\n'
+    + '3. Which part of the core message is most likely to be misheard or misunderstood? Why?\n'
+    + '4. Suggest one simple phrase or metaphor that could anchor this communication.',
+  audience:
+    'Review the audience translations:\n'
+    + '1. For each audience, is the "know" specific enough to be actionable — or is it still abstract?\n'
+    + '2. For each audience, is the "feel" shift realistic given their current stance?\n'
+    + "3. Which audience's translation is weakest, and what would strengthen it?\n"
+    + '4. Are there any audiences missing that should be added based on this change context?',
+  objections:
+    'Anticipate objections for each audience:\nFor each defined audience:\n'
+    + '1. What is the most likely objection or question they will raise?\n'
+    + '2. Is this objection rational, emotional, or political?\n'
+    + '3. What is the best response — factual, empathetic, or involving?\n'
+    + '4. What should NOT be said to this audience — what would backfire?',
+  nudge:
+    'Bridge communication design to behavioural intervention for Unit 5:\n'
+    + '1. For each audience, where is the "do" gap largest — what would make the desired action easier or more likely?\n'
+    + '2. Which audiences are most likely to hear the message but not change behaviour? Why?\n'
+    + '3. For the top 3 audiences, suggest one specific behavioural nudge that would reinforce the communication.\n'
+    + '4. What environmental or structural change would make the communication stick beyond the first message?',
+};
+
+const AI_MODES = [
+  { key:'strengthen', title:'Strengthen the message', desc:'Make the core message sharper, more memorable, and harder to misunderstand.' },
+  { key:'audience',   title:'Audience check',         desc:"For each audience, is the know / feel / do specific enough? What's missing or too vague?" },
+  { key:'objections', title:'Anticipate objections',  desc:'What are the most likely objections to each audience message, and how should you respond?' },
+  { key:'nudge',      title:'Bridge to nudges',       desc:'Based on the know / feel / do gaps, what behavioural interventions make sense for Unit 5?' },
+];
+
 let projectId = null, activeMode = 'strengthen', saveTimer = null;
 let vision = {}, stakeholdersData = { stakeholders: [] };
 const COLORS = ['#004dea','#1f7a4d','#4f46a5','#9b6200','#005d5d','#b42318','#0288a8'];
@@ -82,7 +117,48 @@ async function init() {
   if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
   setField('core-problem', data.core_problem); setField('core-solution', data.core_solution); setField('core-impact', data.core_impact); setField('core-outlook', data.core_outlook); setField('obj-know', data.obj_know); setField('obj-feel', data.obj_feel); setField('obj-do', data.obj_do); if (data.comms_risk_notes) setField('comms-risk-notes', data.comms_risk_notes);
   if (!data.audiences.length && stakeholdersData.stakeholders?.length) { data.audiences = stakeholdersData.stakeholders.map((s, i) => ({ id: uid(), name: s.name || 'Unnamed', source_stakeholder_id: s.id, color: COLORS[i % COLORS.length], know:'', feel:'', do:'', tone:'', notes:'' })); document.getElementById('stakeholder-carry').style.display = 'block'; }
-  renderAudiences(); renderMisfires(); updatePrompt();
+  renderAudiences(); renderMisfires(); renderAiCards(); updatePrompt();
+  updateTabDots();
+}
+
+function tabFilled(tab) {
+  if (tab === 'core') {
+    return !!(data.core_problem || data.core_solution || data.core_impact || data.core_outlook
+      || data.obj_know || data.obj_feel || data.obj_do);
+  }
+  if (tab === 'audiences') {
+    return (data.audiences || []).some(a => (a.know || a.feel || a.do || a.tone || '').trim().length > 0);
+  }
+  if (tab === 'risks') {
+    return (data.flagged_misfires || []).length > 0 || !!(data.comms_risk_notes && data.comms_risk_notes.trim());
+  }
+  return false;
+}
+
+function updateTabDots() {
+  document.querySelectorAll('.tab-dot').forEach(el => {
+    const t = el.getAttribute('data-tabdot');
+    el.classList.toggle('filled', tabFilled(t));
+  });
+}
+
+function renderAiCards() {
+  const grid = document.getElementById('ai-mode-grid');
+  if (!grid) return;
+  grid.innerHTML = AI_MODES.map(m =>
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+    +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+    +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    + '</div>'
+  ).join('');
+}
+
+function selectMode(mode) {
+  activeMode = mode;
+  renderAiCards();
+  updatePrompt();
 }
 function renderAudiences() {
   const list = document.getElementById('audience-list');
@@ -99,19 +175,12 @@ function addCustomAudience() { data.audiences.push({ id: uid(), name: 'New audie
 function renderMisfires() { const grid = document.getElementById('misfire-grid'); grid.innerHTML = MISFIRES.map((m, i) => '<div class="misfire-card' + (data.flagged_misfires.includes(i) ? ' flagged' : '') + '" onclick="toggleMisfire(' + i + ')"><div class="misfire-title">' + m.title + '</div><div class="misfire-desc">' + m.desc + '</div></div>').join(''); }
 function toggleMisfire(i) { const idx = data.flagged_misfires.indexOf(i); if (idx >= 0) data.flagged_misfires.splice(idx, 1); else data.flagged_misfires.push(i); renderMisfires(); autosave(); }
 function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'audiences') renderAudiences(); if (tab === 'ai') updatePrompt(); }
-function autosave() { data.core_problem = val('core-problem'); data.core_solution = val('core-solution'); data.core_impact = val('core-impact'); data.core_outlook = val('core-outlook'); data.obj_know = val('obj-know'); data.obj_feel = val('obj-feel'); data.obj_do = val('obj-do'); data.comms_risk_notes = val('comms-risk-notes'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_communication', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'communication', data).catch(() => {}); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
-function setMode(mode, card) { activeMode = mode; document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active')); card.classList.add('active'); updatePrompt(); }
+function autosave() { data.core_problem = val('core-problem'); data.core_solution = val('core-solution'); data.core_impact = val('core-impact'); data.core_outlook = val('core-outlook'); data.obj_know = val('obj-know'); data.obj_feel = val('obj-feel'); data.obj_do = val('obj-do'); data.comms_risk_notes = val('comms-risk-notes'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_communication', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'communication', data).catch(() => {}); updateTabDots(); if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 function updatePrompt() {
   const audText = data.audiences.map(a => '  ' + a.name + ':\n    Know: ' + (a.know || 'not specified') + '\n    Feel: ' + (a.feel || 'not specified') + '\n    Do: ' + (a.do || 'not specified') + '\n    Tone: ' + (a.tone || 'not specified')).join('\n\n') || '  (no audiences defined)';
   const flagged = data.flagged_misfires.map(i => MISFIRES[i]?.title).join(', ') || 'none flagged';
   const base = 'CHANGE MANAGEMENT CONTEXT — Unit 4: Communicate with Impact\n\nInitiative: ' + (vision.ctx_title || '(not set)') + '\nOrganisation: ' + (vision.ctx_org || '(not set)') + '\nVision: ' + (vision.vision_statement || '(not set)') + '\n\nCORE MESSAGE:\nProblem: ' + (data.core_problem || 'not specified') + '\nSolution: ' + (data.core_solution || 'not specified') + '\nImpact: ' + (data.core_impact || 'not specified') + '\nOutlook: ' + (data.core_outlook || 'not specified') + '\n\nCOMMUNICATION OBJECTIVE:\nKnow: ' + (data.obj_know || 'not specified') + '\nFeel: ' + (data.obj_feel || 'not specified') + '\nDo: ' + (data.obj_do || 'not specified') + '\n\nAUDIENCE TRANSLATIONS:\n' + audText + '\n\nFLAGGED COMMUNICATION RISKS: ' + flagged;
-  const modes = {
-    strengthen: base + '\n\nTASK: Act as a communication strategist. Strengthen this change communication:\n1. Is the core message clear, memorable, and jargon-free? Suggest a sharper version.\n2. Does the know / feel / do objective create a complete and coherent shift? What is missing?\n3. Which part of the core message is most likely to be misheard or misunderstood? Why?\n4. Suggest one simple phrase or metaphor that could anchor this communication.',
-    audience: base + '\n\nTASK: Review the audience translations:\n1. For each audience, is the "know" specific enough to be actionable — or is it still abstract?\n2. For each audience, is the "feel" shift realistic given their current stance?\n3. Which audience\'s translation is weakest, and what would strengthen it?\n4. Are there any audiences missing that should be added based on this change context?',
-    objections: base + '\n\nTASK: Anticipate objections for each audience:\nFor each defined audience:\n1. What is the most likely objection or question they will raise?\n2. Is this objection rational, emotional, or political?\n3. What is the best response — factual, empathetic, or involving?\n4. What should NOT be said to this audience — what would backfire?',
-    nudge: base + '\n\nTASK: Bridge communication design to behavioural intervention for Unit 5:\n1. For each audience, where is the "do" gap largest — what would make the desired action easier or more likely?\n2. Which audiences are most likely to hear the message but not change behaviour? Why?\n3. For the top 3 audiences, suggest one specific behavioural nudge that would reinforce the communication.\n4. What environmental or structural change would make the communication stick beyond the first message?',
-  };
-  document.getElementById('prompt-output').textContent = modes[activeMode];
+  document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
 }
 function copyPrompt(btn) { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => { const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000); }); }
 function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }

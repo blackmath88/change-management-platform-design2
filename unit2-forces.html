@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <title>Unit 2 · Force Field Analysis</title>
+  <title>Unit 02 · Force Field Analysis</title>
   <meta property="og:title" content="Change Management Platform">
   <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
   <meta property="og:type" content="website">
@@ -17,7 +17,7 @@
 
     <header class="topbar">
       <nav class="crumbs" aria-label="Breadcrumb">
-        <span class="meta-label">Unit 2</span>
+        <span class="meta-label">Unit 02</span>
         <span class="meta-label">/</span>
         <span class="meta-label crumb-current">Force Field Analysis</span>
         <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
@@ -33,15 +33,15 @@
       <div class="main-inner">
         <section class="page-head">
           <div>
-            <div class="eyebrow">Unit 2 · Force Field Analysis</div>
+            <div class="eyebrow">Unit 02 · Force Field Analysis</div>
             <h1 class="page-title">What is pushing this change — and what is blocking it?</h1>
             <p class="page-subtitle">Map the forces on both sides. Adjust strength with the bar. Toggle between Rational and Emotional to understand the full picture.</p>
           </div>
         </section>
 
         <div class="tabbar">
-          <button class="tab-btn active" data-tab="map" onclick="switchTab('map',this)">Force Map</button>
-          <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis',this)">Analysis</button>
+          <button class="tab-btn active" data-tab="map" onclick="switchTab('map',this)"><span class="tab-dot" data-tabdot="map"></span>Force Map</button>
+          <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis',this)"><span class="tab-dot" data-tabdot="analysis"></span>Analysis</button>
           <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button>
         </div>
 
@@ -49,7 +49,7 @@
           <div class="module-body">
             <div class="pane active" id="pane-map">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 2 · Force Field Analysis</div>
+                <div class="pane-eyebrow">Unit 02 · Force Field Analysis</div>
                 <h1 class="pane-title">What is pushing this change — and what is blocking it?</h1>
                 <p class="pane-desc">Map the forces on both sides. Adjust strength with the bar. Toggle between Rational (logic, data, business case) and Emotional (fear, pride, identity, trust) to understand the full picture.</p>
               </div>
@@ -79,7 +79,7 @@
 
             <div class="pane" id="pane-analysis">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 2 · Analysis</div>
+                <div class="pane-eyebrow">Unit 02 · Analysis</div>
                 <h1 class="pane-title">What does the force field tell you?</h1>
                 <p class="pane-desc">The force field is only useful if you draw conclusions from it. Use this analysis to identify leverage points, hidden dynamics, and strategic priorities.</p>
               </div>
@@ -92,16 +92,11 @@
 
             <div class="pane" id="pane-ai">
               <div class="pane-head">
-                <div class="pane-eyebrow">Unit 2 · AI &amp; Export</div>
+                <div class="pane-eyebrow">Unit 02 · AI &amp; Export</div>
                 <h1 class="pane-title">Take your force field to an AI thinking partner</h1>
                 <p class="pane-desc">Choose a mode and copy the prompt. Your full force field data is embedded automatically.</p>
               </div>
-              <div class="ai-mode-grid">
-                <div class="ai-mode-card active" onclick="setMode('diagnose',this)"><div class="ai-mode-title">Diagnose the field</div><div class="ai-mode-desc">Analyse the balance, identify hidden dynamics, highlight the most dangerous restraining force.</div></div>
-                <div class="ai-mode-card" onclick="setMode('leverage',this)"><div class="ai-mode-title">Find leverage points</div><div class="ai-mode-desc">Which forces can be amplified or weakened? What single intervention would shift the balance most?</div></div>
-                <div class="ai-mode-card" onclick="setMode('stakeholders',this)"><div class="ai-mode-title">Link to stakeholders</div><div class="ai-mode-desc">Which forces are carried by which stakeholder groups? Prepares you for Unit 3.</div></div>
-                <div class="ai-mode-card" onclick="setMode('emotional',this)"><div class="ai-mode-title">Emotional layer</div><div class="ai-mode-desc">What do the emotional forces reveal about the psychological reality of this change?</div></div>
-              </div>
+              <div class="ai-mode-grid" id="ai-mode-grid"></div>
               <div class="prompt-box">
                 <div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div>
                 <div class="prompt-text" id="prompt-output">Add forces to generate a prompt.</div>
@@ -121,6 +116,41 @@
   <script src="cmt-client.js"></script>
   <script>
 'use strict';
+
+const AI_TASKS = {
+  diagnose:
+    'Act as an experienced change consultant. Analyse this force field:\n'
+    + '1. What is the single most important insight from this force field?\n'
+    + '2. Which restraining force is most dangerous — and why?\n'
+    + '3. Is there a pattern in the emotional vs rational split? What does it reveal?\n'
+    + '4. What does this force field suggest about the readiness for change?',
+  leverage:
+    'Identify leverage points in this force field:\n'
+    + '1. Which driving force, if amplified, would have the biggest positive impact? How?\n'
+    + '2. Which restraining force, if reduced, would most shift the balance? What would reduce it?\n'
+    + '3. Is there a restraining force that could be reframed as a driving force?\n'
+    + '4. What is the one intervention that would change this picture most in the next 30 days?',
+  stakeholders:
+    'Bridge this force field to stakeholder mapping (Unit 3):\n'
+    + '1. For each of the top 3 restraining forces — which stakeholder group is most likely carrying it?\n'
+    + '2. For each of the top 3 driving forces — which stakeholder group could champion it?\n'
+    + '3. What does the emotional force profile suggest about which groups need most attention?\n'
+    + '4. What 4-5 stakeholder groups should be mapped first?',
+  emotional:
+    'Analyse the emotional layer:\n'
+    + '1. What do the emotional forces reveal about the psychological reality of this change for the people involved?\n'
+    + '2. Are the emotional restraining forces more or less dangerous than the rational ones? Why?\n'
+    + '3. What are the underlying fears, losses, or identity threats these emotional forces point to?\n'
+    + '4. What communication or leadership approaches would address the emotional resistance specifically?',
+};
+
+const AI_MODES = [
+  { key:'diagnose',     title:'Diagnose the field',   desc:'Analyse the balance, identify hidden dynamics, highlight the most dangerous restraining force.' },
+  { key:'leverage',     title:'Find leverage points', desc:'Which forces can be amplified or weakened? What single intervention would shift the balance most?' },
+  { key:'stakeholders', title:'Link to stakeholders', desc:'Which forces are carried by which stakeholder groups? Prepares you for Unit 3.' },
+  { key:'emotional',    title:'Emotional layer',      desc:'What do the emotional forces reveal about the psychological reality of this change?' },
+];
+
 let projectId = null, activeMode = 'diagnose', saveTimer = null, vision = {};
 let data = { driving: [], resisting: [], summary: '' };
 function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -141,8 +171,41 @@ async function init() {
   if (vtext) { document.getElementById('vision-carry-text').textContent = vtext; document.getElementById('vision-carry').style.display = 'block'; }
   if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
   if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
-  renderForces('driving'); renderForces('resisting'); updateNetBar(); updateAnalysis(); updatePrompt();
+  renderForces('driving'); renderForces('resisting'); updateNetBar(); updateAnalysis(); renderAiCards(); updatePrompt();
   if (data.summary) document.getElementById('forces-summary').value = data.summary;
+  updateTabDots();
+}
+
+function tabFilled(tab) {
+  if (tab === 'map')      return (data.driving || []).length > 0 || (data.resisting || []).length > 0;
+  if (tab === 'analysis') return !!(data.summary && data.summary.trim());
+  return false;
+}
+
+function updateTabDots() {
+  document.querySelectorAll('.tab-dot').forEach(el => {
+    const t = el.getAttribute('data-tabdot');
+    el.classList.toggle('filled', tabFilled(t));
+  });
+}
+
+function renderAiCards() {
+  const grid = document.getElementById('ai-mode-grid');
+  if (!grid) return;
+  grid.innerHTML = AI_MODES.map(m =>
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+    +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+    +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    + '</div>'
+  ).join('');
+}
+
+function selectMode(mode) {
+  activeMode = mode;
+  renderAiCards();
+  updatePrompt();
 }
 function addForce(side) {
   data[side].push({ id: uid(), label: '', strength: 3, type: 'rational' });
@@ -228,15 +291,11 @@ function autosave() {
   saveTimer = setTimeout(() => {
     localStorage.setItem('cmt_module_' + projectId + '_forces', JSON.stringify(data));
     if (window.CMT) CMT.saveModule(projectId, 'forces', data).catch(() => {});
+    updateTabDots();
+    if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId);
     ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
     setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
   }, 800);
-}
-function setMode(mode, card) {
-  activeMode = mode;
-  document.querySelectorAll('.ai-mode-card').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  updatePrompt();
 }
 function updatePrompt() {
   const dList = data.driving.map(f => '  + ' + (f.label || '(unlabelled)') + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (none added)';
@@ -249,13 +308,7 @@ function updatePrompt() {
     + 'DRIVING FORCES (total: ' + dSum + '):\n' + dList + '\n\nRESTRAINING FORCES (total: ' + rSum + '):\n' + rList + '\n\n'
     + 'NET PRESSURE: ' + (net > 0 ? '+' : '') + net + ' (' + (net > 0 ? 'driving dominates' : net < 0 ? 'resistance dominates' : 'balanced') + ')\n\n'
     + 'PRACTITIONER ANALYSIS:\n' + (data.summary || '(not completed)');
-  const modes = {
-    diagnose: base + '\n\nTASK: Act as an experienced change consultant. Analyse this force field:\n1. What is the single most important insight from this force field?\n2. Which restraining force is most dangerous — and why?\n3. Is there a pattern in the emotional vs rational split? What does it reveal?\n4. What does this force field suggest about the readiness for change?',
-    leverage: base + '\n\nTASK: Identify leverage points in this force field:\n1. Which driving force, if amplified, would have the biggest positive impact? How?\n2. Which restraining force, if reduced, would most shift the balance? What would reduce it?\n3. Is there a restraining force that could be reframed as a driving force?\n4. What is the one intervention that would change this picture most in the next 30 days?',
-    stakeholders: base + '\n\nTASK: Bridge this force field to stakeholder mapping (Unit 3):\n1. For each of the top 3 restraining forces — which stakeholder group is most likely carrying it?\n2. For each of the top 3 driving forces — which stakeholder group could champion it?\n3. What does the emotional force profile suggest about which groups need most attention?\n4. What 4-5 stakeholder groups should be mapped first?',
-    emotional: base + '\n\nTASK: Analyse the emotional layer:\n1. What do the emotional forces reveal about the psychological reality of this change for the people involved?\n2. Are the emotional restraining forces more or less dangerous than the rational ones? Why?\n3. What are the underlying fears, losses, or identity threats these emotional forces point to?\n4. What communication or leadership approaches would address the emotional resistance specifically?',
-  };
-  document.getElementById('prompt-output').textContent = modes[activeMode];
+  document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
 }
 function copyPrompt(btn) { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => { const orig = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000); }); }
 function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }
