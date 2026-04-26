@@ -19,6 +19,11 @@
   --amber-soft: #fff7e8;
   --red: #b42318;
   --red-soft: #fff1f0;
+  --unit-01-accent: #6d5acd;
+  --unit-02-accent: #c4843a;
+  --unit-03-accent: #2b8a8a;
+  --unit-04-accent: #cc6a5a;
+  --unit-05-accent: #3d8b5a;
   --sidebar: 240px;
   --topbar: 64px;
   --radius-control: 4px;
@@ -2854,4 +2859,83 @@ button.nav-item {
     grid-template-columns: 1fr;
     gap: 2px;
   }
+}
+
+/* ── Tier-1 polish ──────────────────────────────────────────
+   Per-unit accent wayfinding (sidebar number + page-head eyebrow),
+   AI tab explainer, AI architecture note on the dashboard, subtle
+   blue-violet tint on the active AI mode card.
+   ────────────────────────────────────────────────────────── */
+
+/* Sidebar: tint just the unit number with the per-unit accent.
+   Stays accent-coloured even when the row is active — the accent is
+   a wayfinding cue, so it should not flip back to blue on selection. */
+.nav-item[data-module="vision"]        .nav-num,
+.nav-item.is-active[data-module="vision"]        .nav-num { color: var(--unit-01-accent); }
+.nav-item[data-module="forces"]        .nav-num,
+.nav-item.is-active[data-module="forces"]        .nav-num { color: var(--unit-02-accent); }
+.nav-item[data-module="stakeholders"]  .nav-num,
+.nav-item.is-active[data-module="stakeholders"]  .nav-num { color: var(--unit-03-accent); }
+.nav-item[data-module="communication"] .nav-num,
+.nav-item.is-active[data-module="communication"] .nav-num { color: var(--unit-04-accent); }
+.nav-item[data-module="nudges"]        .nav-num,
+.nav-item.is-active[data-module="nudges"]        .nav-num { color: var(--unit-05-accent); }
+
+/* Page-head eyebrow takes the matching accent on each unit page.
+   Scoped to .page-head so other .eyebrow uses (module headers, etc.)
+   stay neutral. */
+body.unit-01-page .page-head .eyebrow { color: var(--unit-01-accent); }
+body.unit-02-page .page-head .eyebrow { color: var(--unit-02-accent); }
+body.unit-03-page .page-head .eyebrow { color: var(--unit-03-accent); }
+body.unit-04-page .page-head .eyebrow { color: var(--unit-04-accent); }
+body.unit-05-page .page-head .eyebrow { color: var(--unit-05-accent); }
+
+/* AI tab explainer — small, muted line above the mode-card grid. */
+.ai-tab-explainer {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 18px 0;
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 70ch;
+}
+
+/* Active mode card — universal subtle blue-violet tint, with a 3px
+   per-unit left border that replaces the previous inset shadow accent. */
+.ai-mode-card.active {
+  background: rgba(109, 90, 205, 0.06);
+  border-color: rgba(109, 90, 205, 0.28);
+  box-shadow: none;
+  border-left: 3px solid var(--unit-01-accent);
+}
+body.unit-02-page .ai-mode-card.active { border-left-color: var(--unit-02-accent); }
+body.unit-03-page .ai-mode-card.active { border-left-color: var(--unit-03-accent); }
+body.unit-04-page .ai-mode-card.active { border-left-color: var(--unit-04-accent); }
+body.unit-05-page .ai-mode-card.active { border-left-color: var(--unit-05-accent); }
+
+/* Dashboard: "How AI fits in" info block. Visually quiet — readable
+   prose, not a hero. */
+.ai-architecture-note .module-body {
+  padding: 22px 24px 24px;
+}
+
+.ai-architecture-note .module-title {
+  margin-top: 6px;
+  max-width: 70ch;
+}
+
+.ai-note-body {
+  margin: 14px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 70ch;
+  color: var(--ink);
+}
+
+.ai-note-sub {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  max-width: 70ch;
+  color: var(--muted);
 }

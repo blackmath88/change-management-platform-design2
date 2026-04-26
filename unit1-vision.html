@@ -11,7 +11,7 @@
   <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
 </head>
-<body>
+<body class="unit-page unit-01-page">
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit1-vision.html"></div>
 
@@ -188,6 +188,8 @@
                 <h1 class="pane-title">Take your vision to an AI thinking partner</h1>
                 <p class="pane-desc">Choose a prompt mode, copy the generated prompt, and open Claude or ChatGPT. Your full context is embedded automatically.</p>
               </div>
+
+              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
 
               <div class="ai-mode-grid" id="ai-mode-grid"></div>
 
@@ -617,6 +619,11 @@
 
   function updatePrompt() {
     const d = data;
+    if (!d.ctx_title) {
+      document.getElementById('prompt-output').textContent =
+        'Fill in the case context above to generate a prompt tailored to your initiative.';
+      return;
+    }
     const criteriaText = CRITERIA.map(c => {
       const cd = d.criteria[c.id];
       return '  ' + c.name + ': ' + (cd.score ? cd.score + '/5' : 'not scored') + (cd.notes ? ' — ' + cd.notes : '');
