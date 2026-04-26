@@ -11,7 +11,7 @@
   <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
 </head>
-<body>
+<body class="unit-page unit-02-page">
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit2-forces.html"></div>
 
@@ -96,6 +96,7 @@
                 <h1 class="pane-title">Take your force field to an AI thinking partner</h1>
                 <p class="pane-desc">Choose a mode and copy the prompt. Your full force field data is embedded automatically.</p>
               </div>
+              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
               <div class="ai-mode-grid" id="ai-mode-grid"></div>
               <div class="prompt-box">
                 <div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div>
@@ -299,6 +300,11 @@ function autosave() {
   }, 800);
 }
 function updatePrompt() {
+  if (!vision.ctx_title) {
+    document.getElementById('prompt-output').textContent =
+      "Complete Unit 01 (Vision) to generate a richer prompt. Each unit's AI prompt builds on the work from earlier units.";
+    return;
+  }
   const dList = data.driving.map(f => '  + ' + (f.label || '(unlabelled)') + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (none added)';
   const rList = data.resisting.map(f => '  - ' + (f.label || '(unlabelled)') + ' [' + f.strength + '/5, ' + f.type + ']').join('\n') || '  (none added)';
   const dSum = data.driving.reduce((a, f) => a + f.strength, 0);

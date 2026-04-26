@@ -336,7 +336,7 @@
     }
   </style>
 </head>
-<body>
+<body class="unit-page unit-03-page">
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit3-stakeholders.html"></div>
 
@@ -447,6 +447,7 @@
                   <h1 class="pane-title">Take your stakeholder map to an AI thinking partner</h1>
                   <p class="pane-desc">All stakeholder data is embedded. Choose a mode and copy the prompt.</p>
                 </div>
+                <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
                 <div class="ai-mode-grid" id="ai-mode-grid"></div>
                 <div class="prompt-box">
                   <div class="prompt-box-head">
@@ -1054,6 +1055,12 @@ function autosave() {
 }
 
 function updatePrompt() {
+  const noForces = (forces.driving || []).length === 0 && (forces.resisting || []).length === 0;
+  if (!vision.ctx_title || noForces) {
+    document.getElementById('prompt-output').textContent =
+      'Complete Units 01 (Vision) and 02 (Forces) to generate a richer prompt. Stakeholder reflection is most useful when grounded in your case context and force field.';
+    return;
+  }
   const shList = data.stakeholders.map(s =>
     '  ' + (s.name || 'Unnamed') + ' (' + (s.role || s.group || '—') + ') — Power ' + s.power + '/5, Interest ' + s.interest + '/5, Stance: ' + (s.stance || 'unknown') + ', Readiness: ' + (READINESS[s.readiness] || 'unknown') + '\n'
     + '    Motivations: ' + (s.motivations || 'not specified') + '\n'
