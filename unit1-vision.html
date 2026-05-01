@@ -112,6 +112,7 @@
                 <label class="label">Why now? — what creates urgency?</label>
                 <textarea class="field-textarea" id="ctx-why" rows="2" placeholder="What is making this change necessary or timely? External pressure, strategic opportunity, internal crisis, leadership decision?" oninput="autosave()"></textarea>
               </div>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="refine">Refine the vision →</a></div>
             </div>
 
             <div class="pane" id="pane-vision">
@@ -139,6 +140,7 @@
                 <label class="label">Case for change — in one short paragraph</label>
                 <textarea class="field-textarea" id="vision-case" rows="3" placeholder="Why does this change need to happen? What is the cost of not changing? Keep this crisp — it's the argument you make when someone asks why." oninput="autosave()"></textarea>
               </div>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="refine">Refine the vision →</a></div>
             </div>
 
             <div class="pane" id="pane-criteria">
@@ -154,6 +156,7 @@
               </div>
 
               <div class="criteria-grid" id="criteria-grid"></div>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="critique">Challenge it →</a></div>
             </div>
 
             <div class="pane" id="pane-northstar">
@@ -180,16 +183,17 @@
 
               <div class="signal-list" id="signal-list"></div>
               <button class="btn btn-secondary btn-sm" onclick="addSignal()">+ Add signal</button>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="forces">Forces preview →</a></div>
             </div>
 
             <div class="pane" id="pane-ai">
+              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
+
               <div class="pane-head">
                 <div class="pane-eyebrow">Unit 01 · AI &amp; Export</div>
-                <h1 class="pane-title">Take your vision to an AI thinking partner</h1>
+                <h1 class="pane-title">Refine your vision with AI</h1>
                 <p class="pane-desc">Choose a prompt mode, copy the generated prompt, and open Claude or ChatGPT. Your full context is embedded automatically.</p>
               </div>
-
-              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
 
               <div class="ai-mode-grid" id="ai-mode-grid"></div>
 
@@ -323,6 +327,23 @@
     renderAiCards();
     updatePrompt();
     updateTabDots();
+
+    // Wire deep-links: any [data-ai-mode] anchor points to the AI tab + mode for this project.
+    if (projectId) {
+      document.querySelectorAll('[data-ai-mode]').forEach(a => {
+        const key = a.getAttribute('data-ai-mode');
+        a.setAttribute('href', window.location.pathname + '?project=' + encodeURIComponent(projectId) + '&ai=' + encodeURIComponent(key));
+      });
+    }
+
+    // Honor incoming ?ai=KEY → switch to AI tab and pre-select the mode.
+    const aiParam = params.get('ai');
+    if (aiParam && AI_MODES.some(m => m.key === aiParam)) {
+      const aiBtn = document.querySelector('[data-tab="ai"]');
+      if (aiBtn) switchTab('ai', aiBtn);
+      selectMode(aiParam);
+    }
+
     loadVisionSummary();
   }
 

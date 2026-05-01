@@ -75,6 +75,7 @@
                   <button class="add-force-btn" onclick="addForce('resisting')">+ Add restraining force</button>
                 </div>
               </div>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="diagnose">Diagnose the field →</a></div>
             </div>
 
             <div class="pane" id="pane-analysis">
@@ -88,15 +89,16 @@
                 <label class="label">Your analysis — what does this force field tell you?</label>
                 <textarea class="field-textarea" id="forces-summary" rows="5" style="min-height:120px;" placeholder="Summarise the key insight. What is the dominant pattern? What are the most important levers? What would you do first?" oninput="autosave()"></textarea>
               </div>
+              <div class="ai-cue">Pre-framed prompt for this — <a href="#" data-ai-mode="leverage">Find leverage points →</a></div>
             </div>
 
             <div class="pane" id="pane-ai">
+              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
               <div class="pane-head">
                 <div class="pane-eyebrow">Unit 02 · AI &amp; Export</div>
-                <h1 class="pane-title">Take your force field to an AI thinking partner</h1>
+                <h1 class="pane-title">Pressure-test your force field with AI</h1>
                 <p class="pane-desc">Choose a mode and copy the prompt. Your full force field data is embedded automatically.</p>
               </div>
-              <p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p>
               <div class="ai-mode-grid" id="ai-mode-grid"></div>
               <div class="prompt-box">
                 <div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div>
@@ -176,6 +178,22 @@ async function init() {
   renderForces('driving'); renderForces('resisting'); updateNetBar(); updateAnalysis(); renderAiCards(); updatePrompt();
   if (data.summary) document.getElementById('forces-summary').value = data.summary;
   updateTabDots();
+
+  // Wire deep-links: any [data-ai-mode] anchor points to the AI tab + mode for this project.
+  if (projectId) {
+    document.querySelectorAll('[data-ai-mode]').forEach(a => {
+      const key = a.getAttribute('data-ai-mode');
+      a.setAttribute('href', window.location.pathname + '?project=' + encodeURIComponent(projectId) + '&ai=' + encodeURIComponent(key));
+    });
+  }
+
+  // Honor incoming ?ai=KEY → switch to AI tab and pre-select the mode.
+  const aiParam = params.get('ai');
+  if (aiParam && AI_MODES.some(m => m.key === aiParam)) {
+    const aiBtn = document.querySelector('[data-tab="ai"]');
+    if (aiBtn) switchTab('ai', aiBtn);
+    selectMode(aiParam);
+  }
 }
 
 function tabFilled(tab) {

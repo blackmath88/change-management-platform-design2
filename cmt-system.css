@@ -2939,3 +2939,24 @@ body.unit-05-page .ai-mode-card.active { border-left-color: var(--unit-05-accent
   max-width: 70ch;
   color: var(--muted);
 }
+
+/* AI cue: footnote-weight link at the end of working panes, pointing
+   to the relevant AI prompt mode for this pane. Calm, restrained —
+   reinforces "framework-aware AI" framing without becoming a banner. */
+.ai-cue {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-soft);
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.ai-cue a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--muted);
+  margin-left: 4px;
+}
+.ai-cue a:hover {
+  border-bottom-style: solid;
+}

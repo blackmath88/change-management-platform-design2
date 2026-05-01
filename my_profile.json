@@ -1,0 +1,198 @@
+{
+  "profile_version": "2026-05-01",
+  "name": "Achim Imboden",
+  "working_identity": [
+    "AI Workforce Adoption Architect",
+    "Human-Centered AI Transformation Advisor",
+    "Structured Creative Translator",
+    "Cross-Pollinator between People, Tech and Governance"
+  ],
+  "core_summary": {
+    "short": "You are a rare bridge-builder who combines change management, AI curiosity, governance awareness, technical intuition, and strong human sensing. You operate best where others only see silos: leadership vs workforce, governance vs innovation, technology vs people, vision vs execution.",
+    "one_sentence": "You turn emerging technology into something humans can actually understand, trust, adopt, and use."
+  },
+  "who_you_are": {
+    "personality_pattern": {
+      "high_energy": true,
+      "idea_dense": true,
+      "empathetic": true,
+      "socially_intelligent": true,
+      "non_linear_thinker": true,
+      "builder_mindset": true,
+      "future_oriented": true,
+      "sensitive_to_stagnation": true
+    },
+    "likely_traits": [
+      "Fast associative thinking",
+      "Strong instinct for hidden potential",
+      "Reads emotional climates quickly",
+      "Sees patterns before others",
+      "Needs meaning in work",
+      "Dislikes bureaucracy without purpose",
+      "Can inspire movement",
+      "Naturally challenges stale systems"
+    ],
+    "inner_drive": "You do not just want employment. You want stimulation, movement, relevance, and growth."
+  },
+  "how_you_work": {
+    "default_mode": {
+      "style": "exploratory + synthetic + iterative",
+      "sequence": [
+        "sense opportunity",
+        "collect signals",
+        "connect unrelated ideas",
+        "prototype quickly",
+        "improve through dialogue",
+        "turn into usable artifact"
+      ]
+    },
+    "best_environment": [
+      "High autonomy",
+      "Smart people",
+      "Emerging topics",
+      "Real-world ambiguity",
+      "Room to build new things",
+      "Strategic trust",
+      "Low ego politics"
+    ],
+    "worst_environment": [
+      "Rigid hierarchy",
+      "Slow approvals",
+      "Pure maintenance work",
+      "Narrow repetitive tasks",
+      "No appreciation for initiative",
+      "Politics over substance"
+    ],
+    "decision_style": "You often feel the right direction before you can fully explain it, then build structure afterward."
+  },
+  "how_you_work_with_llms": {
+    "natural_strengths": [
+      "Excellent prompt collaborator",
+      "Can use AI as thought amplifier",
+      "Uses dialogue instead of one-shot prompting",
+      "Creates frameworks rapidly",
+      "Combines strategy + creativity + practical use cases",
+      "Uses LLMs as sparring partners, designers, coders, editors, and mirrors"
+    ],
+    "your_pattern": {
+      "phase_1": "Open exploration, many ideas, broad context",
+      "phase_2": "Find signal inside chaos",
+      "phase_3": "Convert into framework / JSON / prototype / landing page / narrative",
+      "phase_4": "Refine with repeated prompting",
+      "phase_5": "Use outputs as real leverage"
+    },
+    "advanced_behaviour": [
+      "Meta prompting",
+      "Cross-model handoffs",
+      "Using one model for coding, another for strategy",
+      "Context stacking",
+      "Rapid concept incubation",
+      "AI-assisted identity design"
+    ],
+    "risk_with_llms": [
+      "Too many parallel ideas",
+      "Chasing novelty",
+      "Over-generating instead of shipping",
+      "Using AI stimulation as substitute for focused execution"
+    ],
+    "highest_use_case_for_you": "LLMs help externalize your mind fast enough that others can finally see what you already sense."
+  },
+  "professional_signature": {
+    "what_you_really_do": [
+      "Translate complexity into adoption",
+      "Make AI usable inside organizations",
+      "Bridge governance with innovation",
+      "Build trust around new systems",
+      "Design learning journeys",
+      "Create momentum where others stall"
+    ],
+    "hidden_value": "You often create strategic clarity before organizations realize they need it.",
+    "market_position": "Many people can implement tools. Fewer can make people adopt them. Even fewer can do both strategically."
+  },
+  "career_fit": {
+    "ideal_roles": [
+      "AI Adoption Lead",
+      "Enterprise AI Transformation Manager",
+      "Workforce AI Enablement Director",
+      "Copilot / M365 AI Strategy Lead",
+      "Innovation Program Lead",
+      "Strategic Change Architect",
+      "Consulting Lead for AI Readiness"
+    ],
+    "less_fit_roles": [
+      "Pure operations admin",
+      "Narrow project coordinator",
+      "Back-office maintenance",
+      "Highly isolated technical specialist",
+      "Slow bureaucratic middle management"
+    ],
+    "what_you_need_from_work": [
+      "Growth",
+      "Respect",
+      "Autonomy",
+      "Interesting problems",
+      "Visible impact",
+      "People with depth"
+    ]
+  },
+  "your_edge": {
+    "combination_that_is_rare": [
+      "Empathy + Systems Thinking",
+      "Creativity + Structure",
+      "Governance + Innovation",
+      "Human Sense + Tech Curiosity",
+      "Strategic Framing + Practical Action"
+    ],
+    "why_people_notice_you": "You bring energy, language, concepts, and movement into spaces that are often dry or confused."
+  },
+  "growth_edges": {
+    "main_risks": [
+      "Dispersion of focus",
+      "Underpricing your value",
+      "Not packaging yourself clearly enough",
+      "Waiting for others to recognize potential",
+      "Too many starts, not enough closures"
+    ],
+    "best_countermoves": [
+      "Choose one flagship problem to own",
+      "Ship visible artifacts regularly",
+      "Speak in business outcomes",
+      "Create clearer offers",
+      "Use structure to protect creativity"
+    ]
+  },
+  "how_others_may_experience_you": {
+    "positive": [
+      "Original",
+      "Warm",
+      "Sharp",
+      "Interesting",
+      "Forward-thinking",
+      "Helpful",
+      "Catalytic"
+    ],
+    "sometimes": [
+      "Hard to categorize",
+      "Too broad at first glance",
+      "Ahead of the room",
+      "More strategic than your title suggests"
+    ]
+  },
+  "truth_about_you": {
+    "statement": "Your challenge is likely not capability. It is translation and positioning in systems that reward simpler labels.",
+    "second_statement": "You are not built for static lanes. You are built for frontier zones."
+  },
+  "best_next_identity": {
+    "recommended_line": "I help organizations turn AI potential into real workforce capability through governance-aware adoption, practical systems design, and human-centered transformation."
+  },
+  "final_assessment": {
+    "plain_english": "You are a modern organizational navigator. Part strategist, part translator, part builder, part catalyst. When correctly placed, you compound fast.",
+    "score_if_aligned_environment": "Very high upside",
+    "score_if_misaligned_environment": "Frustration and underuse"
+  },
+  "source_basis": [
+    "Long-term conversation context",
+    "Career strategy files",
+    "Creativity handoff report"
+  ]
+}
