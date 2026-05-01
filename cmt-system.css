@@ -2940,23 +2940,75 @@ body.unit-05-page .ai-mode-card.active { border-left-color: var(--unit-05-accent
   color: var(--muted);
 }
 
-/* AI cue: footnote-weight link at the end of working panes, pointing
-   to the relevant AI prompt mode for this pane. Calm, restrained —
-   reinforces "framework-aware AI" framing without becoming a banner. */
+/* AI cue: yellow action panel that surfaces the framework-aware AI
+   prompt for the current pane. Yellow (#f5c000) is the platform-wide
+   semantic marker for "AI" — used ONLY on AI elements so reviewers
+   learn the rule "yellow = AI" at a glance. The rest of the platform
+   stays calm. */
 .ai-cue {
-  margin-top: 22px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--line-soft);
-  font-size: 0.82rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
-.ai-cue a {
-  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  padding: 16px 20px;
+  background: #f5c000;
+  border-radius: 8px;
   text-decoration: none;
-  border-bottom: 1px dotted var(--muted);
-  margin-left: 4px;
+  color: #14171a;
+  transition: background 120ms ease, box-shadow 120ms ease;
 }
-.ai-cue a:hover {
-  border-bottom-style: solid;
+.ai-cue:hover {
+  background: #ffd633;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.ai-cue-badge {
+  font-family: "Manrope", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  background: #14171a;
+  color: #f5c000;
+  padding: 4px 9px;
+  border-radius: 4px;
+}
+.ai-cue-action {
+  flex: 1;
+  font-family: "Manrope", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #14171a;
+}
+.ai-cue-arrow {
+  font-size: 1.15rem;
+  color: #14171a;
+  font-weight: 600;
+}
+
+/* AI tab marker: yellow dot before the "AI & Export" label in unit
+   tabbars, so the AI tab is recognisable as the AI tab on first scan. */
+.tab-btn[data-tab="ai"]::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f5c000;
+  margin-right: 7px;
+  vertical-align: 1px;
+}
+
+/* AI pane eyebrow: yellow pill, visually echoes the .ai-cue-badge so
+   landing on the AI tab feels like the same semantic marker, larger. */
+#pane-ai .pane-eyebrow {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #f5c000;
+  color: #14171a;
+  border-radius: 4px;
+}
+
+/* Dashboard architecture note: yellow stripe ties the "How AI fits in"
+   block into the same yellow = AI rule used inside the units. */
+.ai-architecture-note {
+  border-left: 4px solid #f5c000;
 }

@@ -1,0 +1,7 @@
+# Private context and handoff files — never commit these.
+cmt-handoff-v3.json
+imd_context_summaryjson
+my_profile.json
+
+# macOS
+.DS_Store
