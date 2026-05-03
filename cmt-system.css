@@ -321,7 +321,7 @@ button.nav-item {
 .span-3 { grid-column: span 3; }
 
 .module {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: var(--radius-panel);
   background: var(--panel);
   box-shadow: var(--shadow-card);
@@ -338,7 +338,11 @@ button.nav-item {
 }
 
 .module-body {
-  padding: 18px;
+  padding: 24px;
+}
+
+.module + .module {
+  margin-top: 20px;
 }
 
 .module-title {
@@ -931,7 +935,7 @@ button.nav-item {
 .tab-btn.active {
   color: var(--blue);
   background: var(--blue-soft);
-  box-shadow: inset 0 -3px 0 currentColor;
+  box-shadow: inset 0 -4px 0 currentColor;
 }
 
 /* Per-unit active-tab accent — colour matches the unit's accent so
@@ -1400,8 +1404,8 @@ body.unit-05-page .tab-btn.active:not([data-tab="ai"]) {
 
 .divider {
   height: 1px;
-  background: var(--line-soft);
-  margin: 20px 0;
+  background: rgba(15, 23, 42, 0.10);
+  margin: 24px 0;
 }
 
 .signal-list {
@@ -2915,6 +2919,14 @@ body.unit-05-page .tab-btn.active:not([data-tab="ai"]) {
 .nav-item[data-module="nudges"]        .nav-num,
 .nav-item.is-active[data-module="nudges"]        .nav-num { color: var(--unit-05-accent); }
 
+/* Active sidebar item picks up the unit accent as a background tint
+   (no left border — the universal blue 2px marker stays). */
+body.unit-01-page .nav-item.is-active[data-module="vision"]        { background: rgba(109, 90, 205, 0.08); }
+body.unit-02-page .nav-item.is-active[data-module="forces"]        { background: rgba(196, 132, 58, 0.08); }
+body.unit-03-page .nav-item.is-active[data-module="stakeholders"]  { background: rgba(43, 138, 138, 0.08); }
+body.unit-04-page .nav-item.is-active[data-module="communication"] { background: rgba(204, 106, 90, 0.08); }
+body.unit-05-page .nav-item.is-active[data-module="nudges"]        { background: rgba(61, 139, 90, 0.08); }
+
 /* Page-head eyebrow takes the matching accent on each unit page.
    Scoped to .page-head so other .eyebrow uses (module headers, etc.)
    stay neutral. */
@@ -2930,29 +2942,14 @@ body.unit-05-page .page-head .eyebrow { color: var(--unit-05-accent); }
 body.unit-page .page-head {
   border-radius: 16px;
   padding: 24px 28px 20px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-body.unit-01-page .page-head {
-  background: rgba(109, 90, 205, 0.04);
-  border-left: 4px solid var(--unit-01-accent);
-}
-body.unit-02-page .page-head {
-  background: rgba(196, 132, 58, 0.04);
-  border-left: 4px solid var(--unit-02-accent);
-}
-body.unit-03-page .page-head {
-  background: rgba(43, 138, 138, 0.04);
-  border-left: 4px solid var(--unit-03-accent);
-}
-body.unit-04-page .page-head {
-  background: rgba(204, 106, 90, 0.04);
-  border-left: 4px solid var(--unit-04-accent);
-}
-body.unit-05-page .page-head {
-  background: rgba(61, 139, 90, 0.04);
-  border-left: 4px solid var(--unit-05-accent);
-}
+body.unit-01-page .page-head { background: rgba(109, 90, 205, 0.08); }
+body.unit-02-page .page-head { background: rgba(196, 132, 58, 0.08); }
+body.unit-03-page .page-head { background: rgba(43, 138, 138, 0.08); }
+body.unit-04-page .page-head { background: rgba(204, 106, 90, 0.08); }
+body.unit-05-page .page-head { background: rgba(61, 139, 90, 0.08); }
 
 /* AI tab explainer — small, muted line above the mode-card grid. */
 .ai-tab-explainer {
@@ -3200,25 +3197,79 @@ body.unit-05-page .ai-mode-card.active { border-left-color: var(--unit-05-accent
 
 .ai-panel-body {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ===== AI PANEL INTERNAL ZONES ===== */
+
+.ai-panel-modes {
+  display: flex;
+  gap: 6px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.ai-panel-mode-pill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: transparent;
+  color: var(--muted, #6b7280);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.ai-panel-mode-pill:hover {
+  background: rgba(15, 23, 42, 0.04);
+  color: var(--ink, #111827);
+}
+
+.ai-panel-mode-pill.active {
+  background: var(--ink, #111827);
+  color: #ffffff;
+  border-color: var(--ink, #111827);
+}
+
+.ai-panel-prompt-zone {
+  flex: 1;
   overflow-y: auto;
-  padding: 20px;
-}
-
-.ai-panel-body .ai-tab-explainer {
-  margin-bottom: 16px;
-}
-
-.ai-panel-body .ai-mode-grid {
-  gap: 12px;
-  grid-template-columns: 1fr;
-}
-
-.ai-panel-body .ai-mode-card {
+  padding: 16px 20px;
   min-height: 0;
 }
 
-.ai-panel-body .prompt-box {
-  margin-top: 16px;
+.ai-panel-prompt-zone .prompt-text {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--ink, #1a1d20);
+  white-space: pre-wrap;
+  font-family: "IBM Plex Mono", "SF Mono", monospace;
+  background: rgba(15, 23, 42, 0.02);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.ai-panel-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fafbfc;
+}
+
+.ai-panel-actions .btn {
+  flex: 1;
+  text-align: center;
+  font-size: 0.78rem;
 }
 
 body.ai-panel-active {

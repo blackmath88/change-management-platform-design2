@@ -1078,28 +1078,58 @@ function switchTab(tab, btn) {
 }
 
 function openAiPanel() {
-  const pane = document.getElementById('pane-ai');
-  const panelBody = document.getElementById('ai-panel-body');
   const overlay = document.getElementById('ai-panel-overlay');
-  if (!pane || !panelBody || !overlay) return;
-  if (pane.parentElement !== panelBody) panelBody.appendChild(pane);
-  pane.classList.add('active');
-  pane.style.display = 'block';
+  const panelBody = document.getElementById('ai-panel-body');
+  if (!overlay || !panelBody) return;
+  const pills = AI_MODES.map(m =>
+    '<button class="ai-panel-mode-pill' + (m.key === activeMode ? ' active' : '') +
+    '" data-mode="' + m.key + '" onclick="setPanelMode(\'' + m.key + '\')">' +
+    esc(m.title) + '</button>'
+  ).join('');
+  panelBody.innerHTML =
+    '<div class="ai-panel-modes">' + pills + '</div>' +
+    '<div class="ai-panel-prompt-zone"><div class="prompt-text" id="panel-prompt-text"></div></div>' +
+    '<div class="ai-panel-actions">' +
+      '<button class="btn btn-inverse" onclick="copyPanelPrompt(this)">Copy prompt</button>' +
+      '<a class="btn btn-secondary" href="https://claude.ai" target="_blank" rel="noopener">Claude ↗</a>' +
+      '<a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" rel="noopener">ChatGPT ↗</a>' +
+    '</div>';
+  updatePanelPrompt();
   overlay.classList.add('visible');
   document.body.classList.add('ai-panel-active');
-  if (typeof updatePrompt === 'function') updatePrompt();
 }
 
 function closeAiPanel() {
-  const pane = document.getElementById('pane-ai');
-  const moduleBody = document.querySelector('.module-body');
   const overlay = document.getElementById('ai-panel-overlay');
-  if (!pane || !moduleBody || !overlay) return;
-  if (pane.parentElement !== moduleBody) moduleBody.appendChild(pane);
-  pane.classList.remove('active');
-  pane.style.display = '';
+  if (!overlay) return;
   overlay.classList.remove('visible');
   document.body.classList.remove('ai-panel-active');
+}
+
+function setPanelMode(mode) {
+  activeMode = mode;
+  document.querySelectorAll('.ai-panel-mode-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.mode === mode);
+  });
+  updatePanelPrompt();
+}
+
+function updatePanelPrompt() {
+  if (typeof updatePrompt === 'function') updatePrompt();
+  const target = document.getElementById('panel-prompt-text');
+  const source = document.getElementById('prompt-output');
+  if (target && source) target.textContent = source.textContent;
+}
+
+function copyPanelPrompt(btn) {
+  const el = document.getElementById('panel-prompt-text');
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function autosave() {
