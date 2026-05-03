@@ -24,7 +24,7 @@
       </nav>
       <div class="topbar-actions">
         <span class="save-indicator" id="save-indicator">—</span>
-        <button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button>
+        <button class="btn" onclick="openAiPanel()">AI Reflection</button>
         <a class="btn btn-primary" href="unit3-stakeholders.html">Stakeholders</a>
       </div>
     </header>
@@ -42,7 +42,7 @@
         <div class="tabbar">
           <button class="tab-btn active" data-tab="map" onclick="switchTab('map',this)"><span class="tab-dot" data-tabdot="map"></span>Force Map</button>
           <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis',this)"><span class="tab-dot" data-tabdot="analysis"></span>Analysis</button>
-          <button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button>
+          <button class="tab-btn tab-btn-ai" data-tab="ai" onclick="openAiPanel()">AI Reflection</button>
         </div>
 
         <section class="module">
@@ -115,6 +115,20 @@
       </div>
     </main>
   </div>
+  <!-- AI slide panel -->
+  <div class="ai-panel-overlay" id="ai-panel-overlay" role="dialog" aria-modal="true" aria-label="AI reflection panel">
+    <div class="ai-panel" id="ai-panel">
+      <div class="ai-panel-head">
+        <div>
+          <div class="ai-panel-title">AI Reflection</div>
+          <div class="ai-panel-sub">Framework-aware prompts for your case</div>
+        </div>
+        <button class="ai-panel-close" onclick="closeAiPanel()" title="Close (Esc)" aria-label="Close AI panel">×</button>
+      </div>
+      <div class="ai-panel-body" id="ai-panel-body"></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
   <script src="cmt-client.js"></script>
   <script>
@@ -187,13 +201,16 @@ async function init() {
     });
   }
 
-  // Honor incoming ?ai=KEY → switch to AI tab and pre-select the mode.
+  // Honor incoming ?ai=KEY → open AI panel and pre-select the mode.
   const aiParam = params.get('ai');
   if (aiParam && AI_MODES.some(m => m.key === aiParam)) {
-    const aiBtn = document.querySelector('[data-tab="ai"]');
-    if (aiBtn) switchTab('ai', aiBtn);
+    openAiPanel();
     selectMode(aiParam);
   }
+
+  document.getElementById('ai-panel-overlay')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAiPanel();
+  });
 }
 
 function tabFilled(tab) {
@@ -295,13 +312,42 @@ function updateAnalysis() {
     + (rationalR.length ? '<ul>' + rationalR.map(f => '<li>' + esc(f.label || '(unlabelled)') + ' <span style="color:var(--muted)">(' + f.strength + '/5)</span></li>').join('') + '</ul>' : '<span style="color:var(--muted)">No rational restraining forces yet.</span>') + '</div></div>';
 }
 function switchTab(tab, btn) {
+  if (tab === 'ai') { openAiPanel(); return; }
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('pane-' + tab).classList.add('active');
   if (btn) btn.classList.add('active');
   if (tab === 'analysis') updateAnalysis();
-  if (tab === 'ai') updatePrompt();
 }
+function openAiPanel() {
+  const pane = document.getElementById('pane-ai');
+  const panelBody = document.getElementById('ai-panel-body');
+  const overlay = document.getElementById('ai-panel-overlay');
+  if (!pane || !panelBody || !overlay) return;
+  if (pane.parentElement !== panelBody) panelBody.appendChild(pane);
+  pane.classList.add('active');
+  pane.style.display = 'block';
+  overlay.classList.add('visible');
+  document.body.classList.add('ai-panel-active');
+  if (typeof updatePrompt === 'function') updatePrompt();
+}
+function closeAiPanel() {
+  const pane = document.getElementById('pane-ai');
+  const moduleBody = document.querySelector('.module-body');
+  const overlay = document.getElementById('ai-panel-overlay');
+  if (!pane || !moduleBody || !overlay) return;
+  if (pane.parentElement !== moduleBody) moduleBody.appendChild(pane);
+  pane.classList.remove('active');
+  pane.style.display = '';
+  overlay.classList.remove('visible');
+  document.body.classList.remove('ai-panel-active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('ai-panel-overlay');
+    if (overlay && overlay.classList.contains('visible')) closeAiPanel();
+  }
+});
 function autosave() {
   data.summary = document.getElementById('forces-summary')?.value || '';
   updateNetBar();
