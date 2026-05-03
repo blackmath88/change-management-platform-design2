@@ -14,10 +14,10 @@
 <body class="unit-page unit-05-page">
   <div class="app-shell">
     <div id="sidebar-mount" data-active="unit5-nudges.html"></div>
-    <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 05</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="switchTab('ai',document.querySelector('[data-tab=ai]'))">AI &amp; Export</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
+    <header class="topbar"><nav class="crumbs" aria-label="Breadcrumb"><span class="meta-label">Unit 05</span><span class="meta-label">/</span><span class="meta-label crumb-current">Nudge &amp; Build Momentum</span><span class="topbar-sep" id="topbar-sep" style="display:none;">·</span></nav><div class="topbar-actions"><span class="save-indicator" id="save-indicator">—</span><button class="btn" onclick="openAiPanel()">AI Reflection</button><button class="btn btn-primary" onclick="exportProject()">Export JSON</button></div></header>
     <main class="main"><div class="main-inner">
       <section class="page-head"><div><div class="eyebrow">Unit 05 · Nudge &amp; Build Momentum</div><h1 class="page-title">Where are your stakeholders on the adoption curve?</h1><p class="page-subtitle">Behaviour change happens in stages. Map each group, design EAST nudges, and monitor the momentum signals that show whether adoption is actually moving.</p></div></section>
-      <div class="tabbar"><button class="tab-btn active" data-tab="adoption" onclick="switchTab('adoption',this)"><span class="tab-dot" data-tabdot="adoption"></span>Adoption Map</button><button class="tab-btn" data-tab="nudges" onclick="switchTab('nudges',this)"><span class="tab-dot" data-tabdot="nudges"></span>Nudge Plan</button><button class="tab-btn" data-tab="momentum" onclick="switchTab('momentum',this)"><span class="tab-dot" data-tabdot="momentum"></span>Momentum</button><button class="tab-btn" data-tab="ai" onclick="switchTab('ai',this)">AI &amp; Export</button></div>
+      <div class="tabbar"><button class="tab-btn active" data-tab="adoption" onclick="switchTab('adoption',this)"><span class="tab-dot" data-tabdot="adoption"></span>Adoption Map</button><button class="tab-btn" data-tab="nudges" onclick="switchTab('nudges',this)"><span class="tab-dot" data-tabdot="nudges"></span>Nudge Plan</button><button class="tab-btn" data-tab="momentum" onclick="switchTab('momentum',this)"><span class="tab-dot" data-tabdot="momentum"></span>Momentum</button><button class="tab-btn tab-btn-ai" data-tab="ai" onclick="openAiPanel()">AI Reflection</button></div>
       <section class="module"><div class="module-body">
         <div class="pane active" id="pane-adoption"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · Adoption Map</div><h1 class="pane-title">Where are your stakeholders on the adoption curve?</h1><p class="pane-desc">Behaviour change happens in stages. Map each group to their current position, define the behaviour you want, and name the barrier stopping them from moving forward.</p></div><div id="comms-carry" class="hint-box" style="display:none;"><strong>From Unit 4:</strong> <span id="comms-carry-text"></span></div><div class="hint-box"><strong>Adoption stages:</strong> Unaware → Aware → Experimenting → Using → Advocating. Click a stage to mark where each stakeholder currently is. The right intervention depends entirely on where they are — not where you want them to be.</div><div id="adoption-cards"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Add stakeholders in Unit 3 to populate the adoption map.</div></div><a class="ai-cue" href="#" data-ai-mode="resistance"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Address resistance</span><span class="ai-cue-arrow">→</span></a></div>
         <div class="pane" id="pane-nudges"><div class="pane-head"><div class="pane-eyebrow">Unit 05 · Nudge Plan</div><h1 class="pane-title">Design interventions that make change easier</h1><p class="pane-desc">Use the EAST framework. Each nudge should respond to a specific diagnosed barrier — not be chosen at random. The question is always: what makes this next step easier, more appealing, more social, or better timed?</p></div><div class="east-grid"><div class="east-card east-easy"><span class="east-badge">Easy</span><div class="east-card-title">Reduce friction</div><div class="east-card-desc">Simplify the desired behaviour. Defaults, templates, one-click access, pre-filled forms. Make doing nothing harder than changing.</div></div><div class="east-card east-attractive"><span class="east-badge">Attractive</span><div class="east-card-title">Make it appealing</div><div class="east-card-desc">Personalise the benefit. Use recognition, visible progress, or identity alignment. People move toward things that feel rewarding.</div></div><div class="east-card east-social"><span class="east-badge">Social</span><div class="east-card-title">Use peer influence</div><div class="east-card-desc">Show that people similar to them are already doing it. Champions, peer stories, visible adoption by respected colleagues.</div></div><div class="east-card east-timely"><span class="east-badge">Timely</span><div class="east-card-title">Intervene at the right moment</div><div class="east-card-desc">Deliver when people are most receptive — at a decision point, after a frustrating experience, or when momentum is building.</div></div></div><div class="nudge-list" id="nudge-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">No nudges yet. Add one below.</div></div><button class="btn btn-secondary btn-sm" onclick="addNudge()">+ Add nudge</button><a class="ai-cue" href="#" data-ai-mode="nudges"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Improve the nudges</span><span class="ai-cue-arrow">→</span></a></div>
@@ -26,6 +26,20 @@
       </div></section>
     </div></main>
   </div>
+  <!-- AI slide panel -->
+  <div class="ai-panel-overlay" id="ai-panel-overlay" role="dialog" aria-modal="true" aria-label="AI reflection panel">
+    <div class="ai-panel" id="ai-panel">
+      <div class="ai-panel-head">
+        <div>
+          <div class="ai-panel-title">AI Reflection</div>
+          <div class="ai-panel-sub">Framework-aware prompts for your case</div>
+        </div>
+        <button class="ai-panel-close" onclick="closeAiPanel()" title="Close (Esc)" aria-label="Close AI panel">×</button>
+      </div>
+      <div class="ai-panel-body" id="ai-panel-body"></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
   <script src="cmt-client.js"></script>
   <script>
@@ -110,13 +124,16 @@ async function init() {
     });
   }
 
-  // Honor incoming ?ai=KEY → switch to AI tab and pre-select the mode.
+  // Honor incoming ?ai=KEY → open AI panel and pre-select the mode.
   const aiParam = params.get('ai');
   if (aiParam && AI_MODES.some(m => m.key === aiParam)) {
-    const aiBtn = document.querySelector('[data-tab="ai"]');
-    if (aiBtn) switchTab('ai', aiBtn);
+    openAiPanel();
     selectMode(aiParam);
   }
+
+  document.getElementById('ai-panel-overlay')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAiPanel();
+  });
 }
 
 function tabFilled(tab) {
@@ -184,7 +201,36 @@ function renderNudges() {
 function renderMomentumSignals() { const container = document.getElementById('momentum-signals'); container.innerHTML = MOMENTUM_SIGNALS.map((sig, i) => { const checked = data.momentum_checked.includes(i); return '<div class="signal-row" onclick="toggleSignal(' + i + ')"><div class="signal-check' + (checked ? ' on' : '') + '">' + (checked ? '✓' : '') + '</div><div class="signal-text">' + sig + '</div></div>'; }).join(''); }
 function toggleSignal(i) { const idx = data.momentum_checked.indexOf(i); if (idx >= 0) data.momentum_checked.splice(idx, 1); else data.momentum_checked.push(i); renderMomentumSignals(); updateMomentumScore(); autosave(); }
 function updateMomentumScore() { const score = Math.round((data.momentum_checked.length / MOMENTUM_SIGNALS.length) * 100); document.getElementById('momentum-score').textContent = score + '%'; document.getElementById('momentum-fill').style.width = score + '%'; let status = ''; if (score === 0) status = 'Check the signals that are true in your change right now.'; else if (score <= 25) status = 'Early signals only — momentum is fragile. Focus on 1–2 visible wins.'; else if (score <= 50) status = 'Building momentum. Strengthen the social signals and visible leadership.'; else if (score <= 75) status = 'Good momentum. Protect the energy and address the remaining gaps.'; else status = 'Strong momentum. Shift focus to sustaining and institutionalising the change.'; document.getElementById('momentum-status').textContent = status; }
-function switchTab(tab, btn) { document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); if (tab === 'ai') updatePrompt(); }
+function switchTab(tab, btn) { if (tab === 'ai') { openAiPanel(); return; } document.querySelectorAll('.pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('pane-' + tab).classList.add('active'); if (btn) btn.classList.add('active'); }
+function openAiPanel() {
+  const pane = document.getElementById('pane-ai');
+  const panelBody = document.getElementById('ai-panel-body');
+  const overlay = document.getElementById('ai-panel-overlay');
+  if (!pane || !panelBody || !overlay) return;
+  if (pane.parentElement !== panelBody) panelBody.appendChild(pane);
+  pane.classList.add('active');
+  pane.style.display = 'block';
+  overlay.classList.add('visible');
+  document.body.classList.add('ai-panel-active');
+  if (typeof updatePrompt === 'function') updatePrompt();
+}
+function closeAiPanel() {
+  const pane = document.getElementById('pane-ai');
+  const moduleBody = document.querySelector('.module-body');
+  const overlay = document.getElementById('ai-panel-overlay');
+  if (!pane || !moduleBody || !overlay) return;
+  if (pane.parentElement !== moduleBody) moduleBody.appendChild(pane);
+  pane.classList.remove('active');
+  pane.style.display = '';
+  overlay.classList.remove('visible');
+  document.body.classList.remove('ai-panel-active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('ai-panel-overlay');
+    if (overlay && overlay.classList.contains('visible')) closeAiPanel();
+  }
+});
 function autosave() { data.momentum_accelerators = valF('momentum-accelerators'); data.momentum_blockers = valF('momentum-blockers'); data.momentum_tipping = valF('momentum-tipping'); const ind = document.getElementById('save-indicator'); ind.textContent = 'Saving'; ind.className = 'save-indicator saving'; clearTimeout(saveTimer); saveTimer = setTimeout(() => { localStorage.setItem('cmt_module_' + projectId + '_nudges', JSON.stringify(data)); if (window.CMT) CMT.saveModule(projectId, 'nudges', data).catch(() => {}); updateTabDots(); if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId); ind.textContent = 'Saved'; ind.className = 'save-indicator saved'; setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000); }, 800); }
 async function exportProject() {
   // Flush any pending autosave first so the export reflects the latest edits
