@@ -37,7 +37,7 @@
         </div>
         <div class="pane" id="pane-audiences"><div class="pane-head"><div class="pane-eyebrow">Unit 04 · Audience Translations</div><h1 class="pane-title">Same truth, different language</h1><p class="pane-desc">Each audience has a different relationship to the change. Translate the core message into their language, their concerns, and their call to action.</p></div><div id="stakeholder-carry" class="hint-box" style="display:none;"><strong>Your stakeholders from Unit 3</strong> are pre-loaded as audiences below. Add know / feel / do for each.</div><div id="audience-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">Loading audiences from Unit 3</div></div><button class="btn btn-secondary btn-sm" onclick="addCustomAudience()" style="margin-top:8px;">+ Add custom audience</button><a class="ai-cue" href="#" data-ai-mode="audience"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Audience check</span><span class="ai-cue-arrow">→</span></a></div>
         <div class="pane" id="pane-risks"><div class="pane-head"><div class="pane-eyebrow">Unit 04 · Communication Risks</div><h1 class="pane-title">What could go wrong?</h1><p class="pane-desc">Most communication failures are predictable. Flag the patterns you recognise in your current approach — before they damage trust.</p></div><div class="hint-box amber"><strong>Communication misfires are predictable.</strong> They're caused by a small set of recurring patterns. Spotting them early is far cheaper than recovering from them.</div><div class="misfire-grid" id="misfire-grid"></div><div class="field-group"><label class="label">Your biggest communication risk for this initiative</label><textarea class="field-textarea" id="comms-risk-notes" style="min-height:110px;" placeholder="What specific misfire are you most worried about, and why? What would you do to prevent it?" oninput="autosave()"></textarea></div><a class="ai-cue" href="#" data-ai-mode="objections"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Anticipate objections</span><span class="ai-cue-arrow">→</span></a></div>
-        <div class="pane" id="pane-ai"><p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p><div class="pane-head"><div class="pane-eyebrow">Unit 04 · AI &amp; Export</div><h1 class="pane-title">Sharpen your communication with AI</h1><p class="pane-desc">Your full context, core message, and audience translations are embedded automatically.</p></div><div class="ai-mode-grid" id="ai-mode-grid"></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div><div class="prompt-text" id="prompt-output">Fill in Tabs 1–3 to generate a prompt.</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div></div>
+        <div class="pane" id="pane-ai"><p class="ai-tab-explainer">Prompts are generated from your current case data and tailored to this unit's framework. Copy them into ChatGPT, Claude, or your preferred AI tool to challenge, refine, or extend your thinking.</p><div class="pane-head"><div class="pane-eyebrow">Unit 04 · AI &amp; Export</div><h1 class="pane-title">Sharpen your communication with AI</h1><p class="pane-desc">Your full context, core message, and audience translations are embedded automatically.</p></div><div class="ai-mode-grid" id="ai-mode-grid"></div><div class="prompt-box"><div class="prompt-box-head"><span class="prompt-box-label">Ready-to-use prompt — your project data is included</span></div><div class="prompt-text" id="prompt-output">Fill in Tabs 1–3 to generate a prompt.</div><div class="prompt-actions"><button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button><a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a><a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a></div></div></div>
       </div></section>
     </div></main>
   </div>
@@ -47,7 +47,7 @@
       <div class="ai-panel-head">
         <div>
           <div class="ai-panel-title">AI Reflection</div>
-          <div class="ai-panel-sub">Framework-aware prompts for your case</div>
+          <div class="ai-panel-sub">Your case data is already embedded in these prompts — structured around this unit's framework. Copy one into Claude, ChatGPT, or your preferred AI tool. The AI gets your context without you having to explain it.</div>
         </div>
         <button class="ai-panel-close" onclick="closeAiPanel()" title="Close (Esc)" aria-label="Close AI panel">×</button>
       </div>
@@ -181,11 +181,11 @@ function renderAiCards() {
   const grid = document.getElementById('ai-mode-grid');
   if (!grid) return;
   grid.innerHTML = AI_MODES.map(m =>
-    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '" title="' + esc(m.desc) + '" onclick="selectMode(\'' + m.key + '\')">'
     +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
     +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
     +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
-    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    +   '<button class="ai-mode-use" type="button" onclick="event.stopPropagation();selectMode(\'' + m.key + '\')">Use this task</button>'
     + '</div>'
   ).join('');
 }
