@@ -101,7 +101,7 @@
               </div>
               <div class="ai-mode-grid" id="ai-mode-grid"></div>
               <div class="prompt-box">
-                <div class="prompt-box-head"><span class="prompt-box-label">Generated prompt</span></div>
+                <div class="prompt-box-head"><span class="prompt-box-label">Ready-to-use prompt — your project data is included</span></div>
                 <div class="prompt-text" id="prompt-output">Add forces to generate a prompt.</div>
                 <div class="prompt-actions">
                   <button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button>
@@ -121,7 +121,7 @@
       <div class="ai-panel-head">
         <div>
           <div class="ai-panel-title">AI Reflection</div>
-          <div class="ai-panel-sub">Framework-aware prompts for your case</div>
+          <div class="ai-panel-sub">Your case data is already embedded in these prompts — structured around this unit's framework. Copy one into Claude, ChatGPT, or your preferred AI tool. The AI gets your context without you having to explain it.</div>
         </div>
         <button class="ai-panel-close" onclick="closeAiPanel()" title="Close (Esc)" aria-label="Close AI panel">×</button>
       </div>
@@ -230,11 +230,11 @@ function renderAiCards() {
   const grid = document.getElementById('ai-mode-grid');
   if (!grid) return;
   grid.innerHTML = AI_MODES.map(m =>
-    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '">'
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '" title="' + esc(m.desc) + '" onclick="selectMode(\'' + m.key + '\')">'
     +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
     +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
     +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
-    +   '<button class="ai-mode-use" type="button" onclick="selectMode(\'' + m.key + '\')">Use this task</button>'
+    +   '<button class="ai-mode-use" type="button" onclick="event.stopPropagation();selectMode(\'' + m.key + '\')">Use this task</button>'
     + '</div>'
   ).join('');
 }
